@@ -1,0 +1,9 @@
+{
+    "importMap": "./import_map.json",
+    "compilerOptions": {
+        "lib": ["deno.ns", "deno.unstable", "dom"]
+    },
+    "tasks": {
+        "run": "deno run --allow-all --unstable ./cli.ts"
+    }
+}

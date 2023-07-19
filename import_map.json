@@ -1,0 +1,8 @@
+{
+    "imports": {
+      "sdk": "./sdk",
+      "cli": "./sdk/cli",
+      "commands": "./commands",
+      "fs": "./sdk/fs"
+    }
+  }
