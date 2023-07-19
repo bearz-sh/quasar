@@ -1,3 +1,6 @@
+import { toPathString } from "https://deno.land/std@0.194.0/fs/_util.ts";
+import { IChildProcess, Signal } from "./_base.ts";
+
 export type Stdio = "inherit" | "piped" | "null";
 
 export interface ICommandOptions {
@@ -55,6 +58,8 @@ export interface ICommandOptions {
 export interface IPsStartInfo extends ICommandOptions
 {
     file: string | URL;
+
+    input?: Uint8Array | string | PsOutput | ReadableStream<Uint8Array>;
 }
 
 
@@ -174,6 +179,16 @@ export class PsOutput
 
         return this;
     }
+
+    async pipe(
+        next: (args?: string[], options?: Partial<IPsStartInfo>) => Promise<PsOutput>,
+        args?: string[],
+        options?: Partial<IPsStartInfo>) {
+        
+        const o : Partial<IPsStartInfo> = options ?? {};
+        o.input = this.stdout;
+        await next(args, o);
+    }
 }
 
 export interface IPsPreHook {
@@ -250,6 +265,43 @@ export class Ps
         return this;
     }
 
+    spawn()
+    {
+        if(preCallHooks.length > 0) {
+            preCallHooks.forEach((hook) => {
+                hook(this.#startInfo);
+            });
+        }
+
+        const cmd = new Deno.Command(this.#startInfo.file, this.#startInfo);
+        const r = cmd.spawn();
+       
+        const child : IChildProcess = {
+            pid: r.pid,
+
+            status: r.status,
+            
+            stdin: r.stdin,
+
+            stdout: r.stdout,
+
+            stderr: r.stderr,
+
+            output: async () => {
+                return await r.output();
+            },
+
+            kill: (signal?: Signal) => {
+                r.kill(signal);
+            },
+
+            ref: () => r.ref(),
+
+            unref: () => r.unref()
+        }
+
+        return child;
+    }
 
 
     async output()
@@ -260,8 +312,62 @@ export class Ps
             });
         }
 
+      
+        if (!this.#startInfo.input) {
+            const cmd2 = new Deno.Command(this.#startInfo.file, this.#startInfo);
+            const result = await cmd2.output();
+            const output = new PsOutput(this.#startInfo, result);
+    
+            if (postCallHooks.length > 0) {
+                postCallHooks.forEach((hook) => {
+                    hook(this.#startInfo, output);
+                });
+            }
+    
+            return output;
+        }
+
+        const input = this.#startInfo.input;
+        this.#startInfo.stdin = 'piped';
         const cmd = new Deno.Command(this.#startInfo.file, this.#startInfo);
-        const result = await cmd.output();
+
+        const child = cmd.spawn();
+        if (input instanceof PsOutput) {
+           
+            const writer = child.stdin.getWriter();
+            await writer.write(input.stdout);
+            await writer.close();
+        }
+
+        if (input instanceof Uint8Array) {
+            const writer = child.stdin.getWriter();
+            await writer.write(input);
+            await writer.close();
+        }
+
+        if (input instanceof ReadableStream) {
+            const writer = child.stdin.getWriter();
+            const reader = input.getReader();
+            while(true) {
+                const { done, value } = await reader.read();
+                if (done) {
+                    break;
+                }
+
+                await writer.write(value);
+            }
+            await writer.close();
+        }
+
+        if (typeof input === 'string') {
+            const writer = child.stdin.getWriter();
+            await writer.write(new TextEncoder().encode(input));
+            await writer.close();
+        }
+
+
+
+        const result = await child.output();
         const output = new PsOutput(this.#startInfo, result);
 
         if (postCallHooks.length > 0) {

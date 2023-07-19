@@ -15,8 +15,8 @@ import {
 
 registerExe("bash", {
     windows: [
-        "%Program Files%\\Git\\bin\\bash.exe",
-        "%Program Files%\\Git\\usr\\bin\\bash.exe",
+        "%ProgramFiles%\\Git\\bin\\bash.exe",
+        "%ProgramFiles%\\Git\\usr\\bin\\bash.exe",
         '%ChocolateyInstall%\\msys2\\usr\\bin\\bash.exe',
         '%SystemDrive%\\msys64\\usr\\bin\\bash.exe',
         '%SystemDrive%\\msys\\usr\\bin\\bash.exe',
@@ -37,15 +37,13 @@ export async function bashScript(script: string, options?: IExecOptions) {
     const scriptFile = await generateScriptFile(script, ".sh");
     try  {
         let file = scriptFile;
-
         // windows with WSL installed has bash.exe in System32, but it doesn't handle windows paths
         if (IS_WINDOWS) {
             const exe = await findExe("bash");
             if (exe?.endsWith("System32\\bash.exe")) {
-                file = '/mnt/' + 'c' + file.substring(1).replaceAll('\\', '/').replace(':', '');
+                file = '/mnt/' + 'c' + file.substring(1).replace(':', '');
             }
         }
-
 
         return await bash(['-noprofile', '--norc', '-e', '-o', 'pipefail', "-c", file], options);
     } finally {

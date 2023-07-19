@@ -9,20 +9,29 @@ IMakeTempOptions
 } from './_interfaces.ts';
 
 
+
 export function isDirectory(path: string | URL) : Promise<boolean> {
-    return Deno.stat(path).then(stat => stat.isDirectory);
+    return Deno.stat(path).then(stat => stat.isDirectory).catch(() => false);
 }
 
 export function isDirectorySync(path: string | URL) : boolean {
-    return Deno.statSync(path).isDirectory;
+    try {
+        return Deno.statSync(path).isDirectory;
+    } catch {
+        return false;
+    }
 }
 
 export function isFile(path: string | URL) : Promise<boolean> {
-    return Deno.stat(path).then(stat => stat.isFile);
+    return Deno.stat(path).then(stat => stat.isFile).catch(() => false);
 }
 
 export function isFileSync(path: string | URL) : boolean {
-    return Deno.statSync(path).isFile;
+    try {
+        return Deno.statSync(path).isFile;
+    } catch {
+        return false;
+    }
 }
 
 export function link(oldPath: string, newPath: string) : Promise<void> {

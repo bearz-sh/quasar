@@ -1,0 +1,24 @@
+import { 
+    IExecOptions, 
+    IExecSyncOptions, 
+    exec, 
+    execSync, 
+    registerExe 
+} from "../../process/exec.ts";
+
+registerExe("sleep", {
+    windows: [
+        "%ProgramFiles%\\Git\\usr\\bin\\sleep.exe",
+        "%ChocolateyInstall%\\msys2\\usr\\bin\\sleep.exe",
+        "%SystemDrive%\\msys64\\usr\\bin\\sleep.exe",
+        "%SystemDrive%\\msys\\usr\\bin\\sleep.exe",
+    ]
+});
+
+export function sleep(args?: string[], options?: IExecOptions) {
+    return exec("sleep", args, options);
+}
+
+export function sleepSync(args?: string[], options?: IExecSyncOptions) {
+    return execSync("sleep", args, options);
+}

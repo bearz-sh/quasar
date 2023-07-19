@@ -2,8 +2,9 @@ import { which, whichSync } from './which.ts';
 import { expand, get } from '../os/env.ts';
 import { isFile, isFileSync } from '../fs/mod.ts';
 import { IS_WINDOWS, IS_DARWIN } from '../os/constants.ts';
-import { IPsStartInfo, output, outputSync } from './ps.ts';
+import { IPsStartInfo, PsOutput, output, outputSync } from './ps.ts';
 import { NotFoundOnPathError } from './errors.ts';
+import { isAbsolute } from 'https://deno.land/std@0.194.0/path/posix.ts';
 
 
 
@@ -31,6 +32,10 @@ export function registerExe(name: string, options?: Partial<IPathFinderOptions>)
 }
 
 export function findExeSync(name: string) {
+    if (isAbsolute(name) && isFileSync(name)) {
+        return name;
+    }
+
     let options = registry.get(name);
     if (!options) {
         options ??= {} as IPathFinderOptions;
@@ -106,6 +111,10 @@ export function findExeSync(name: string) {
 }
 
 export async function findExe(name: string) {
+    if (isAbsolute(name) && await isFile(name)) {
+        return name;
+    }
+
     let options = registry.get(name);
     if (!options) {
         options ??= {} as IPathFinderOptions;
@@ -232,6 +241,8 @@ export interface IExecOptions extends IExecSyncOptions {
      * Ignored by {@linkcode Command.outputSync}.
      */
     signal?: AbortSignal;
+
+    input?: string | Uint8Array | PsOutput | ReadableStream<Uint8Array>;
 }
 
 
@@ -246,6 +257,15 @@ export async function exec(name: string, args?: string[], options?: IExecOptions
         file: path,
         args: args
     }
+
+    if (si.stdout === undefined)
+        si.stdout = 'inherit';
+
+    if (si.stderr === undefined)
+        si.stderr = 'inherit';
+
+    if (si.input)
+        si.stdin = 'piped';
 
     return await output(si);
 }
@@ -262,6 +282,13 @@ export function execSync(name: string, args?: string[], options?: IExecSyncOptio
         file: path,
         args: args
     }
+
+    if (si.stdout === undefined)
+        si.stdout = 'inherit';
+
+    if (si.stderr === undefined)
+        si.stderr = 'inherit';
+
     return outputSync(si);
 }
 
@@ -273,7 +300,7 @@ export function generateScriptFileSync(script: string, ext: string, tpl?: string
         Deno.writeTextFileSync(scriptFile, script);
     }
 
-    return scriptFile;
+    return scriptFile.replaceAll('\\', '/');
 }
 
 export async function generateScriptFile(script: string, ext: string, tpl?: string) {
@@ -284,5 +311,5 @@ export async function generateScriptFile(script: string, ext: string, tpl?: stri
         await Deno.writeTextFile(scriptFile, script);
     }
 
-    return scriptFile;
+    return scriptFile.replaceAll('\\', '/');
 }

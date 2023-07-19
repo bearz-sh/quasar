@@ -1,5 +1,73 @@
 import { IWriter, IWriterSync, ICloser, IReader, IReaderSync } from '../streams/interfaces.ts';
 
+export type Signal = | "SIGABRT"
+| "SIGALRM"
+| "SIGBREAK"
+| "SIGBUS"
+| "SIGCHLD"
+| "SIGCONT"
+| "SIGEMT"
+| "SIGFPE"
+| "SIGHUP"
+| "SIGILL"
+| "SIGINFO"
+| "SIGINT"
+| "SIGIO"
+| "SIGKILL"
+| "SIGPIPE"
+| "SIGPROF"
+| "SIGPWR"
+| "SIGQUIT"
+| "SIGSEGV"
+| "SIGSTKFLT"
+| "SIGSTOP"
+| "SIGSYS"
+| "SIGTERM"
+| "SIGTRAP"
+| "SIGTSTP"
+| "SIGTTIN"
+| "SIGTTOU"
+| "SIGURG"
+| "SIGUSR1"
+| "SIGUSR2"
+| "SIGVTALRM"
+| "SIGWINCH"
+| "SIGXCPU"
+| "SIGXFSZ";
+
+export interface ICommandStatus {
+    readonly code: number;
+
+    readonly signal: Signal | null;
+
+    readonly success: boolean;
+}
+
+export interface ICommandOutput {
+    readonly stdout: Uint8Array;
+
+    readonly stderr: Uint8Array;
+}
+
+export interface IChildProcess {
+    readonly pid: number;
+
+    readonly status: Promise<ICommandStatus>;
+
+    readonly stdin: WritableStream<Uint8Array>;
+
+    readonly stdout: ReadableStream<Uint8Array>;
+
+    readonly stderr: ReadableStream<Uint8Array>;
+
+    output(): Promise<ICommandOutput>;
+
+    kill(signal?: Signal): void;
+
+    ref(): void;
+
+    unref(): void;
+}
 
 export function chdir(directory: string | URL) {
     Deno.chdir(directory);

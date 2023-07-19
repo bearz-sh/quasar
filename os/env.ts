@@ -232,7 +232,7 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
                 continue;
             }
 
-            const key = tokenBuilder.join("");
+            const key = String.fromCodePoint(...tokenBuilder);
             const value = getValue(key);
             if (value !== undefined && value.length > 0)
                 output.push(...toCharArray(value));
@@ -321,7 +321,7 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
                 i--;
             }
 
-            const key = tokenBuilder.join("");
+            const key = String.fromCodePoint(...tokenBuilder);
             if (key.length === 0) {
                 throw new Error("Bad substitution, empty variable name.");
             }
