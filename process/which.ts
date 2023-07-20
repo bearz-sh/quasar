@@ -94,14 +94,25 @@ export function whichSync(
                 fileName.toLowerCase().endsWith(segment)
             ) !== undefined;
 
-            if (hasPathExt) {
+            if (!hasPathExt) {
                 try {
                     let first : IDirectoryInfo | undefined;
                     for(const entry of readDirectorySync(pathSegment)) {
-                        if(entry.isFile && entry.name?.toLowerCase() === baseNameLowered) {
-                            first = entry;
-                            break;
+                        
+                        if (entry.isFile)
+                        {
+                            for (const ext of pathExtSegments) {
+                                if(entry.name?.toLowerCase() === baseNameLowered + ext) {
+                                    first = entry;
+                                    break;
+                                }
+                            }
+
+                            if (first) {
+                                break;
+                            }
                         }
+
                     }
 
                     if (first?.name) {
@@ -215,7 +226,7 @@ export async function which(
     const baseNameLowered = baseName.toLowerCase();
 
     const systemPaths = env.path.split()
-        .filter((segment) => segment.length > 0)
+        .filter((segment) => segment.length)
         .map((segment) => env.expand(segment));
 
     const pathSegments = prependPath !== undefined ? prependPath.concat(systemPaths) : systemPaths;
@@ -246,14 +257,22 @@ export async function which(
                 fileName.toLowerCase().endsWith(segment)
             ) !== undefined;
 
-            if (hasPathExt) {
+            if (!hasPathExt) {
                 try {
                    
                     let first : IDirectoryInfo | undefined;
                     for await(const entry of readDirectory(pathSegment)) {
-                        if(entry.isFile && entry.name?.toLowerCase() === baseNameLowered) {
-                            first = entry;
-                            break;
+                        if(entry.isFile) {
+                            for (const ext of pathExtSegments) {
+                                if(entry.name?.toLowerCase() === baseNameLowered + ext) {
+                                    first = entry;
+                                    break;
+                                }
+                            }
+
+                            if (first) {
+                                break;
+                            }
                         }
                     }
 

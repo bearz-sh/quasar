@@ -6,8 +6,6 @@ import { IPsStartInfo, PsOutput, output, outputSync } from './ps.ts';
 import { NotFoundOnPathError } from './errors.ts';
 import { isAbsolute } from 'https://deno.land/std@0.194.0/path/posix.ts';
 
-
-
 export interface IPathFinderOptions {
     name: string;
     executable?: string;
@@ -21,14 +19,45 @@ export interface IPathFinderOptions {
 
 const registry = new Map<string, IPathFinderOptions>();
 
-export function registerExe(name: string, options?: Partial<IPathFinderOptions>) {
-    const o : IPathFinderOptions = {
+export function registerExe(name: string, options?: Partial<IPathFinderOptions>, force = false) {
+
+    let o = registry.get(name);
+    if (o) {
+        if (force && options) {
+            if(options.cached)
+                o.cached = options.cached;
+
+            if(options.envVariable)
+                o.envVariable = options.envVariable;
+
+            if(options.executable)
+                o.executable = options.executable;
+
+            if(options.paths)
+                o.paths = options.paths;
+
+            if(options.windows)
+                o.windows = options.windows;
+
+            if(options.linux)
+                o.linux = options.linux;
+
+            if(options.darwin)
+                o.darwin = options.darwin;
+        }
+
+        return o;
+    }
+
+    o = {
         ...options,
         name: name
     };
-    o.envVariable ??= (name.toUpperCase() + '_PATH');
 
+    o.envVariable ??= (name.toUpperCase() + '_PATH');
     registry.set(name, o);
+
+    return o;
 }
 
 export function findExeSync(name: string) {

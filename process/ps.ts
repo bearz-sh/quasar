@@ -1,5 +1,5 @@
-import { toPathString } from "https://deno.land/std@0.194.0/fs/_util.ts";
 import { IChildProcess, Signal } from "./_base.ts";
+import { NEW_LINE } from "../os/constants.ts";
 
 export type Stdio = "inherit" | "piped" | "null";
 
@@ -144,7 +144,7 @@ export class PsOutput
         }
 
         if(this.#si?.stdout === 'piped') {
-            this.#stdoutLines = this.stdoutAsString.split('\n');
+            this.#stdoutLines = this.stdoutAsString.split(NEW_LINE);
         } else {
             this.#stdoutLines = [];
         }
@@ -158,7 +158,7 @@ export class PsOutput
         }
 
         if(this.#si?.stderr === 'piped') {
-            this.#stderrLines = this.stderrAsString.split('\n');
+            this.#stderrLines = this.stderrAsString.split(NEW_LINE);
         }
 
         return this.#stderrLines;

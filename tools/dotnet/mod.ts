@@ -7,7 +7,7 @@ import {
     registerExe 
 } from "../../process/exec.ts";
 import { PsOutput } from "../../process/ps.ts";
-import { IPkgInfo, IPkgMgr } from "../pkgmgr.ts";
+import { IPkgInfo, IPkgMgr, pkgmgrs } from "../pkgmgr.ts";
 
 registerExe("dotnet", {
     windows: [
@@ -71,3 +71,6 @@ export class DotNetNugetManager implements IPkgMgr {
         throw new Error("Method not implemented.");
     }
 }
+
+pkgmgrs.set("dotnet-tools", new DotNetToolManager());
+pkgmgrs.set("dotnet-nuget", new DotNetNugetManager());

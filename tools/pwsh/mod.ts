@@ -10,7 +10,7 @@ import {
     registerExe 
 } from "../../process/exec.ts";
 import { PsOutput } from "../../process/ps.ts";
-import { IPkgInfo, IPkgMgr } from "../pkgmgr.ts";
+import { IPkgInfo, IPkgMgr, pkgmgrs } from "../pkgmgr.ts";
 
 registerExe("pwsh", {
     windows: [
@@ -240,3 +240,5 @@ export class PwshModuleManager implements IPkgMgr {
         });
     }
 }
+
+pkgmgrs.set("pwsh", new PwshModuleManager());

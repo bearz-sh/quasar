@@ -7,7 +7,7 @@ import {
     registerExe 
 } from "../../process/exec.ts";
 import { PsOutput } from "../../process/ps.ts";
-import { IPkgInfo, IPkgMgr } from "../pkgmgr.ts";
+import { IPkgInfo, IPkgMgr, pkgmgrs } from "../pkgmgr.ts";
 
 registerExe("nuget", {
     windows: [
@@ -47,3 +47,5 @@ export class NugetManager implements IPkgMgr {
         throw new Error("Method not implemented.");
     }
 }
+
+pkgmgrs.set("nuget", new NugetManager());

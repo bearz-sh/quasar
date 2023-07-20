@@ -10,7 +10,7 @@ import {
     generateScriptFileSync, 
     registerExe 
 } from "../../process/exec.ts";
-import { IPkgInfo, IPkgMgr } from "../pkgmgr.ts";
+import { IPkgInfo, IPkgMgr, pkgmgrs } from "../pkgmgr.ts";
 import { PsOutput } from "../../process/ps.ts";
 
 let exe = "powershell";
@@ -255,3 +255,5 @@ export class PowershellModuleManager implements IPkgMgr {
         });
     }
 }
+
+pkgmgrs.set("powershell", new PowershellModuleManager());

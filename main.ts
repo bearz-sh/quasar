@@ -1,9 +1,14 @@
-import  { PwshModuleManager } from './tools/pwsh/mod.ts';
+import { ChocoManager } from './tools/choco/mod.ts';
+import { whichSync } from './process/which.ts';
 
-const mgr = new PwshModuleManager();
-const out = await mgr.install("powershell-yaml", "0.4.6");
+console.log(whichSync("choco"));
 
-console.log(out.code);
+const choco = new ChocoManager();
+console.log(await choco.list(""));
+
+
+
+
 
 /*
 import { bash } from './tools/bash/mod.ts';

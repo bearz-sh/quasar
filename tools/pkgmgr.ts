@@ -20,3 +20,5 @@ export interface IPkgMgr {
 
     search(query: string, args?: string[]): Promise<IPkgInfo[]>;
 }
+
+export const pkgmgrs = new Map<string, IPkgMgr>();
