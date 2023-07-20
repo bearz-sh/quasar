@@ -17,7 +17,8 @@ export function sudo(args?: string[], options?: IExecOptions) {
     return exec("sudo", args, options);
 }
 
-export function sudoSync(args?: string[], options?: IExecSyncOptions) {
+sudo.cli = sudo;
+sudo.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     if (IS_WINDOWS) {
         throw new PlatformNotSupportedError("sudo is not supported on Windows.");
     }

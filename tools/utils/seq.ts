@@ -19,6 +19,7 @@ export function seq(args?: string[], options?: IExecOptions) {
     return exec("seq", args, options);
 }
 
-export function seqSync(args?: string[], options?: IExecSyncOptions) {
+seq.cli = seq;
+seq.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("seq", args, options);
 }

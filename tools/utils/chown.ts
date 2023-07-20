@@ -19,6 +19,7 @@ export function chown(args?: string[], options?: IExecOptions) {
     return exec("chown", args, options);
 }
 
-export function chownSync(args?: string[], options?: IExecSyncOptions) {
+chown.cli = chown;
+chown.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("chown", args, options);
 }

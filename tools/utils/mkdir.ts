@@ -19,6 +19,7 @@ export function mkdir(args?: string[], options?: IExecOptions) {
     return exec("mkdir", args, options);
 }
 
-export function mkdirSync(args?: string[], options?: IExecSyncOptions) {
+mkdir.cli = mkdir;
+mkdir.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("mkdir", args, options);
 }

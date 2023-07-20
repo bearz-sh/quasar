@@ -19,6 +19,7 @@ export function sleep(args?: string[], options?: IExecOptions) {
     return exec("sleep", args, options);
 }
 
-export function sleepSync(args?: string[], options?: IExecSyncOptions) {
+sleep.cli = sleep;
+sleep.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("sleep", args, options);
 }

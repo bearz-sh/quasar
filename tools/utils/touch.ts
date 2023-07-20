@@ -19,6 +19,7 @@ export function touch(args?: string[], options?: IExecOptions) {
     return exec("touch", args, options);
 }
 
-export function touchSync(args?: string[], options?: IExecSyncOptions) {
+touch.cli = touch;
+touch.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("touch", args, options);
 }

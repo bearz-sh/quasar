@@ -19,6 +19,7 @@ export function env(args?: string[], options?: IExecOptions) {
     return exec("env", args, options);
 }
 
-export function envSync(args?: string[], options?: IExecSyncOptions) {
+env.cli = env;
+env.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("env", args, options);
 }

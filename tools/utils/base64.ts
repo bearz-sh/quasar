@@ -19,6 +19,7 @@ export function base64(args?: string[], options?: IExecOptions) {
     return exec("base64", args, options);
 }
 
-export function base64Sync(args?: string[], options?: IExecSyncOptions) {
+base64.cli = base64;
+base64.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("base64", args, options);
 }

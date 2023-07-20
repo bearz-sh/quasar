@@ -19,6 +19,7 @@ export function more(args?: string[], options?: IExecOptions) {
     return exec("more", args, options);
 }
 
-export function moreSync(args?: string[], options?: IExecSyncOptions) {
+more.cli = more;
+more.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("more", args, options);
 }

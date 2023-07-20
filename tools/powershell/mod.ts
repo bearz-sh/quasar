@@ -36,11 +36,20 @@ export function powershell(args?: string[], options?: IExecOptions) {
     return exec(exe, args, options);
 }
 
-export function powershellSync(args?: string[], options?: IExecOptions) {
+powershell.cli = powershell;
+powershell.cliSync = function(args?: string[], options?: IExecOptions) {
     return execSync(exe, args, options);
 }
 
-export async function powershellScript(script: string, options?: IExecOptions) {
+powershell.scriptFile = async function(scriptFile: string, options?: IExecOptions) {
+    return await powershell.cli(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+}
+
+powershell.scriptFileSync = function(scriptFile: string, options?: IExecSyncOptions) {
+    return powershell.cliSync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+}
+
+powershell.script = async function(script: string, options?: IExecOptions) {
     script = `
 $ErrorActionPreference = 'Stop'
 ${script}
@@ -58,7 +67,7 @@ if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }
     }
 }
 
-export function powershellScriptSync(script: string, options?: IExecSyncOptions) {
+powershell.scriptSync = function(script: string, options?: IExecSyncOptions) {
     script = `
 $ErrorActionPreference = 'Stop'
 ${script}
@@ -66,7 +75,7 @@ if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }
 `
     const scriptFile = generateScriptFileSync(script, ".ps1");
     try  {
-        return powershellSync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+        return powershell.cliSync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
     } finally {
         if (existsSync(scriptFile)) {
             rmSync(scriptFile)

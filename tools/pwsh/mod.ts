@@ -24,21 +24,28 @@ export function pwsh(args?: string[], options?: IExecOptions) {
     return exec("pwsh", args, options);
 }
 
-export function pwshSync(args?: string[], options?: IExecOptions) {
+pwsh.cli = pwsh;
+pwsh.cliSync = function(args?: string[], options?: IExecOptions) {
     return execSync("pwsh", args, options);
 }
 
-export async function pwshScript(script: string, options?: IExecOptions) {
+pwsh.scriptFile = async function(scriptFile: string, options?: IExecOptions) {
+    return await pwsh.cli(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+}
+
+pwsh.scriptFileSync = function(scriptFile: string, options?: IExecSyncOptions) {
+    return pwsh.cliSync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+}
+
+pwsh.script = async function(script: string, options?: IExecOptions) {
     script = `
 $ErrorActionPreference = 'Stop'
 ${script}
 if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }
-`
+`;
     const scriptFile = await generateScriptFile(script, ".ps1");
     try  {
-
-
-        return await pwsh(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+        return await pwsh.cli(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
     } finally {
         if (await exists(scriptFile)) {
             await rm(scriptFile)
@@ -46,15 +53,15 @@ if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }
     }
 }
 
-export function pwshScriptSync(script: string, options?: IExecSyncOptions) {
+pwsh.scriptSync = function(script: string, options?: IExecSyncOptions) {
     script = `
 $ErrorActionPreference = 'Stop'
 ${script}
 if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }
-`
+`;
     const scriptFile = generateScriptFileSync(script, ".ps1");
     try  {
-        return pwshSync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+        return pwsh.cliSync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
     } finally {
         if (existsSync(scriptFile)) {
             rmSync(scriptFile)

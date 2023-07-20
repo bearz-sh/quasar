@@ -19,6 +19,7 @@ export function head(args?: string[], options?: IExecOptions) {
     return exec("head", args, options);
 }
 
-export function headSync(args?: string[], options?: IExecSyncOptions) {
+head.cli = head;
+head.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("head", args, options);
 }

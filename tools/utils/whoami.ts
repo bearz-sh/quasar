@@ -19,6 +19,7 @@ export function whoami(args?: string[], options?: IExecOptions) {
     return exec("whoami", args, options);
 }
 
-export function whoamiSync(args?: string[], options?: IExecSyncOptions) {
+whoami.cli = whoami;
+whoami.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("whoami", args, options);
 }

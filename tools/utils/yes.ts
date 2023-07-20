@@ -19,6 +19,7 @@ export function yes(args?: string[], options?: IExecOptions) {
     return exec("yes", args, options);
 }
 
-export function yesSync(args?: string[], options?: IExecSyncOptions) {
+yes.cli = yes;
+yes.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("yes", args, options);
 }

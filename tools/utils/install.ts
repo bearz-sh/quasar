@@ -19,6 +19,7 @@ export function install(args?: string[], options?: IExecOptions) {
     return exec("install", args, options);
 }
 
-export function installSync(args?: string[], options?: IExecSyncOptions) {
+install.cli = install;
+install.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("install", args, options);
 }

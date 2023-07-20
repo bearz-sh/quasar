@@ -19,6 +19,7 @@ export function uniq(args?: string[], options?: IExecOptions) {
     return exec("uniq", args, options);
 }
 
-export function uniqSync(args?: string[], options?: IExecSyncOptions) {
+uniq.cli = uniq;
+uniq.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("uniq", args, options);
 }

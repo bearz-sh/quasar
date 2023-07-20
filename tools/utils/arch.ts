@@ -19,6 +19,7 @@ export function arch(args?: string[], options?: IExecOptions) {
     return exec("arch", args, options);
 }
 
-export function archSync(args?: string[], options?: IExecSyncOptions) {
+arch.cli = arch;
+arch.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("arch", args, options);
 }

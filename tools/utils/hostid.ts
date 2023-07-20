@@ -19,6 +19,7 @@ export function hostid(args?: string[], options?: IExecOptions) {
     return exec("hostid", args, options);
 }
 
-export function hostidSync(args?: string[], options?: IExecSyncOptions) {
+hostid.cli = hostid;
+hostid.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("hostid", args, options);
 }

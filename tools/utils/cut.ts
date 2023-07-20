@@ -19,6 +19,7 @@ export function cut(args?: string[], options?: IExecOptions) {
     return exec("cut", args, options);
 }
 
-export function cutSync(args?: string[], options?: IExecSyncOptions) {
+cut.cli = cut;
+cut.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("cut", args, options);
 }

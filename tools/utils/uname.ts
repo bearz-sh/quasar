@@ -19,6 +19,7 @@ export function uname(args?: string[], options?: IExecOptions) {
     return exec("uname", args, options);
 }
 
-export function unameSync(args?: string[], options?: IExecSyncOptions) {
+uname.cli = uname;
+uname.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("uname", args, options);
 }

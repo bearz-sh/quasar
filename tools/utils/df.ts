@@ -19,6 +19,7 @@ export function df(args?: string[], options?: IExecOptions) {
     return exec("df", args, options);
 }
 
-export function dfSync(args?: string[], options?: IExecSyncOptions) {
+df.cli = df;
+df.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("df", args, options);
 }

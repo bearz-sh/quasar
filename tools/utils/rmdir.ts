@@ -19,6 +19,7 @@ export function rmdir(args?: string[], options?: IExecOptions) {
     return exec("rmdir", args, options);
 }
 
-export function rmdirSync(args?: string[], options?: IExecSyncOptions) {
+rmdir.cli = rmdir;
+rmdir.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("rmdir", args, options);
 }

@@ -24,15 +24,23 @@ export function sh(args?: string[], options?: IExecOptions) {
     return exec("sh", args, options);
 }
 
-export function shSync(args?: string[], options?: IExecOptions) {
+sh.cli = sh;
+sh.cliSync = function(args?: string[], options?: IExecOptions) {
     return execSync("sh", args, options);
 }
 
-export async function shScript(script: string, options?: IExecOptions) {
+sh.scriptFile = async function(scriptFile: string, options?: IExecOptions) {
+    return await sh.cli(['-e', scriptFile], options);
+}
+
+sh.scriptFileSync = function(scriptFile: string, options?: IExecSyncOptions) {
+    return sh.cliSync(['-e', scriptFile], options);
+}
+
+sh.script = async function(script: string, options?: IExecOptions) {
     const scriptFile = await generateScriptFile(script, ".sh");
     try  {
-
-        return await sh(['-e', scriptFile], options);
+        return await sh.cli(['-e', scriptFile], options);
     } finally {
         if (await exists(scriptFile)) {
             await rm(scriptFile)
@@ -40,13 +48,14 @@ export async function shScript(script: string, options?: IExecOptions) {
     }
 }
 
-export function shScriptSync(script: string, options?: IExecSyncOptions) {
+sh.scriptSync = function shScriptSync(script: string, options?: IExecSyncOptions) {
     const scriptFile = generateScriptFileSync(script, ".sh");
     try  {
-        return shSync(['-e', scriptFile], options);
+        return sh.cliSync(['-e', scriptFile], options);
     } finally {
         if (existsSync(scriptFile)) {
             rmSync(scriptFile)
         }
     }
 }
+

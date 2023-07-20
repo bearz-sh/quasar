@@ -19,6 +19,7 @@ export function realpath(args?: string[], options?: IExecOptions) {
     return exec("realpath", args, options);
 }
 
-export function realpathSync(args?: string[], options?: IExecSyncOptions) {
+realpath.cli = realpath;
+realpath.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("realpath", args, options);
 }

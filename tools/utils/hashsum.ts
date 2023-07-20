@@ -19,6 +19,7 @@ export function hashsum(args?: string[], options?: IExecOptions) {
     return exec("hashsum", args, options);
 }
 
-export function hashsumSync(args?: string[], options?: IExecSyncOptions) {
+hashsum.cli = hashsum;
+hashsum.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("hashsum", args, options);
 }

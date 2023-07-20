@@ -19,6 +19,11 @@ export function relpath(args?: string[], options?: IExecOptions) {
     return exec("relpath", args, options);
 }
 
+relpath.cli = relpath;
+relpath.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+    return execSync("relpath", args, options);
+}
+
 export function relpathSync(args?: string[], options?: IExecSyncOptions) {
     return execSync("relpath", args, options);
 }

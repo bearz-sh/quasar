@@ -19,6 +19,7 @@ export function logname(args?: string[], options?: IExecOptions) {
     return exec("logname", args, options);
 }
 
-export function lognameSync(args?: string[], options?: IExecSyncOptions) {
+logname.cli = logname;
+logname.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("logname", args, options);
 }

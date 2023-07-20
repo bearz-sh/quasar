@@ -19,6 +19,7 @@ export function echo(args?: string[], options?: IExecOptions) {
     return exec("echo", args, options);
 }
 
-export function echoSync(args?: string[], options?: IExecSyncOptions) {
+echo.cli = echo;
+echo.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("echo", args, options);
 }

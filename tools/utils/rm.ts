@@ -19,6 +19,7 @@ export function rm(args?: string[], options?: IExecOptions) {
     return exec("rm", args, options);
 }
 
-export function rmSync(args?: string[], options?: IExecSyncOptions) {
+rm.cli = rm;
+rm.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("rm", args, options);
 }

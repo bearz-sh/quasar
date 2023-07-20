@@ -19,6 +19,7 @@ export function _false(args?: string[], options?: IExecOptions) {
     return exec("false", args, options);
 }
 
-export function _falseSync(args?: string[], options?: IExecSyncOptions) {
+_false.cli = _false;
+_false.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("false", args, options);
 }

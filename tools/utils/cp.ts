@@ -19,6 +19,7 @@ export function cp(args?: string[], options?: IExecOptions) {
     return exec("cp", args, options);
 }
 
-export function cpSync(args?: string[], options?: IExecSyncOptions) {
+cp.cli = cp;
+cp.cliSync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("cp", args, options);
 }
