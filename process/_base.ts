@@ -1,5 +1,8 @@
 import { IWriter, IWriterSync, ICloser, IReader, IReaderSync } from '../streams/interfaces.ts';
 
+
+
+
 export type Signal = | "SIGABRT"
 | "SIGALRM"
 | "SIGBREAK"
