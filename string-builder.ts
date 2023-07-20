@@ -6,11 +6,9 @@ export class StringBuilder {
     #buffer: Uint8Array
     #length: number;
     #encoder: TextEncoder;
-    #capacity: number;
 
     constructor(capacity = 16) {
         this.#length = 0;
-        this.#capacity = capacity;
         this.#buffer = new Uint8Array(capacity);
         this.#encoder = new TextEncoder();
     }
@@ -131,7 +129,6 @@ export class StringBuilder {
         this.shrinkTo(this.#length)
         return this;
     }
-
 
     toArray() {
         return this.#buffer.slice(0, this.#length)
