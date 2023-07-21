@@ -259,13 +259,13 @@ import {
   RotatingFileHandler,
   WriterHandler,
 } from "./handlers.ts";
-import { assert } from "./deps.ts";
+import { truthy as assert } from "../assert/mod.ts";
 import type { LevelName } from "./levels.ts";
 
 export { LogLevels } from "./levels.ts";
 export type { LevelName } from "./levels.ts";
 export { Logger } from "./logger.ts";
-export type { LogRecord } from "./log-record.ts";
+export type { LogRecord } from "./log_record.ts";
 export type { FormatterFunction, HandlerOptions, LogMode } from "./handlers.ts";
 
 export class LoggerConfig {

@@ -1,4 +1,4 @@
-import { Char } from '../char.ts';
+import { isLetterCodePoint, isUpperCodePoint, isDigitCodePoint } from '../char.ts';
 import { randomBytes } from '../random/mod.ts';
 
 export function validate(data: Uint8Array) {
@@ -14,8 +14,8 @@ export function validate(data: Uint8Array) {
             continue;
         }
 
-        if (Char.isLetterCodePoint(c)) {
-            if (Char.isUpperCodePoint(c)) {
+        if (isLetterCodePoint(c)) {
+            if (isUpperCodePoint(c)) {
                 isUpperCase = true;
                 continue;
             }
@@ -24,7 +24,7 @@ export function validate(data: Uint8Array) {
             continue;
         }
 
-        if (Char.isDigitCodePoint(c)) {
+        if (isDigitCodePoint(c)) {
             isDigit = true;
             continue;
         }

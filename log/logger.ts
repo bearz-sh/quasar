@@ -2,7 +2,7 @@
 import { getLevelByName, getLevelName, LogLevels } from "./levels.ts";
 import type { LevelName } from "./levels.ts";
 import type { BaseHandler } from "./handlers.ts";
-import { LogRecord } from "./log-record.ts";
+import { LogRecord } from "./log_record.ts";
 
 // deno-lint-ignore no-explicit-any
 export type GenericFunction = (...args: any[]) => any;

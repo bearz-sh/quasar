@@ -1,4 +1,4 @@
-import { Char } from './char.ts';
+import { Char, isWhiteSpaceAt } from './char.ts';
 
 export const EMPTY = '';
 
@@ -7,7 +7,7 @@ export function trimEnd(str: string, chars: string = EMPTY): string {
 
     if (chars === EMPTY) {
         for (let i = str.length - 1; i >= 0; i--) {
-            if (Char.isWhiteSpaceAt(str, i)) {
+            if (isWhiteSpaceAt(str, i)) {
                 size--;
             } else {
                 break;
@@ -113,7 +113,7 @@ export function trimStart(str: string, chars: string = EMPTY): string {
 
     if (chars === EMPTY) {
         for (let i = 0; i < str.length; i++) {
-            if (Char.isWhiteSpaceAt(str, i)) {
+            if (isWhiteSpaceAt(str, i)) {
                 size--;
             } else {
                 break;
@@ -249,7 +249,7 @@ export function isNullOrWhiteSpace(str: string | null | undefined): boolean {
     }
 
     for (let i = 0; i < str.length; i++) {
-        if (!Char.isWhiteSpaceAt(str, i)) {
+        if (!isWhiteSpaceAt(str, i)) {
             return false;
         }
     }

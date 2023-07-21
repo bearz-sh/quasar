@@ -69,10 +69,18 @@ export class StringBuilder {
     }
 
     appendChar(value: number) {
-        this.grow(this.#length + 1)
-        this.#buffer[this.#length] = value
-        this.#length++
+        this.grow(this.length + 1)
+        this.#buffer[this.length] = value
+        this.length++
 
+        return this;
+    }
+
+    appendU16Char(value: number) {
+        this.grow(this.length + 2)
+        this.#buffer[this.length] = value & 0xff
+        this.#buffer[this.length + 1] = (value >> 8) & 0xff
+        this.length += 2
         return this;
     }
 

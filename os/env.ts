@@ -1,4 +1,6 @@
+import { CHAR_UNDERSCORE } from "../char_constants.ts";
 import { IS_DENO, IS_NODELIKE } from "../runtime/mod.ts";
+import { StringBuilder } from "../string-builder.ts";
 import {  PATH_SEPARATOR, PATH_VAR_NAME } from './constants.ts'
 
 export const secrets : string[] = [];
@@ -173,8 +175,8 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
     };
     const getValue = o.getVariable ?? ((name: string) => get(name));
     const setValue = o.setVariable ?? ((name: string, value: string) => set(name, value));
-    const tokenBuilder: number[] = [];
-    const output : number[] = [];
+    const tokenBuilder = new StringBuilder();
+    const output = new StringBuilder();
     let kind = TokenKind.None;
     let remaining = template.length;
     for (let i = 0; i < template.length; i++) {
@@ -195,7 +197,7 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
 
                 // escape the $ character.
                 if (c === backslash && next === dollar) {
-                    output.push(dollar);
+                    output.appendChar(dollar);
                     i++;
                     continue;
                 }
@@ -215,28 +217,25 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
                         kind = TokenKind.BashVariable;
                         continue;
                     }
-
                 }
-
             }
 
-            output.push(c);
+            output.appendChar(c);
             continue;
-
         }
 
         if (kind === TokenKind.Windows && c === percent) {
             if (tokenBuilder.length === 0) {
-                // consecutive %, so just append both characters.
-               output.push(percent, percent);
+                // consecutive %, so just append both characters to match windows.
+                output.appendChar(percent).appendChar(percent);
                 continue;
             }
 
-            const key = String.fromCodePoint(...tokenBuilder);
+            const key = tokenBuilder.toString();
             const value = getValue(key);
             if (value !== undefined && value.length > 0)
-                output.push(...toCharArray(value));
-            tokenBuilder.length = 0;
+                output.appendString(value);
+            tokenBuilder.clear();
             kind = TokenKind.None;
             continue;
         }
@@ -247,7 +246,8 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
                 throw new Error("${} is a bad substitution. Variable name not provided.");
             }
 
-            const substitution = String.fromCharCode(...tokenBuilder);
+            const substitution = tokenBuilder.toString();
+            tokenBuilder.clear();
             let key = substitution;
             let defaultValue = "";
             let message: string | undefined = undefined;
@@ -288,23 +288,23 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
 
             const value = getValue(key);
             if (value !== undefined)
-                output.push(...toCharArray(value));
+                output.appendString(value);
 
             else if (message !== undefined)
                 throw new Error(message);
 
             else if (defaultValue.length > 0)
-            output.push(...toCharArray(defaultValue));
+                output.appendString(defaultValue);
 
             else
                 throw new Error(`Bad substitution, variable ${key} is not set.`);
 
-            tokenBuilder.length = 0;
+
             kind = TokenKind.None;
             continue;
         }
 
-        if (kind === TokenKind.BashVariable && (isLetterOrDigit(c) || remaining === 0)) {
+        if (kind === TokenKind.BashVariable && (!(isLetterOrDigit(c) || c === CHAR_UNDERSCORE) || remaining === 0)) {
             // '\' is used to escape the next character, so don't append it.
             // its used to escape a name like $HOME\\_TEST where _TEST is not
             // part of the variable name.
@@ -312,7 +312,7 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
 
             if (remaining === 0 && isLetterOrDigit(c)) {
                 append = false;
-                tokenBuilder.push(c);
+                tokenBuilder.appendChar(c);
             }
 
             // rewind one character. Let the previous block handle $ for the next variable
@@ -321,21 +321,22 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
                 i--;
             }
 
-            const key = String.fromCodePoint(...tokenBuilder);
+            const key = tokenBuilder.toString();
+            tokenBuilder.clear();
             if (key.length === 0) {
                 throw new Error("Bad substitution, empty variable name.");
             }
 
             const index = parseInt(key);
             if (o.unixArgsExpansion && !isNaN(index)) {
-                if (index < 0 || index >= Deno.args.length)
-                    throw new Error(`Bad substitution, invalid index ${index}.`);
-
-                output.push(...toCharArray(Deno.args[index]));
+                if (index > -1 || index < Deno.args.length)
+                {
+                    output.appendString(Deno.args[index]);
+                }
+               
                 if (append)
-                    output.push(c);
+                    output.appendChar(c);
 
-                tokenBuilder.length = 0;
                 kind = TokenKind.None;
                 continue;
             }
@@ -346,21 +347,19 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
 
             const value = getValue(key);
             if (value !== undefined && value.length > 0)
-                output.push(...toCharArray(value));
+                output.appendString(value);
 
             if (value === undefined)
                 throw new Error(`Bad substitution, variable ${key} is not set.`);
 
             if (append)
-                output.push(c);
+                output.appendChar(c);
 
-            tokenBuilder.length = 0;
             kind = TokenKind.None;
             continue;
         }
 
-
-        tokenBuilder.push(c);
+        tokenBuilder.appendChar(c);
         if (remaining === 0) {
             if (kind === TokenKind.Windows)
                 throw new Error("Bad substitution, missing closing token '%'.");
@@ -370,7 +369,9 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
         }
     }
 
-    return String.fromCharCode(...output);
+    const r = output.toString();
+    output.clear().trimExcess();
+    return r;
 }
 
 
