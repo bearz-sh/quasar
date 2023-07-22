@@ -1,3 +1,5 @@
+export * from '../assert/mod.ts'
+
 
 export interface ITestContext {
     name: string;
