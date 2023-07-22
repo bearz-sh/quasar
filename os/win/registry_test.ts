@@ -8,8 +8,9 @@ test("registry", () => {
     const key = Registry.hkcu.openSubKey('Software\\Microsoft\\Windows\\CurrentVersion\\Run');
     assert.exists(key);
     assert.equals(key.name, 'HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run');
-
-    Registry.close();
+    
+   
 });
 
 
+Registry.close();

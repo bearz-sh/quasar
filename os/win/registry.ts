@@ -1,5 +1,5 @@
-import  { Ptr, Pwstr } from "../../ptr/mod.ts";
-import { openKey2, close } from "./native/registry.ts";
+import  { Pwstr, Ptr } from "./native/core.ts";
+import { openKey2, closeKey, close } from "./native/registry.ts";
 
 
 export enum RegistryHive
@@ -88,9 +88,11 @@ class RegistryKey
     #remoteKey: boolean;
     #isPerfData: boolean;
     #view: RegistryView;
+    #disposed: boolean;
 
     constructor(hkey: Ptr, keyName = "", writable: boolean, systemkey = false, remoteKey = false, isPerfData = false, view = RegistryView.Default)
     {
+        this.#disposed = false;
         this.#hkey = hkey;
         this.#keyName = keyName;
         this.#writable = writable;
@@ -101,9 +103,24 @@ class RegistryKey
         this.#checkMode = RegistryKeyPermissionCheck.Default;
     }
 
+    get disposed(): boolean
+    {
+        return this.#disposed;
+    }
+
     get name(): string
     {
         return this.#keyName;
+    }
+
+    dispose()
+    {
+        if (this.disposed)
+            return;
+
+        if (this.#hkey !== undefined) {
+            closeKey(this.#hkey);
+        }
     }
 
     openSubKey(name: string, permissionCheck?: RegistryKeyPermissionCheck, rights?: RegistryRights): RegistryKey | null
@@ -136,6 +153,8 @@ class RegistryKey
         return null;
     }
 }
+
+
 
 function openBaseKey(hKey: RegistryHive, view: RegistryView): RegistryKey
 {
