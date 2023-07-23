@@ -20,6 +20,6 @@ export function more(args?: string[], options?: IExecOptions) {
 }
 
 more.cli = more;
-more.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+more.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("more", args, options);
 }

@@ -20,6 +20,6 @@ export function mv(args?: string[], options?: IExecOptions) {
 }
 
 mv.cli = mv;
-mv.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+mv.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("mv", args, options);
 }

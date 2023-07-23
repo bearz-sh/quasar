@@ -20,6 +20,6 @@ export function uname(args?: string[], options?: IExecOptions) {
 }
 
 uname.cli = uname;
-uname.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+uname.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("uname", args, options);
 }

@@ -153,6 +153,7 @@ export function whichSync(
                 for(const entry of readDirectorySync(pathSegment)) {
                     if(entry.isFile && entry.name?.toLowerCase() === baseNameLowered) {
                         first = entry;
+                        console.log(first);
                         break;
                     }
                 }
@@ -253,6 +254,7 @@ export async function which(
         }
 
         if (isWindows) {
+            console.log('is windows');
             const hasPathExt = pathExtSegments.find((segment) =>
                 fileName.toLowerCase().endsWith(segment)
             ) !== undefined;
@@ -262,7 +264,7 @@ export async function which(
                    
                     let first : IDirectoryInfo | undefined;
                     for await(const entry of readDirectory(pathSegment)) {
-                        if(entry.isFile) {
+                        if(!entry.isDirectory) {
                             for (const ext of pathExtSegments) {
                                 if(entry.name?.toLowerCase() === baseNameLowered + ext) {
                                     first = entry;
@@ -291,7 +293,7 @@ export async function which(
                 try {
                     let first : IDirectoryInfo | undefined;
                     for await(const entry of readDirectory(pathSegment)) {
-                        if(entry.isFile && entry.name?.toLowerCase() === baseNameLowered) {
+                        if(!entry.isDirectory && entry.name?.toLowerCase() === baseNameLowered) {
                             first = entry;
                             break;
                         }
@@ -310,10 +312,12 @@ export async function which(
             }
         } else {
             try {
+                
                 let first : IDirectoryInfo | undefined;
                 for await(const entry of readDirectory(pathSegment)) {
-                    if(entry.isFile && entry.name?.toLowerCase() === baseNameLowered) {
+                    if(!entry.isDirectory && entry.name?.toLowerCase() === baseNameLowered) {
                         first = entry;
+                        console.log(first);
                         break;
                     }
                 }

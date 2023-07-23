@@ -20,6 +20,6 @@ export function ln(args?: string[], options?: IExecOptions) {
 }
 
 ln.cli = ln;
-ln.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+ln.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("ln", args, options);
 }

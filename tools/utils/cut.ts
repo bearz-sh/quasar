@@ -20,6 +20,6 @@ export function cut(args?: string[], options?: IExecOptions) {
 }
 
 cut.cli = cut;
-cut.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+cut.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("cut", args, options);
 }

@@ -17,7 +17,7 @@ export function apt(args?: string[], options?: IExecOptions) {
 
 apt.cli = apt;
 apt.findOptions = findOptions;
-apt.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+apt.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("apt", args, options);
 }
 

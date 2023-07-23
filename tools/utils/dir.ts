@@ -20,6 +20,6 @@ export function dir(args?: string[], options?: IExecOptions) {
 }
 
 dir.cli = dir;
-dir.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+dir.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("dir", args, options);
 }

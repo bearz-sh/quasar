@@ -20,6 +20,6 @@ export function paste(args?: string[], options?: IExecOptions) {
 }
 
 paste.cli = paste;
-paste.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+paste.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("paste", args, options);
 }

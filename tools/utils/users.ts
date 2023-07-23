@@ -20,6 +20,6 @@ export function users(args?: string[], options?: IExecOptions) {
 }
 
 users.cli = users;
-users.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+users.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("users", args, options);
 }

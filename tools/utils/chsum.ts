@@ -20,6 +20,6 @@ export function chsum(args?: string[], options?: IExecOptions) {
 }
 
 chsum.cli = chsum;
-chsum.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+chsum.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("chsum", args, options);
 }

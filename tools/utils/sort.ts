@@ -20,6 +20,6 @@ export function sort(args?: string[], options?: IExecOptions) {
 }
 
 sort.cli = sort;
-sort.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+sort.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("sort", args, options);
 }

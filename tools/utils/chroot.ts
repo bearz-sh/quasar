@@ -20,6 +20,6 @@ export function chroot(args?: string[], options?: IExecOptions) {
 }
 
 chroot.cli = chroot;
-chroot.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+chroot.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("chroot", args, options);
 }

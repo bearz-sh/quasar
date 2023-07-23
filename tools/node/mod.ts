@@ -39,7 +39,7 @@ export function node(args?: string[], options?: IExecOptions) {
 }
 
 node.cli = node;
-node.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+node.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("node", args, options);
 }
 
@@ -79,7 +79,7 @@ export function npm(args?: string[], options?: IExecOptions) {
 }
 
 npm.cli = npm;
-npm.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+npm.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("npm", args, options);
 }
 
@@ -88,7 +88,7 @@ export function yarn(args?: string[], options?: IExecOptions) {
 }
 
 yarn.cli = yarn;
-yarn.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+yarn.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("yarn", args, options);
 }
 
@@ -135,7 +135,7 @@ export async function tsc(args?: string[], options?: IExecOptions) {
 }
 
 tsc.cli = tsc;
-tsc.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+tsc.sync = function(args?: string[], options?: IExecSyncOptions) {
     const cli = findNpmBinFileSync('tsc');
     if (!cli) {
         throw new NotFoundOnPathError('tsc');
@@ -154,7 +154,7 @@ export async function tsnode(args?: string[], options?: IExecOptions) {
 }
 
 tsnode.cli = tsnode;
-tsnode.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+tsnode.sync = function(args?: string[], options?: IExecSyncOptions) {
     const cli = findNpmBinFileSync('ts-node');
     if (!cli) {
         throw new NotFoundOnPathError('ts-node');

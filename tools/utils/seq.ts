@@ -20,6 +20,6 @@ export function seq(args?: string[], options?: IExecOptions) {
 }
 
 seq.cli = seq;
-seq.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+seq.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("seq", args, options);
 }

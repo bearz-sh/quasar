@@ -20,6 +20,6 @@ export function mktemp(args?: string[], options?: IExecOptions) {
 }
 
 mktemp.cli = mktemp;
-mktemp.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+mktemp.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("mktemp", args, options);
 }

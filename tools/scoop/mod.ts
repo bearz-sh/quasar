@@ -26,7 +26,7 @@ export function scoop(args?: string[], options?: IExecOptions) {
 }
 
 scoop.cli = scoop;
-scoop.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+scoop.sync = function(args?: string[], options?: IExecSyncOptions) {
     if (!IS_WINDOWS) {
         throw new PlatformNotSupportedError(`scoop is only supported on Windows.`);
     }

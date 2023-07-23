@@ -20,6 +20,6 @@ export function hostname(args?: string[], options?: IExecOptions) {
 }
 
 hostname.cli = hostname;
-hostname.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+hostname.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("hostname", args, options);
 }

@@ -20,6 +20,6 @@ export function tee(args?: string[], options?: IExecOptions) {
 }
 
 tee.cli = tee;
-tee.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+tee.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("tee", args, options);
 }

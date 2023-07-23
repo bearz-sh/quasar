@@ -20,6 +20,6 @@ export function du(args?: string[], options?: IExecOptions) {
 }
 
 du.cli = du;
-du.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+du.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("du", args, options);
 }

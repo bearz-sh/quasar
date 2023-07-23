@@ -20,6 +20,6 @@ export function basename(args?: string[], options?: IExecOptions) {
 }
 
 basename.cli = basename;
-basename.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+basename.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("basename", args, options);
 }

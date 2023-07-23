@@ -20,7 +20,7 @@ export function choco(args?: string[], options?: IExecOptions) {
 }
 
 choco.cli = choco;
-choco.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+choco.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("choco", args, options);
 }
 
@@ -63,8 +63,14 @@ export class ChocoManager implements IPkgMgr {
         return choco(splat, { stdout: "inherit", stderr: "inherit" });
     }
  
-    async list(query: string, args?: string[]): Promise<IPkgInfo[]> {
-        const splat = ["list", query, "-r"];
+    async list(query?: string, args?: string[]): Promise<IPkgInfo[]> {
+        const splat = ["list"];
+
+        if (query?.length)
+            splat.push(query);
+
+        splat.push("-r");
+
         if (!this.#version) {
             const out = await choco(["--version"], { stdout: "piped", stderr: "inherit" });
             this.#version = out.stdoutAsLines[0];
@@ -96,8 +102,14 @@ export class ChocoManager implements IPkgMgr {
         return results;
     }
 
-    async search(query: string,args?: string[]): Promise<IPkgInfo[]> {
-        const splat = ["search", query, "-r"];
+    async search(query?: string,args?: string[]): Promise<IPkgInfo[]> {
+        const splat = ["search"];
+
+        if (query?.length)
+            splat.push(query);
+
+        splat.push("-r");
+
         if (!this.#version) {
             const out = await choco(["--version"], { stdout: "piped", stderr: "inherit" });
             this.#version = out.stdoutAsLines[0];

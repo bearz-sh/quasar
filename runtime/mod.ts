@@ -1,5 +1,3 @@
-import { run } from "../process/ps.ts";
-
 // deno-lint-ignore no-explicit-any
 const g = globalThis as any;
 
@@ -24,9 +22,6 @@ else if (IS_DENO) {
 } else {
     runtimeName = "unknown";
 }
-
-
-
 
 export const RUNTIME : Runtimes = runtimeName
 

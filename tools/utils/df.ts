@@ -20,6 +20,6 @@ export function df(args?: string[], options?: IExecOptions) {
 }
 
 df.cli = df;
-df.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+df.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("df", args, options);
 }

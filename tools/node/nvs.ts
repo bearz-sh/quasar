@@ -21,6 +21,6 @@ export function nvs(args?: string[], options?: IExecOptions) {
 }
 
 nvs.cli = nvs;
-nvs.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+nvs.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("nvs", args, options);
 }

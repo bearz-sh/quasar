@@ -20,6 +20,6 @@ export function hostid(args?: string[], options?: IExecOptions) {
 }
 
 hostid.cli = hostid;
-hostid.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+hostid.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("hostid", args, options);
 }

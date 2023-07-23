@@ -27,7 +27,7 @@ export function pwsh(args?: string[], options?: IExecOptions) {
 }
 
 pwsh.cli = pwsh;
-pwsh.cliSync = function(args?: string[], options?: IExecOptions) {
+pwsh.sync = function(args?: string[], options?: IExecOptions) {
     return execSync("pwsh", args, options);
 }
 

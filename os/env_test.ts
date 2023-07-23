@@ -3,8 +3,8 @@ import { assert } from '../assert/mod.ts';
 import * as env from './env.ts';
 import { PATH_VAR_NAME, HOME_VAR_NAME } from './constants.ts';
 
-const envState = await Deno.permissions.query({ name: 'env' });
-const hasEnv = envState.state === 'granted';
+const hasEnv = (await Deno.permissions.query({ name: 'env' })).state === 'granted';
+
 
 test.when(hasEnv, "env.get", () => {
     const path = env.get(PATH_VAR_NAME);

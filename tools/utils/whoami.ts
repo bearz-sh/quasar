@@ -20,6 +20,6 @@ export function whoami(args?: string[], options?: IExecOptions) {
 }
 
 whoami.cli = whoami;
-whoami.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+whoami.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("whoami", args, options);
 }

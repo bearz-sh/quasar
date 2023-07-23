@@ -20,7 +20,7 @@ export function ls(args?: string[], options?: IExecOptions) {
 }
 
 ls.cli = ls;
-ls.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+ls.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("ls", args, options);
 }
 

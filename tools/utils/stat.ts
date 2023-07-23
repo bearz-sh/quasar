@@ -20,6 +20,6 @@ export function stat(args?: string[], options?: IExecOptions) {
 }
 
 stat.cli = stat;
-stat.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+stat.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("stat", args, options);
 }

@@ -25,7 +25,7 @@ export function sh(args?: string[], options?: IExecOptions) {
 }
 
 sh.cli = sh;
-sh.cliSync = function(args?: string[], options?: IExecOptions) {
+sh.sync = function(args?: string[], options?: IExecOptions) {
     return execSync("sh", args, options);
 }
 

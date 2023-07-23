@@ -20,6 +20,6 @@ export function cat(args?: string[], options?: IExecOptions) {
 }
 
 cat.cli = cat;
-cat.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+cat.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("cat", args, options);
 }

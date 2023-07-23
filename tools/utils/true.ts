@@ -20,6 +20,6 @@ export function _true(args?: string[], options?: IExecOptions) {
 }
 
 _true.cli = _true;
-_true.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+_true.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("true", args, options);
 }

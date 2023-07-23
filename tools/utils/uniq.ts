@@ -20,6 +20,6 @@ export function uniq(args?: string[], options?: IExecOptions) {
 }
 
 uniq.cli = uniq;
-uniq.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+uniq.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("uniq", args, options);
 }

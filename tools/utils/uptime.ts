@@ -20,6 +20,6 @@ export function uptime(args?: string[], options?: IExecOptions) {
 }
 
 uptime.cli = uptime;
-uptime.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+uptime.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("uptime", args, options);
 }

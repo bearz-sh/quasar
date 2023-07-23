@@ -20,6 +20,6 @@ export function kill(args?: string[], options?: IExecOptions) {
 }
 
 kill.cli = kill;
-kill.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+kill.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("kill", args, options);
 }

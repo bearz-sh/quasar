@@ -20,6 +20,6 @@ export function echo(args?: string[], options?: IExecOptions) {
 }
 
 echo.cli = echo;
-echo.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+echo.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("echo", args, options);
 }

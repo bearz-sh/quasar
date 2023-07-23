@@ -20,6 +20,6 @@ export function arch(args?: string[], options?: IExecOptions) {
 }
 
 arch.cli = arch;
-arch.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+arch.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("arch", args, options);
 }

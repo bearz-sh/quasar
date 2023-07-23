@@ -20,6 +20,6 @@ export function head(args?: string[], options?: IExecOptions) {
 }
 
 head.cli = head;
-head.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+head.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("head", args, options);
 }

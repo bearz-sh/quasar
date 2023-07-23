@@ -20,6 +20,6 @@ export function dircolors(args?: string[], options?: IExecOptions) {
 }
 
 dircolors.cli = dircolors;
-dircolors.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+dircolors.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("dircolors", args, options);
 }

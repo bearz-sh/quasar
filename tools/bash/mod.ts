@@ -30,7 +30,7 @@ export function bash(args?: string[], options?: IExecOptions) {
 }
 
 bash.cli = bash;
-bash.cliSync = function bashSync(args?: string[], options?: IExecOptions) {
+bash.sync = function bashSync(args?: string[], options?: IExecOptions) {
     return execSync("bash", args, options);
 }
 

@@ -39,7 +39,7 @@ export function powershell(args?: string[], options?: IExecOptions) {
 }
 
 powershell.cli = powershell;
-powershell.cliSync = function(args?: string[], options?: IExecOptions) {
+powershell.sync = function(args?: string[], options?: IExecOptions) {
     return execSync(exe, args, options);
 }
 

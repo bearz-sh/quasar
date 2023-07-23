@@ -20,6 +20,6 @@ export function chmod(args?: string[], options?: IExecOptions) {
 }
 
 chmod.cli = chmod;
-chmod.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+chmod.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("chmod", args, options);
 }

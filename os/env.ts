@@ -152,16 +152,6 @@ function isValidBashVariable(value: string) {
     return true;
 }
 
-function toCharArray(value: string) {
-
-    const output: number[] = [];
-    for (let i = 0; i < value.length; i++) {
-        output.push(value.charCodeAt(i));
-    }
-
-    return output;
-}
-
 export function expand(template: string, options?: IEnvSubstitutionOptions): string {
     if (typeof template !== 'string' || template.length === 0)
         return "";

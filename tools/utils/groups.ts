@@ -20,6 +20,6 @@ export function groups(args?: string[], options?: IExecOptions) {
 }
 
 groups.cli = groups;
-groups.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+groups.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("groups", args, options);
 }

@@ -20,6 +20,6 @@ export function tail(args?: string[], options?: IExecOptions) {
 }
 
 tail.cli = tail;
-tail.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+tail.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("tail", args, options);
 }

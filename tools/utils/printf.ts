@@ -20,6 +20,6 @@ export function printf(args?: string[], options?: IExecOptions) {
 }
 
 printf.cli = printf;
-printf.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+printf.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("printf", args, options);
 }

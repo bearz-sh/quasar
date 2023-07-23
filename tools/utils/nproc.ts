@@ -20,6 +20,6 @@ export function nproc(args?: string[], options?: IExecOptions) {
 }
 
 nproc.cli = nproc;
-nproc.cliSync = function(args?: string[], options?: IExecSyncOptions) {
+nproc.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("nproc", args, options);
 }
