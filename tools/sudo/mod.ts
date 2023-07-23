@@ -1,15 +1,16 @@
-import { PlatformNotSupportedError } from "../../errors/mod.ts";
-import { IS_WINDOWS } from "../../os/constants.ts";
 import { 
     IExecOptions, 
     IExecSyncOptions, 
     exec, 
     execSync, 
-    registerExe 
-} from "../../process/exec.ts";
+    registerExe,
+    IS_WINDOWS,
+    PlatformNotSupportedError 
+} from "../mod.ts";
 
 registerExe("sudo", {});
 
+// TODO: expand sudo module to handle password prompts
 export function sudo(args?: string[], options?: IExecOptions) {
     if (IS_WINDOWS) {
         throw new PlatformNotSupportedError("sudo is not supported on Windows.");

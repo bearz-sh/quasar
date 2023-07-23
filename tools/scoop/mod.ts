@@ -1,14 +1,16 @@
-import { PlatformNotSupportedError } from "../../errors/mod.ts";
-import { IS_WINDOWS } from "../../os/constants.ts";
 import { 
     IExecOptions, 
     IExecSyncOptions, 
     exec, 
     execSync, 
-    registerExe 
-} from "../../process/exec.ts";
-import { PsOutput } from "../../process/ps.ts";
-import { IPkgInfo, IPkgMgr, pkgmgrs } from "../pkgmgr.ts";
+    registerExe,
+    PlatformNotSupportedError,
+    IS_WINDOWS,
+    PsOutput,
+    IPkgInfo,
+    IPkgMgr,
+    upm,
+} from "../mod.ts";
 
 registerExe("scoop", {
     windows: [
@@ -139,4 +141,4 @@ export class ScoopManager implements IPkgMgr {
     }
 }
 
-pkgmgrs.set("scoop", new ScoopManager());
+upm.register("scoop", new ScoopManager());

@@ -5,7 +5,7 @@ import {
     exec, 
     execSync, 
     registerExe 
-} from "../../process/exec.ts";
+} from "../mod.ts";
 import { PsOutput } from "../../process/ps.ts";
 import { IPkgInfo, IPkgMgr, pkgmgrs } from "../pkgmgr.ts";
 import { get } from "../../os/env.ts";

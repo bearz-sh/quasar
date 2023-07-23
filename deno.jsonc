@@ -4,6 +4,6 @@
         "lib": ["deno.ns", "deno.unstable", "dom"]
     },
     "tasks": {
-        "run": "deno run --allow-all --unstable ./cli.ts"
+        "test": "deno test -A -q --unstable"
     }
 }

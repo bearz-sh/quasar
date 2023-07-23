@@ -1,6 +1,3 @@
-import { rm, rmSync } from "../../fs/fs.ts";
-import { IS_WINDOWS } from "../../os/constants.ts";
-import { exists, existsSync } from "../../fs/mod.ts";
 import { 
     IExecOptions, 
     IExecSyncOptions, 
@@ -8,10 +5,18 @@ import {
     execSync,
     generateScriptFile, 
     generateScriptFileSync, 
-    registerExe 
-} from "../../process/exec.ts";
-import { IPkgInfo, IPkgMgr, pkgmgrs } from "../pkgmgr.ts";
-import { PsOutput } from "../../process/ps.ts";
+    registerExe,
+    IPkgInfo,
+    IPkgMgr,
+    scriptRunner,
+    upm,
+    PsOutput,
+    rm,
+    rmSync,
+    IS_WINDOWS,
+    exists,
+    existsSync
+} from "../mod.ts";
 
 let exe = "powershell";
 
@@ -48,7 +53,7 @@ powershell.scriptFile = async function(scriptFile: string, options?: IExecOption
 }
 
 powershell.scriptFileSync = function(scriptFile: string, options?: IExecSyncOptions) {
-    return powershell.cliSync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+    return powershell.sync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
 }
 
 powershell.script = async function(script: string, options?: IExecOptions) {
@@ -77,7 +82,7 @@ if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }
 `
     const scriptFile = generateScriptFileSync(script, ".ps1");
     try  {
-        return powershell.cliSync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+        return powershell.sync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
     } finally {
         if (existsSync(scriptFile)) {
             rmSync(scriptFile)
@@ -256,4 +261,10 @@ export class PowershellModuleManager implements IPkgMgr {
     }
 }
 
-pkgmgrs.set("powershell", new PowershellModuleManager());
+scriptRunner.register("powershell", {
+    run: powershell.script,
+    runSync: powershell.scriptSync,
+    runFile: powershell.scriptFile,
+    runFileSync: powershell.scriptFileSync,
+})
+upm.register("powershell", new PowershellModuleManager());

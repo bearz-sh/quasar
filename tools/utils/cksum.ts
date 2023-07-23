@@ -4,9 +4,9 @@ import {
     exec, 
     execSync, 
     registerExe 
-} from "../../process/exec.ts";
+} from "../mod.ts";
 
-registerExe("chsum", {
+registerExe("cksum", {
     windows: [
         "%ProgramFiles%\\Git\\usr\\bin\\chsum.exe",
         "%ChocolateyInstall%\\msys2\\usr\\bin\\chsum.exe",
@@ -15,11 +15,11 @@ registerExe("chsum", {
     ]
 });
 
-export function chsum(args?: string[], options?: IExecOptions) {
+export function cksum(args?: string[], options?: IExecOptions) {
     return exec("chsum", args, options);
 }
 
-chsum.cli = chsum;
-chsum.sync = function(args?: string[], options?: IExecSyncOptions) {
+cksum.cli = chsum;
+cksum.sync = function(args?: string[], options?: IExecSyncOptions) {
     return execSync("chsum", args, options);
 }

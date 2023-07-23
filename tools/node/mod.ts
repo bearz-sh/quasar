@@ -1,9 +1,3 @@
-import { isDirectory, isDirectorySync, rm, rmSync } from "../../fs/fs.ts";
-import { exists, existsSync } from "../../fs/mod.ts";
-import { IS_WINDOWS } from "../../os/constants.ts";
-import { join } from "../../path/mod.ts";
-import { cwd } from "../../process/_base.ts";
-import { NotFoundOnPathError } from "../../process/errors.ts";
 import { 
     IExecOptions, 
     IExecSyncOptions, 
@@ -11,8 +5,18 @@ import {
     execSync, 
     generateScriptFile, 
     generateScriptFileSync, 
-    registerExe 
-} from "../../process/exec.ts";
+    registerExe,
+    NotFoundOnPathError,
+    cwd,
+    join,
+    IS_WINDOWS,
+    exists,
+    existsSync,
+    rm,
+    rmSync,
+    isDirectory,
+    isDirectorySync,
+} from "../mod.ts";
 import { which, whichSync } from "../../process/mod.ts";
 
 registerExe("node", {
@@ -48,7 +52,7 @@ node.scriptFile = async function(scriptFile: string, options?: IExecOptions) {
 }
 
 node.scriptFileSync = function(scriptFile: string, options?: IExecSyncOptions) {
-    return node.cliSync([scriptFile], options);
+    return node.sync([scriptFile], options);
 }
 
 node.script = async function(script: string, options?: IExecOptions) {
@@ -65,7 +69,7 @@ node.script = async function(script: string, options?: IExecOptions) {
 node.scriptSync = function(script: string, options?: IExecSyncOptions) {
     const scriptFile = generateScriptFileSync(script, ".js");
     try  {
-        return node.cliSync([scriptFile], options);
+        return node.sync([scriptFile], options);
     } finally {
         if (existsSync(scriptFile)) {
             rmSync(scriptFile)

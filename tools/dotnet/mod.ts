@@ -1,15 +1,17 @@
 // deno-lint-ignore-file no-unused-vars
-import { NEW_LINE } from "../../os/constants.ts";
 import { 
     IExecOptions, 
     IExecSyncOptions, 
     exec, 
     execSync, 
-    registerExe 
-} from "../../process/exec.ts";
-import { PsOutput } from "../../process/ps.ts";
-import { get } from "../../os/env.ts";
-import { IPkgInfo, IPkgMgr, pkgmgrs } from "../pkgmgr.ts";
+    registerExe,
+    PsOutput,
+    env,
+    IPkgInfo, 
+    IPkgMgr,
+    cwd,
+    upm,
+} from "../mod.ts";
 
 registerExe("dotnet", {
     windows: [
@@ -164,7 +166,7 @@ export class DotNetNugetManager implements IPkgMgr {
     readonly name: string = "dotnet-nuget";
 
     install(name: string, version?: string, args?: string[], options?: IExecOptions): Promise<PsOutput> {
-        const project = get("DOTNET_PROJECT") ?? cwd();
+        const project = env.get("DOTNET_PROJECT") ?? cwd();
         
         const splat = ["add", project, "package", name];
 
@@ -179,7 +181,7 @@ export class DotNetNugetManager implements IPkgMgr {
     }
  
     uninstall(name: string, args?: string[], options?: IExecOptions): Promise<PsOutput> {
-        const project = get("DOTNET_PROJECT") ?? cwd();
+        const project = env.get("DOTNET_PROJECT") ?? cwd();
         
         const splat = ["remove", project, "package", name];
 
@@ -195,7 +197,10 @@ export class DotNetNugetManager implements IPkgMgr {
     }
  
     list(query?: string, args?: string[], options?: IExecOptions): Promise<IPkgInfo[]> {
-        const project = get("DOTNET_PROJECT") ?? cwd();
+        throw new Error("Method not implemented.");
+
+        /**
+             const project = env.get("DOTNET_PROJECT") ?? cwd();
         
         const splat = ["list", project, "package"];
 
@@ -203,7 +208,13 @@ export class DotNetNugetManager implements IPkgMgr {
             splat.push(...args);
         }
 
+        options.s
+
         return dotnet(splat, options);
+         */
+        
+   
+
     }
 
     search(query: string,args?: string[], options?: IExecOptions): Promise<IPkgInfo[]> {
@@ -211,5 +222,5 @@ export class DotNetNugetManager implements IPkgMgr {
     }
 }
 
-pkgmgrs.set("dotnet-tools", new DotNetToolManager());
-pkgmgrs.set("dotnet-nuget", new DotNetNugetManager());
+upm.register("dotnet-tools", new DotNetToolManager());
+upm.register("dotnet-nuget", new DotNetNugetManager());

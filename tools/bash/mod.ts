@@ -1,6 +1,3 @@
-import { rm, rmSync } from "../../fs/fs.ts";
-import { exists, existsSync } from "../../fs/mod.ts";
-import { IS_WINDOWS } from "../../os/constants.ts";
 import { 
     IExecOptions, 
     IExecSyncOptions, 
@@ -10,8 +7,14 @@ import {
     findExeSync, 
     generateScriptFile, 
     generateScriptFileSync, 
-    registerExe 
-} from "../../process/exec.ts";
+    registerExe,
+    IS_WINDOWS, 
+    exists,
+    existsSync,
+    rm,
+    rmSync,
+    scriptRunner,
+} from "../mod.ts";
 
 registerExe("bash", {
     windows: [
@@ -39,7 +42,7 @@ bash.scriptFile = async function(scriptFile: string, options?: IExecOptions) {
 }
 
 bash.scriptFileSync = function bashScriptFileSync(scriptFile: string, options?: IExecSyncOptions) {
-    return bash.cliSync(['-noprofile', '--norc', '-e', '-o', 'pipefail', "-c", scriptFile], options);
+    return bash.sync(['-noprofile', '--norc', '-e', '-o', 'pipefail', "-c", scriptFile], options);
 }
 
 bash.script = async function(script: string, options?: IExecOptions) {
@@ -75,10 +78,17 @@ bash.scriptSync = function bashScriptSync(script: string, options?: IExecSyncOpt
             }
         }
 
-        return bash.cliSync(['-noprofile', '--norc', '-e', '-o', 'pipefail', "-c", file], options);
+        return bash.sync(['-noprofile', '--norc', '-e', '-o', 'pipefail', "-c", file], options);
     } finally {
         if (existsSync(scriptFile)) {
             rmSync(scriptFile)
         }
     }
 }
+
+scriptRunner.register("bash", {
+    run: bash.script,
+    runSync: bash.scriptSync,
+    runFile: bash.scriptFile,
+    runFileSync: bash.scriptFileSync,
+}); 

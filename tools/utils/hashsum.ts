@@ -4,7 +4,7 @@ import {
     exec, 
     execSync, 
     registerExe 
-} from "../../process/exec.ts";
+} from "../mod.ts";
 
 registerExe("hashsum", {
     windows: [

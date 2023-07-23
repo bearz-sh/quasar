@@ -1,5 +1,3 @@
-import { rm, rmSync } from "../../fs/fs.ts";
-import { exists, existsSync } from "../../fs/mod.ts";
 import { 
     IExecOptions, 
     IExecSyncOptions, 
@@ -7,8 +5,13 @@ import {
     execSync, 
     generateScriptFile, 
     generateScriptFileSync, 
-    registerExe 
-} from "../../process/exec.ts";
+    registerExe,
+    scriptRunner,
+    rm,
+    rmSync,
+    exists,
+    existsSync
+} from "../mod.ts";
 
 registerExe("sh", {
     windows: [
@@ -34,7 +37,7 @@ sh.scriptFile = async function(scriptFile: string, options?: IExecOptions) {
 }
 
 sh.scriptFileSync = function(scriptFile: string, options?: IExecSyncOptions) {
-    return sh.cliSync(['-e', scriptFile], options);
+    return sh.sync(['-e', scriptFile], options);
 }
 
 sh.script = async function(script: string, options?: IExecOptions) {
@@ -51,7 +54,7 @@ sh.script = async function(script: string, options?: IExecOptions) {
 sh.scriptSync = function shScriptSync(script: string, options?: IExecSyncOptions) {
     const scriptFile = generateScriptFileSync(script, ".sh");
     try  {
-        return sh.cliSync(['-e', scriptFile], options);
+        return sh.sync(['-e', scriptFile], options);
     } finally {
         if (existsSync(scriptFile)) {
             rmSync(scriptFile)
@@ -59,3 +62,9 @@ sh.scriptSync = function shScriptSync(script: string, options?: IExecSyncOptions
     }
 }
 
+scriptRunner.register("sh", {
+    run: sh.script,
+    runSync: sh.scriptSync,
+    runFile: sh.scriptFile,
+    runFileSync: sh.scriptFileSync,
+});

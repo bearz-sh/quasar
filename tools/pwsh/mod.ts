@@ -1,5 +1,3 @@
-import { rm, rmSync } from "../../fs/fs.ts";
-import { exists, existsSync } from "../../fs/mod.ts";
 import { 
     IExecOptions, 
     IExecSyncOptions, 
@@ -7,10 +5,17 @@ import {
     execSync,
     generateScriptFile, 
     generateScriptFileSync, 
-    registerExe 
-} from "../../process/exec.ts";
-import { PsOutput } from "../../process/ps.ts";
-import { IPkgInfo, IPkgMgr, pkgmgrs } from "../pkgmgr.ts";
+    registerExe,
+    IPkgInfo,
+    IPkgMgr,
+    scriptRunner,
+    upm,
+    PsOutput,
+    rm,
+    rmSync,
+    exists,
+    existsSync
+} from "../mod.ts";
 
 registerExe("pwsh", {
     windows: [
@@ -36,7 +41,7 @@ pwsh.scriptFile = async function(scriptFile: string, options?: IExecOptions) {
 }
 
 pwsh.scriptFileSync = function(scriptFile: string, options?: IExecSyncOptions) {
-    return pwsh.cliSync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+    return pwsh.sync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
 }
 
 pwsh.script = async function(script: string, options?: IExecOptions) {
@@ -63,7 +68,7 @@ if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }
 `;
     const scriptFile = generateScriptFileSync(script, ".ps1");
     try  {
-        return pwsh.cliSync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+        return pwsh.sync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
     } finally {
         if (existsSync(scriptFile)) {
             rmSync(scriptFile)
@@ -241,4 +246,10 @@ export class PwshModuleManager implements IPkgMgr {
     }
 }
 
-pkgmgrs.set("pwsh", new PwshModuleManager());
+upm.register("pwsh", new PwshModuleManager());
+scriptRunner.register("pwsh", {
+    run: pwsh.script,
+    runSync: pwsh.scriptSync,
+    runFile: pwsh.scriptFile,
+    runFileSync: pwsh.scriptFileSync,
+})

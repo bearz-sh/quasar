@@ -4,10 +4,12 @@ import {
     IExecSyncOptions, 
     exec, 
     execSync, 
-    registerExe 
-} from "../../process/exec.ts";
-import { PsOutput } from "../../process/ps.ts";
-import { IPkgInfo, IPkgMgr, pkgmgrs } from "../pkgmgr.ts";
+    registerExe,
+    upm,
+    IPkgInfo,
+    IPkgMgr,
+    PsOutput
+} from "../mod.ts";
 
 const findOptions = registerExe("apt", {});
 
@@ -122,4 +124,4 @@ export class AptManager implements IPkgMgr {
     }
 }
 
-pkgmgrs.set("apt", new AptManager());
+upm.register("apt", new AptManager());

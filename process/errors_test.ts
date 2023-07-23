@@ -4,7 +4,7 @@ import { NotFoundOnPathError, ProcessError } from "./errors.ts";
 test("NotFoundOnPathError", () => {
     assert.throws<NotFoundOnPathError>(
         () => {
-        throw new NotFoundOnPathError("test");
+            throw new NotFoundOnPathError("test");
         }, 
         NotFoundOnPathError,
     `Executable test not found on PATH.`);

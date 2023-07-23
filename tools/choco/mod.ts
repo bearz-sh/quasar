@@ -3,10 +3,12 @@ import {
     IExecSyncOptions, 
     exec, 
     execSync, 
-    registerExe 
-} from "../../process/exec.ts";
-import { PsOutput } from "../../process/ps.ts";
-import { IPkgInfo, IPkgMgr, pkgmgrs } from "../pkgmgr.ts";
+    registerExe,
+    PsOutput,
+    IPkgInfo,
+    IPkgMgr,
+    upm,
+} from "../mod.ts";
 
 registerExe("choco", {
     windows: [
@@ -134,4 +136,4 @@ export class ChocoManager implements IPkgMgr {
     }
 }
 
-pkgmgrs.set("choco", new ChocoManager());
+upm.register("choco", new ChocoManager());
