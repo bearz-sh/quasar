@@ -254,7 +254,6 @@ export async function which(
         }
 
         if (isWindows) {
-            console.log('is windows');
             const hasPathExt = pathExtSegments.find((segment) =>
                 fileName.toLowerCase().endsWith(segment)
             ) !== undefined;
@@ -317,7 +316,6 @@ export async function which(
                 for await(const entry of readDirectory(pathSegment)) {
                     if(!entry.isDirectory && entry.name?.toLowerCase() === baseNameLowered) {
                         first = entry;
-                        console.log(first);
                         break;
                     }
                 }
