@@ -1,10 +1,17 @@
 import { which, whichSync } from './which.ts';
-import { expand, get } from '../os/env.ts';
-import { isFile, isFileSync } from '../fs/mod.ts';
+import { expand, get, set } from '../os/env.ts';
+import { isFile, isFileSync, readTextFileSync } from '../fs/mod.ts';
 import { IS_WINDOWS, IS_DARWIN } from '../os/constants.ts';
 import { IPsStartInfo, PsOutput, output, outputSync } from './ps.ts';
 import { NotFoundOnPathError } from './errors.ts';
 import { isAbsolute } from 'https://deno.land/std@0.194.0/path/posix.ts';
+import { existsSync } from '../mod.ts';
+import { readTextFile } from '../mod.ts';
+import { NEW_LINE } from '../mod.ts';
+import { update } from '../tools/docker/container.ts';
+import { StringBuilder } from '../string-builder.ts';
+import setBlocking from 'https://deno.land/x/yargs@v17.7.2-deno/build/lib/utils/set-blocking.js';
+import { writeTextFileSync } from '../mod.ts';
 
 export interface IPathFinderOptions {
     name: string;
@@ -341,4 +348,145 @@ export async function generateScriptFile(script: string, ext: string, tpl?: stri
     }
 
     return scriptFile.replaceAll('\\', '/');
+}
+
+function updateProfile(profile: string, name: string, path: string) {
+    const lines = readTextFileSync(profile).split(`\n`);
+    let updated = false;
+    const sb = new StringBuilder();
+    for(let i = 0; i < lines.length; i++)
+    {
+        const line = lines[i];
+        if (line.startsWith(`### QUASAR ${name} ### `)) {
+            sb.appendLine(line);
+            sb.appendLine(`export PATH=\"$PATH:${path}\"`);
+            sb.appendLine(`### END QUASAR ${name} ###`);
+            sb.appendLine("")
+            i = i+3;
+            updated = true;
+            break;
+        }
+
+        sb.appendLine(line);
+    }
+
+    if (!updated) {
+        sb.appendLine("");
+        sb.appendLine(`### QUASAR ${name} ### `);
+        sb.appendLine(`export PATH=\"$PATH:${path}\"`);
+        sb.appendLine(`### END QUASAR ${name} ###`);
+        sb.appendLine("")                                      
+    }
+
+    writeTextFileSync(profile, sb.toString());
+}
+
+export function switchPath(name: string, path: string, target: 'user' | 'machine' | 'process' = 'process') {
+    const options = registry.get(name);
+    if (!options) {
+        throw new Error(`Unknown tool ${name}`);
+    }
+
+    options.envVariable ??= (options.name.toUpperCase() + '_PATH');
+    set(options.envVariable, path);
+
+    switch(target) {
+        case 'process':
+            return;
+        case 'user':
+            if (IS_WINDOWS) {
+                execSync('setx', [options.envVariable, path]);
+                return;
+            } else {
+                const home = get('HOME');
+                const shell = get('SHELL');
+                if (!home || !shell) {
+                    throw new Error('Unable to determine home directory or shell');
+                }
+
+                switch(shell) {
+                    case '/bin/bash':
+                        {
+                            const profiles = [
+                                `${home}/.bash_profile`,
+                                `${home}/.bash_login`,
+                                `${home}/.profile`,
+                            ]
+
+                            for (const profile of profiles) {
+                                if (existsSync(profile)) {
+                                    updateProfile(profile, options.name, path);
+
+                                    return;
+                                }
+                            }
+
+                            throw new Error(`Unable to find profile for ${shell}`);
+                        }
+
+                    case '/bin/zsh':
+                        { 
+                            const profiles = [
+                                `${home}/.zshenv`,
+                                `${home}/.zprofile`,
+                                `${home}/.zshrc`,
+                            ]
+
+                            for (const profile of profiles) {
+                                if (existsSync(profile)) {
+                                    updateProfile(profile, options.name, path);
+                                    set(options.envVariable, path);
+                                    return;
+                                }
+                            }
+
+                            throw new Error(`Unable to find profile for ${shell}`);
+                        }
+
+                    default: 
+                        throw new Error(`Unknown shell ${shell}`);
+                }
+            }
+    
+        case 'machine':
+            if (IS_WINDOWS) {
+                execSync('setx', [options.envVariable, path, '/m']);
+                return;
+            }
+            else {
+                const shell = get('SHELL');
+                if (!shell) {
+                    throw new Error('Unable to determine shell');
+                }
+
+                switch(shell) {
+                    case '/bin/bash':
+                        {
+                            const profile = '/etc/profile';
+                            if (!existsSync(profile)) {
+                                throw new Error(`Unable to find ${profile}`);
+                            }
+
+                            updateProfile(profile, options.name, path);
+                            return;
+                        }
+                    case '/bin/zsh':
+                        {
+                            const profile = '/etc/zprofile';
+                            if (!existsSync(profile)) {
+                                throw new Error(`Unable to find ${profile}`);
+                            }
+
+                            updateProfile(profile, options.name, path);
+                            return;
+                        }
+
+                    default:
+                        throw new Error(`Unknown shell ${shell}`);
+                }
+            }
+
+        default:
+            throw new Error(`Unknown target ${target}`);
+    }
 }

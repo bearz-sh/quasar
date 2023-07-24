@@ -1,4 +1,5 @@
 export * from '../assert/mod.ts'
+export * from './deno_permissions.ts'
 
 
 export interface ITestContext {
