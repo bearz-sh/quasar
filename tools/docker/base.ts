@@ -170,106 +170,131 @@ export function logoutSync(args: DockerLogoutArgs, options?: IExecSyncOptions) {
     return docker.sync(splat(args), options);
 }
 
+function command(command: string, args?: string[], options?: IExecOptions) {
+    if (args?.length) {
+        args.splice(0, 0, command);
+    }
+    else {
+        args = [command];
+    }
+
+    return docker(args, options);
+}
+
+function commandSync(command: string, args?: string[], options?: IExecSyncOptions) {
+    if (args?.length) {
+        args.splice(0, 0, command);
+    }
+    else {
+        args = [command];
+    }
+
+    return docker.sync(args, options);
+}
+
 export function network(args?: string[], options?: IExecOptions) {
-    return docker(["network", ...args ?? []], options);
+    return command("network", args, options);
 }
 
 export function networkSync(args?: string[], options?: IExecSyncOptions) {
-    args ??= [];
-    return docker.sync(["network", ], options);
+    return commandSync("network", args, options);
 }
 
-export function context(options: IExecOptions) {
-    return docker(["context"], options);
+export function context(args?: string[], options?: IExecOptions) {
+    return command("context", args, options);
 }
 
-export function contextSync(options: IExecSyncOptions) {
-    return docker.sync(["context"], options);
+export function contextSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("context", args, options);
 }
 
-export function volume(options: IExecOptions) {
-    return docker(["volume"], options);
+export function volume(args?: string[],options?: IExecOptions) {
+    return command("volume", args, options);
 }
 
-export function volumeSync(options: IExecSyncOptions) {
-    return docker.sync(["volume"], options);
+export function volumeSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("volume", args, options);
 }
 
-export function image(options: IExecOptions) {
-    return docker(["image"], options);
+export function image(args?: string[], options?: IExecOptions) {
+    return command("image", args, options);
 }
 
-export function imageSync(options: IExecSyncOptions) {
-    return docker.sync(["image"], options);
+export function imageSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("image", args, options);
 }
 
-export function container(options: IExecOptions) {
-    return docker(["container"], options);
+export function container(args?: string[], options?: IExecOptions) {
+    return command("container", args, options);
 }
 
-export function containerSync(options: IExecSyncOptions) {
-    return docker.sync(["container"], options);
+export function containerSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("container", args, options);
 }
 
-export function nodeargs(options: IExecOptions) {
-    return docker(["no args"], options);
+export function node(args?: string[], options?: IExecOptions) {
+    return command("no args", args, options);
 }
 
-export function serivce(options: IExecOptions) {
-    return docker(["service"], options);
+export function nodeSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("no args", args, options);
 }
 
-export function serviceSync(options: IExecSyncOptions) {
-    return docker.sync(["service"], options);
+export function serivce(args?: string[], options?: IExecOptions) {
+    return command("service", args, options);
 }
 
-export function stack(options: IExecOptions) {
-    return docker(["stack"], options);
+export function serviceSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("service", args, options);
 }
 
-export function stackSync(options: IExecSyncOptions) {
-    return docker.sync(["stack"], options);
+export function stack(args?: string[], options?: IExecOptions) {
+    return command("stack", args, options);
 }
 
-export function swarm(options: IExecOptions) {
-    return docker(["swarm"], options);
+export function stackSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("stack", args, options);
 }
 
-export function swarmSync(options: IExecSyncOptions) {
-    return docker.sync(["swarm"], options);
+export function swarm(args?: string[], options?: IExecOptions) {
+    return command("swarm", args, options);
 }
 
-export function secret(options: IExecOptions) {
-    return docker(["secret"], options);
+export function swarmSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("swarm", args, options);
 }
 
-export function secretSync(options: IExecSyncOptions) {
-    return docker.sync(["secret"], options);
+export function secret(args?: string[], options?: IExecOptions) {
+    return command("secret", args, options);
 }
 
-export function config(options: IExecOptions) {
-    return docker(["config"], options);
+export function secretSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("secret", args, options);
 }
 
-export function configSync(options: IExecSyncOptions) {
-    return docker.sync(["config"], options);
+export function config(args?: string[], options?: IExecOptions) {
+    return command("config", args, options);
+}
+
+export function configSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("config", args, options);
 }
 
 
-export function plugin(options: IExecOptions) {
-    return docker(["plugin"], options);
+export function plugin(args?: string[], options?: IExecOptions) {
+    return command("plugin", args, options);
 }
 
-export function pluginSync(options: IExecSyncOptions) {
-    return docker.sync(["plugin"], options);
+export function pluginSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("plugin", args, options);
 }
 
-export function trust(options: IExecOptions) {
-    return docker(["trust"], options);
+export function trust(args?: string[], options?: IExecOptions) {
+    return command("trust", args, options);
 }
 
-export function trustSync(options: IExecSyncOptions) {
-    return docker.sync(["trust"], options);
+export function trustSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("trust", args, options);
 }
 
 export function search(args: DockerSearchArgs, options?: IExecOptions) {
@@ -280,18 +305,16 @@ export function search(args: DockerSearchArgs, options?: IExecOptions) {
 }
 
 export function searchSync(args: DockerSearchArgs, options?: IExecSyncOptions) {
-    return docker.sync(splat(args, {
+    return docker.sync(["search", ...splat(args, {
         arguments: ["term"],
         appendArguments: true,
-    }), options);
+    })], options);
 }
 
-
-export function system(options: IExecOptions) {
-    return docker(["system"], options);
+export function system(args?: string[], options?: IExecOptions) {
+    return command("system", args, options);
 }
 
-export function systemSync(options: IExecSyncOptions) {
-    return docker.sync(["system"], options);
+export function systemSync(args?: string[], options?: IExecSyncOptions) {
+    return commandSync("system", args, options);
 }
-

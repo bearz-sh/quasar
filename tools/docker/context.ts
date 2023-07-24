@@ -92,15 +92,6 @@ function buildContextArgs(args: DockerContextCreateDockerArgs) {
     return str;
 }
 
-
-function context(options: IExecOptions) {
-    return docker(["context"], options);
-}
-
-context.sync = function(options: IExecSyncOptions) {
-    return docker.sync(["context"], options);
-}
-
 export function create(args: DockerContextCreateArgs, options?: IExecOptions) {
 
     if (args.docker) {

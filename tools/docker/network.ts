@@ -71,17 +71,6 @@ export interface DockerNetworkRmArgs extends DockerArgs {
 }
 
 
-/*
-
-function network(options: IExecOptions) {
-    return docker(["network"], options);
-}
-
-network.sync = function(options: IExecSyncOptions) {
-    return docker.sync(["network"], options);
-}
-*/
-
 export function connect(args: DockerNetworkConnectArgs, options?: IExecOptions) {
     return docker(["network", "connect", ...splat(args, {
         arguments: ["container", "network"],
