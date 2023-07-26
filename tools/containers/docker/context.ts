@@ -2,7 +2,7 @@ import {
     IExecOptions, 
     IExecSyncOptions, 
     splat,
-} from "../mod.ts";
+} from "../../mod.ts";
 
 import {
     DockerArgs,

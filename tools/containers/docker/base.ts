@@ -7,7 +7,7 @@ import {
     findExeSync, 
     registerExe,
     splat,
-} from "../mod.ts";
+} from "../../mod.ts";
 
 
 

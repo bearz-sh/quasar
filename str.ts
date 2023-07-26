@@ -62,6 +62,29 @@ export function trimEnd(str: string, chars: string = EMPTY): string {
     return str.substring(0, size);
 }
 
+export function indexOfIgnoreCase(str: string, search: string, start = 0, locales?: string | string[]) {
+    const searchLen = search.length;
+    const strLen = str.length;
+
+    if (strLen === 0 || searchLen === 0 || searchLen > strLen) {
+        return -1;
+    }
+
+    let i = start;
+    while (i <= strLen - searchLen) {
+      let j = 0;
+      while (j < searchLen && str[i + j].localeCompare(search[j], locales, { sensitivity: 'accent' }) === 0) {
+        j++;
+      }
+      if (j === searchLen) {
+        return i;
+      }
+      i++;
+    }
+    return -1;
+
+}
+
 export function startsWithIgnoreCase(str: string, search: string, start = 0, locales?: string | string[]) {
     const searchLen = search.length;
     const strLen = str.length;

@@ -6,9 +6,9 @@ import {
     execSync, 
     registerExe,
     PsOutput,
-    IPkgInfo, IPkgMgr, pkgmgrs,
+    IPkgInfo, IPkgMgr, upm,
     env,
-} from "../../mod.ts";
+} from "../../../mod.ts";
 
 
 registerExe("nuget", {
@@ -32,7 +32,7 @@ export class NugetManager implements IPkgMgr {
     install(name: string, version?: string, args?: string[], options?: IExecOptions): Promise<PsOutput> {
         const splat = ["install", name];
 
-        const msBuildPath = get("MSBUILD_PATH");
+        const msBuildPath = env.get("MSBUILD_PATH");
         if (msBuildPath && args && !args.includes("-MSBuildPath"))
             splat.push("-MSBuildPath", msBuildPath);
         
@@ -53,12 +53,9 @@ export class NugetManager implements IPkgMgr {
     upgrade(name: string, args?: string[], options?: IExecOptions): Promise<PsOutput> {
         const splat = ["update"];
 
-        const msBuildPath = get("MSBUILD_PATH");
+        const msBuildPath = env.get("MSBUILD_PATH");
         if (msBuildPath && args && !args.includes("-MSBuildPath"))
             splat.push("-MSBuildPath", msBuildPath);
-        
-        if (version)
-            splat.push("-Version", version);
 
         if (args?.length)
             splat.push(...args);
@@ -66,7 +63,7 @@ export class NugetManager implements IPkgMgr {
         return nuget(splat, options);
     }
  
-    list(query?: string, args?: string[], options?: IExecOptions): Promise<IPkgInfo[]> {
+    async list(query?: string, args?: string[], options?: IExecOptions): Promise<IPkgInfo[]> {
         const splat = ["list"];
 
         if (query)
@@ -82,8 +79,7 @@ export class NugetManager implements IPkgMgr {
         const out = await nuget(splat, options);
         const result : IPkgInfo[] = [];
         const lines = out.stdoutAsLines;
-        for(var i = 0; i < lines.length; i++) {
-        {
+        for(let i = 0; i < lines.length; i++) {
             const line = lines[i];
             const parts = line.split(" ").filter(p => p.length);
             if (parts.length < 2)
@@ -94,10 +90,10 @@ export class NugetManager implements IPkgMgr {
             result.push({ name, version });
         }
 
-        return parts;
+        return result;
     }
 
-    search(query: string, args?: string[], options?: IExecOptions): Promise<IPkgInfo[]> {
+    async search(query: string, args?: string[], options?: IExecOptions): Promise<IPkgInfo[]> {
         const splat = ["search"];
 
         if (query)
@@ -113,8 +109,7 @@ export class NugetManager implements IPkgMgr {
         const out = await nuget(splat, options);
         const result : IPkgInfo[] = [];
         const lines = out.stdoutAsLines;
-        for(var i = 2; i < lines.length; i++) {
-        {
+        for(let i = 2; i < lines.length; i++) {
             const line = lines[i];
             const parts = line.split(" ").filter(p => p.length && p !== '>' && p !== '|');
             if (parts.length < 2)
@@ -125,8 +120,8 @@ export class NugetManager implements IPkgMgr {
             result.push({ name, version });
         }
 
-        return parts;
+        return result;
     }
 }
 
-pkgmgrs.set("nuget", new NugetManager());
+upm.register("nuget", new NugetManager());
