@@ -1,7 +1,10 @@
 import { ITask } from "./interfaces.ts";
 import { Tasks } from "./task_collection.ts";
 import { parse } from "https://deno.land/std@0.195.0/flags/mod.ts"
+import { HostWriter } from "../fmt/host_writer.ts";
+import { green, magenta, red, yellow } from "../deps.ts";
 
+export const hostWriter = new HostWriter();
 
 interface IRunArgs 
 {
@@ -14,16 +17,38 @@ interface IRunArgs
 
 function listTasks() {
     const tasks = Tasks;
-    console.log(`Quasar Task Runner version 0.1.0`);
-    console.log(``);
+    hostWriter.writeLine(`Quasar Task Runner version 0.1.0`);
+    hostWriter.writeLine();
 
-    console.log(`TASKS:`);
+    hostWriter.writeLine(`TASKS:`);
     const maxTask = tasks
         .toArray()
         .map(t => t.id.length)
         .reduce((a, b) => Math.max(a, b), 0);
     for(const task of tasks) {
-        console.log(`  ${task.id.padEnd(maxTask)}  ${task.description ?? ''}`);
+        hostWriter.writeLine(`  ${task.id.padEnd(maxTask)}  ${task.description ?? ''}`);
+    }
+}
+
+function writeHelp() {
+    hostWriter.writeLine(`Quasar Task Runner version 0.1.0`);
+    hostWriter.writeLine();
+    hostWriter.writeLine(`USAGE:`);
+    hostWriter.writeLine(`  qtr [...TASK] [OPTIONS]`);
+    hostWriter.writeLine();
+    hostWriter.writeLine(`OPTIONS:`);
+    hostWriter.writeLine(`  -h, --help`);
+    hostWriter.writeLine(`  -s, --skip-deps`);
+    hostWriter.writeLine(`  -t, --timeout`);
+    hostWriter.writeLine();
+    hostWriter.writeLine(`TASKS:`);
+    const tasks = Tasks;
+    const maxTask = tasks
+        .toArray()
+        .map(t => t.id.length)
+        .reduce((a, b) => Math.max(a, b), 0);
+    for(const task of tasks) {
+        hostWriter.writeLine(`  ${task.id.padEnd(maxTask)}  ${task.description ?? ''}`);
     }
 }
 
@@ -35,7 +60,7 @@ export interface ITasksResult {
 async function runTask(task: ITask, signal: AbortSignal, state: Map<string, unknown>, timeoutValue: number, results: ITasksResult[]) {
     let failed = false;
     const onAbort = () => {
-        console.log(`${task.name} timed out after ${timeoutValue} seconds`);
+        hostWriter.warn(`${task.name} timed out after ${timeoutValue} seconds`);
         failed = true;
         results.push({ status: 'timedout', task });
     };
@@ -48,10 +73,10 @@ async function runTask(task: ITask, signal: AbortSignal, state: Map<string, unkn
         failed = true;
         results.push({ status: 'failed', task });
         if (e instanceof Error) {
-            console.error(`${task.name} failed: ${e.message}`);
+            hostWriter.error(e, `${task.name} failed: ${e.message}`);
         }
         else {
-            console.error(`${task.name} failed: ${e}`);
+            hostWriter.error(`${task.name} failed: ${e}`);
         }
       
         signal.removeEventListener('abort', onAbort);
@@ -79,24 +104,27 @@ async function runTasks(tasks: ITask[], args: IRunArgs) {
             if (typeof task.skip === 'function') {
                 const skip = await task.skip();
                 if (skip) {
-                    console.log(`> ${task.name} skipped`);
+                    hostWriter.startGroup(`${task.name} (skipped)`);
+                    hostWriter.endGroup();
                     results.push({ status: 'skipped', task });
                     continue;
                 }
             }
-            console.log(`> ${task.name} skipped`);
+            hostWriter.startGroup(`${task.name} (skipped)`);
             results.push({ status: 'skipped', task });
+            hostWriter.endGroup();
             continue;
         }
 
         if (failed && !force) {
-            console.warn(`> ${task.name} skipped due to previous failure`);
+            hostWriter.startGroup(`${task.name} (skipped)`);
+            hostWriter.endGroup();
             results.push({ status: 'skipped', task });
             continue
         }
 
         const to = task.timeout;
-        console.log(`> ${task.name}`)
+        hostWriter.startGroup(task.name);
         if (to && to > 0) {
             const controller = new AbortController();
             const signal = controller.signal;
@@ -108,45 +136,71 @@ async function runTasks(tasks: ITask[], args: IRunArgs) {
             
             const r = await runTask(task, signal, state, timeoutValue, results);
             if (r) { failed = true; }
-            console.log(``);
+            hostWriter.writeLine();
             clearTimeout(handle);
         } else {
             const r = await runTask(task, mainSignal, state, timeout, results);
             if (r) { failed = true; }
         }
-        console.log(``);
+        hostWriter.endGroup();
     } 
 
     clearTimeout(timeoutId);
-    console.log(``);
-    console.log(`SUMMARY:`);
+    hostWriter.writeLine();
+    hostWriter.writeLine(`SUMMARY:`);
     const max = results.map(r => r.task.name.length).reduce((a, b) => Math.max(a, b), 0);
 
     for(const result of results) {
         switch(result.status) {
             case 'ok':
-                console.log(`  ${result.task.name.padEnd(max)}  completed`);
+                {
+                    if (hostWriter.supportsColor.stdout.level) {
+                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  ${green('completed')}`);
+                    } else {
+                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  completed`);
+                    }
+                }
                 break;
             case 'failed':
-                console.log(`  ${result.task.name.padEnd(max)}  failed`);
+                {
+                    if (hostWriter.supportsColor.stdout.level) {
+                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  ${red('failed')}`);
+                    } else {
+                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  failed`);
+                    }
+                }
+               
+                console.log();
                 break;
             case 'skipped':
-                console.log(`  ${result.task.name.padEnd(max)}  skipped`);
+                {
+                    if (hostWriter.supportsColor.stdout.level) {
+                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  ${yellow('skipped')}`);
+                    } else {
+                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  skipped`);
+                    }
+                }
                 break;
             case 'timedout':
-                console.log(`  ${result.task.name.padEnd(max)}  timed out`);
+                {
+                    if (hostWriter.supportsColor.stdout.level) {
+                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  ${magenta('timed out')}`);
+                    } else {
+                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  timed out`);
+                    }
+                }
                 break;
         }
     }
 
-    return results.some(r => r.status === 'failed') ? 1 : 0;
+    return results.some(r => r.status === 'failed' || r.status === 'timedout') ? 1 : 0;
 }
 
 function detectCycles(tasks: ITask[]) {
     const stack = new Set<string>();
     const resolve = (task: ITask) => {
         if (stack.has(task.id)) {
-            console.log(`Cycle detected in task dependencies: ${[...stack.values(), task.id].join(' -> ')}`);
+            hostWriter.error(`Cycle detected in task dependencies: ${[...stack.values(), task.id].join(' -> ')}`);
             Deno.exit(1);
         }
 
@@ -154,7 +208,7 @@ function detectCycles(tasks: ITask[]) {
         for(const dep of task.deps) {
             const depTask = Tasks.get(dep);
             if (!depTask) {
-                console.log(`Dependency task '${dep}' not found for task '${task.name}'`);
+                hostWriter.error(`Dependency task '${dep}' not found for task '${task.name}'`);
                 Deno.exit(1);
             }
 
@@ -182,7 +236,7 @@ function flattenTasks(tasks: ITask[]) {
         for(const dep of task.deps) {
             const depTask = Tasks.get(dep);
             if (!depTask) {
-                console.error(`Dependency task '${dep}' not found for task '${task.name}'`);
+                hostWriter.error(`Dependency task '${dep}' not found for task '${task.name}'`);
                 Deno.exit(1);
             }
 
@@ -219,14 +273,25 @@ export async function runTaskRunner() {
 
     const flags : IRunArgs = parse(optArgs, {
         boolean: ['skip-deps', 'skipDeps'],
+        alias: {
+            h: "help",
+            s: "skip-deps",
+            t: "timeout",
+        },
         default: {
             skipDeps: false,
             timeout: 3 * 60,
+            help: false,
         },
     });
 
     if (cmds.length === 0) {
         cmds.push('default');
+    }
+
+    if (flags.help === true) {
+        writeHelp();
+        Deno.exit(0);
     }
 
     switch(cmds[0])
@@ -242,7 +307,7 @@ export async function runTaskRunner() {
                             Deno.exit(0);
                         break;
                         default:
-                            console.log(`Unknown tasks sub command '${cmds[1]}'`);
+                            hostWriter.error(`Unknown tasks sub command '${cmds[1]}'`);
                             Deno.exit(1);
                     }
                 }
@@ -263,11 +328,13 @@ export async function runTaskRunner() {
                     const task = Tasks.get(cmd);
                     if (!task) {
                         if(cmd === 'default') {
-                            console.error("No default task found");
+                            hostWriter.error("No default task found");
+                            writeHelp()
                             Deno.exit(1);
                         }
 
                         console.error(`Task '${cmd}' not found`);
+                        writeHelp()
                         Deno.exit(1);   
                     }
 

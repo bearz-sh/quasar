@@ -81,6 +81,10 @@ export function exit(code?: number) {
     Deno.exit(code);
 }
 
+export function isatty(rid: number): boolean {
+    return Deno.isatty(rid);
+}
+
 export const pid = Deno.pid;
 
 

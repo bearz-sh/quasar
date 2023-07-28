@@ -18,7 +18,7 @@ task("skip_me", () => {
 })
 
 task("default", ["hello", "skip_me", "pwsh", "bash"], () => {
-    console.log("before hello");
+    console.log("must run after hello");
     return Promise.resolve();
 });
 

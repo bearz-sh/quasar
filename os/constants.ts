@@ -53,6 +53,7 @@ export const IS_UNIX = OS_FAMILY !== 'windows';
 export const IS_WINDOWS = OS_FAMILY === 'windows';
 export const IS_LINUX = OS_FAMILY === 'linux';
 export const IS_DARWIN = OS_FAMILY === 'darwin';
+export const OS_RELEASE = Deno.osRelease();
 export const PATH_SEPARATOR = IS_WINDOWS ? ';' : ':';
 export const DIR_SEPARATOR = IS_WINDOWS ? '\\' : '/';
 export const DIR_SEPARATOR_RE = IS_WINDOWS ? /[\\\/]+/ : /\/+/;
