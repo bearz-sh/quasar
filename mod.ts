@@ -7,4 +7,4 @@ export * from "./fs/mod.ts";
 export * from "./secrets/mod.ts";
 
 export const VERSION = "0.0.1";
-export const AUTHORS = ["bearz-me"]
+export const AUTHORS = ["bearz-me"];

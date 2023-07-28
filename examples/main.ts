@@ -1,4 +1,4 @@
-import { ps, runTaskRunner, shellTask, task } from "../tasks/mod.ts";
+import { ps, runTaskRunner, shellTask, task } from "../tasks/scripting.ts";
 
 task("hello", async () => {
     await ps.run("echo", "Hello World");

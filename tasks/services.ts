@@ -2,19 +2,18 @@ import { IEnv, IFileSystem, IOperatingSystem, IPath, IProcess } from "./interfac
 import {
     args,
     capture,
+    captureSync,
     chdir,
     cwd,
-    runSync,
-    captureSync,
-    exit,
-    isatty,
     exec,
     execSync,
+    exit,
     findExe,
     findExeSync,
-    IExecOptions,
+    isatty,
     registerExe,
     run,
+    runSync,
 } from "../process/mod.ts";
 import { isProcessElevated } from "../os/os.ts";
 import { err, ok, Result } from "../optional/result.ts";
@@ -89,7 +88,7 @@ export const ps: IProcess = {
     isatty,
     exec,
     execSync,
-    exit
+    exit,
 };
 
 Reflect.defineProperty(ps, "cwd", {

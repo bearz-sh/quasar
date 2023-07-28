@@ -7,7 +7,6 @@ import {
     ISymlinkOptions,
     IWriteOptions,
 } from "../fs/_interfaces.ts";
-import { Result } from "../optional/result.ts";
 import { OsFamily, RuntimeArch } from "../os/constants.ts";
 import { IEnvSubstitutionOptions } from "../os/env.ts";
 import { ParsedPath } from "../path/mod.ts";
@@ -94,17 +93,17 @@ export interface IProcess {
 
     readonly args: string[];
 
-    run(...args: string[]): Promise<PsOutput>
+    run(...args: string[]): Promise<PsOutput>;
 
-    runSync(...args: string[]): PsOutput
+    runSync(...args: string[]): PsOutput;
 
-    capture(...args: string[]): Promise<PsOutput>
+    capture(...args: string[]): Promise<PsOutput>;
 
-    captureSync(...args: string[]): PsOutput
+    captureSync(...args: string[]): PsOutput;
 
-    exec(exec: string, args?: string[], options?: IExecOptions): Promise<PsOutput>
+    exec(exec: string, args?: string[], options?: IExecOptions): Promise<PsOutput>;
 
-    execSync(exec: string, args?: string[], options?: IExecOptions): PsOutput
+    execSync(exec: string, args?: string[], options?: IExecOptions): PsOutput;
 
     isatty(rid: number): boolean;
 
