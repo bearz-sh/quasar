@@ -1,8 +1,7 @@
 import { ITask } from "./interfaces.ts";
 import { Tasks } from "./task_collection.ts";
-import { parse } from "https://deno.land/std@0.195.0/flags/mod.ts";
 import { HostWriter } from "../fmt/host_writer.ts";
-import { green, magenta, red, yellow } from "../deps.ts";
+import { green, magenta, parseFlags as parse, red, yellow } from "../deps.ts";
 
 export const hostWriter = new HostWriter();
 

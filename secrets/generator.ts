@@ -1,4 +1,4 @@
-import { isDigitCodePoint, isLetterCodePoint, isUpperCodePoint } from "../char.ts";
+import { isDigitCodePoint, isLetterCodePoint, isUpperCodePoint } from "../text/char.ts";
 import { randomBytes } from "../random/mod.ts";
 
 export function validate(data: Uint8Array) {

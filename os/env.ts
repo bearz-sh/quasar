@@ -1,7 +1,7 @@
-import { CHAR_UNDERSCORE } from "../char_constants.ts";
+import { CHAR_UNDERSCORE } from "../text/char_constants.ts";
 import { IS_DENO, IS_NODELIKE } from "../runtime/mod.ts";
-import { equalsIgnoreCase } from "../str.ts";
-import { StringBuilder } from "../string-builder.ts";
+import { equalsIgnoreCase } from "../text/str.ts";
+import { StringBuilder } from "../text/string_builder.ts";
 import { IS_WINDOWS, PATH_SEPARATOR, PATH_VAR_NAME } from "./constants.ts";
 
 export const secrets: string[] = [];

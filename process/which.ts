@@ -10,7 +10,7 @@ import {
     readDirectorySync,
 } from "../fs/mod.ts";
 import { IS_WINDOWS as isWindows } from "../os/constants.ts";
-import { isNullOrEmpty, isNullOrWhiteSpace } from "../str.ts";
+import { isNullOrEmpty, isNullOrWhiteSpace } from "../text/str.ts";
 import { notNull, notNullOrWhiteSpace } from "../check/mod.ts";
 
 const executableCache: { [key: string]: string | undefined } = {};

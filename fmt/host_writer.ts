@@ -1,9 +1,7 @@
 import { get, has, set } from "../os/env.ts";
 import { ISupportsColor, supportsColor } from "./supports_color.ts";
 import { args, isatty, stdout } from "../process/_base.ts";
-import { sprintf } from "https://deno.land/std/fmt@0.196.0/printf.ts";
-import { blue, gray, green, magenta, red, yellow } from "../deps.ts";
-import { cyan } from "https://deno.land/std@0.196.0/fmt/colors.ts";
+import { blue, cyan, gray, green, magenta, red, sprintf, yellow } from "../deps.ts";
 
 function handleStack(stack?: string) {
     stack = stack ?? "";

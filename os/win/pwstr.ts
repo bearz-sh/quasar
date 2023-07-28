@@ -1,4 +1,4 @@
-import { StringBuilder } from "../../string-builder.ts";
+import { StringBuilder } from "../../text/string_builder.ts";
 
 export function pwstrFromFfi(ptr: Deno.PointerValue): string | null {
     if (ptr === null) {

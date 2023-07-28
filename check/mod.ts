@@ -1,4 +1,4 @@
-import { isWhiteSpaceAt } from "../char.ts";
+import { isWhiteSpaceAt } from "../text/char.ts";
 
 import {
     ArgumentEmptyError,

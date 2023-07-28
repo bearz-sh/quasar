@@ -1,4 +1,4 @@
-import { equalsIgnoreCase } from "../str.ts";
+import { equalsIgnoreCase } from "../text/str.ts";
 
 export class CaseInsensitiveMap<V> extends Map<string, V> {
     override get(key: string): V | undefined {

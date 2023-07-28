@@ -17,10 +17,10 @@ export { none, Option, some } from "../optional/option.ts";
 import * as env2 from "../os/env.ts";
 import * as path2 from "../path/mod.ts";
 import * as fs2 from "../fs/mod.ts";
-export * as str from "../str.ts";
+export * as str from "../text/str.ts";
 import { secretMasker } from "../secrets/mod.ts";
 import { CaseInsensitiveMap } from "../collections/case_insensitive_map.ts";
-export { StringBuilder } from "../string-builder.ts";
+export { StringBuilder } from "../text/string_builder.ts";
 export * from "../secrets/mod.ts";
 
 import {

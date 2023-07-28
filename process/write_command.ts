@@ -1,6 +1,6 @@
 import { ISecretMasker, secretMasker } from "../secrets/masker.ts";
 import { stdout } from "./_base.ts";
-import { cyan } from "https://deno.land/std@0.194.0/fmt/colors.ts";
+import { cyan } from "../deps.ts";
 
 export const writeCommandOptions = {
     enabled: true,

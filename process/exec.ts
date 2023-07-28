@@ -3,10 +3,10 @@ import { expand, get, set } from "../os/env.ts";
 import { isFile, isFileSync, readTextFileSync } from "../fs/mod.ts";
 import { IS_DARWIN, IS_WINDOWS } from "../os/constants.ts";
 import { IPsStartInfo, output, outputSync, PsOutput } from "./ps.ts";
-import { NotFoundOnPathError } from "./errors.ts";
-import { isAbsolute } from "https://deno.land/std@0.194.0/path/posix.ts";
+import { NotFoundOnPathError } from "../errors/mod.ts";
+import { isAbsolute } from "../path/mod.ts";
 import { existsSync } from "../mod.ts";
-import { StringBuilder } from "../string-builder.ts";
+import { StringBuilder } from "../text/string_builder.ts";
 import { writeTextFileSync } from "../mod.ts";
 
 export interface IPathFinderOptions {

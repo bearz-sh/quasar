@@ -1,5 +1,4 @@
 import { Ptr, TypedStruct } from "../../../ffi/mod.ts";
-import { sizeofSymbol } from "../../../sizeof/mod.ts";
 export { Ptr };
 
 /**
@@ -154,6 +153,8 @@ export interface ISecurityAttributes {
     /** Windows.Win32.Foundation.BOOL */
     bInheritHandle: boolean;
 }
+
+const sizeofSymbol = Symbol.for("sizeof");
 
 export class SecurityAttributes extends TypedStruct implements ISecurityAttributes {
     constructor(buf: Uint8Array) {

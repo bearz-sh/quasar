@@ -1,5 +1,5 @@
 import { assert, test } from "../testing/mod.ts";
-import { NotFoundOnPathError, ProcessError } from "./errors.ts";
+import { NotFoundOnPathError, ProcessError } from "./mod.ts";
 
 test("NotFoundOnPathError", () => {
     assert.throws<NotFoundOnPathError>(

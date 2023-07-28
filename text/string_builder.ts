@@ -1,5 +1,5 @@
-import { ArgumentRangeError, NotSupportedError } from "./errors/mod.ts";
-import { NEW_LINE } from "./os/constants.ts";
+import { ArgumentRangeError, NotSupportedError } from "../errors/mod.ts";
+import { NEW_LINE } from "../os/constants.ts";
 
 export class StringBuilder {
     #buffer: Uint8Array;
