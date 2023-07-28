@@ -45,7 +45,7 @@ It provides an altnerative to shell scripts.
 The module is built in a way to abstract using the `Deno` object directly so that the
 code may be migrated to npm/node or bun at a later date.
 
-## Why Deno
+### Why Deno
 
 Quasar is built on Deno because it is unique among scripting languages and runtimes. While Deno is marketed towards web
 servers, servless, and edge computing; an overlooked use case is system scripting and automation.
