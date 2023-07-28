@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("echo", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("echo", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\echo.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\echo.exe",
         "%SystemDrive%\\msys\\usr\\bin\\echo.exe",
-    ]
+    ],
 });
 
 export function echo(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function echo(args?: string[], options?: IExecOptions) {
 }
 
 echo.cli = echo;
-echo.sync = function(args?: string[], options?: IExecSyncOptions) {
+echo.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("echo", args, options);
-}
+};

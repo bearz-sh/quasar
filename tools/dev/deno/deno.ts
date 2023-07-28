@@ -1,20 +1,14 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../../mod.ts";
 
 registerExe("deno", {
     windows: [
         "%USERPROFILE%\\.deno\\bin\\deno.cmd",
-        "%ChocolateyInstall%\\lib\\deno\\deno.exe"
+        "%ChocolateyInstall%\\lib\\deno\\deno.exe",
     ],
 
     linux: [
         "${HOME}/.deno/bin/deno",
-    ]
+    ],
 });
 
 export function deno(args?: string[], options?: IExecOptions) {
@@ -22,6 +16,6 @@ export function deno(args?: string[], options?: IExecOptions) {
 }
 
 deno.cli = deno;
-deno.sync = function(args?: string[], options?: IExecSyncOptions) {
+deno.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("deno", args, options);
-}
+};

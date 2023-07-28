@@ -1,11 +1,11 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IS_WINDOWS,
-    PlatformNotSupportedError 
+    PlatformNotSupportedError,
+    registerExe,
 } from "../../mod.ts";
 
 registerExe("sudo", {});
@@ -19,10 +19,10 @@ export function sudo(args?: string[], options?: IExecOptions) {
 }
 
 sudo.cli = sudo;
-sudo.sync = function(args?: string[], options?: IExecSyncOptions) {
+sudo.sync = function (args?: string[], options?: IExecSyncOptions) {
     if (IS_WINDOWS) {
         throw new PlatformNotSupportedError("sudo is not supported on Windows.");
     }
 
     return execSync("sudo", args, options);
-}
+};

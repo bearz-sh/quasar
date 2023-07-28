@@ -1,275 +1,268 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    splat,
-} from "../../mod.ts";
+import { IExecOptions, IExecSyncOptions, splat } from "../../mod.ts";
 
-import {
-    compose,
-} from './base.ts'
-
+import { compose } from "./base.ts";
 
 export interface DockerComposeArgs {
-    ansi?: "never" | "always" | "auto"
-    compatibility?: boolean
-    file?: string[],
-    parallel?: number
-    projectDirectory?: string
-    envFile?: string[]
-    profile?: string[]
-    progress?: "auto" | "plain" | "tty" | "quiet"
-    projectName?: string
+    ansi?: "never" | "always" | "auto";
+    compatibility?: boolean;
+    file?: string[];
+    parallel?: number;
+    projectDirectory?: string;
+    envFile?: string[];
+    profile?: string[];
+    progress?: "auto" | "plain" | "tty" | "quiet";
+    projectName?: string;
 }
 
 export interface DockerComposeBuildArgs extends DockerComposeArgs {
-    service?: string[],
-    buildArg?: string[]
-    dryRun?: boolean
-    memory?: string
-    noCache?: boolean
-    pull?: boolean
-    push?: boolean
-    quiet?: boolean
-    ssh?: string
+    service?: string[];
+    buildArg?: string[];
+    dryRun?: boolean;
+    memory?: string;
+    noCache?: boolean;
+    pull?: boolean;
+    push?: boolean;
+    quiet?: boolean;
+    ssh?: string;
 }
 
 export interface DockerComposeConfigArgs extends DockerComposeArgs {
-    service?: string[],
-    dryRun?: boolean
-    format?: 'json' | 'yaml'
-    hash?: string
-    images?: boolean
-    noConsistency?: boolean
-    noInterpolate?: boolean
-    noNormalize?: boolean
-    noPathResolution?: boolean
-    output?: string 
-    profiles?: boolean
-    quiet?: boolean
-    resolveImageDigests?: boolean
-    services?: boolean
-    volumes?: boolean
+    service?: string[];
+    dryRun?: boolean;
+    format?: "json" | "yaml";
+    hash?: string;
+    images?: boolean;
+    noConsistency?: boolean;
+    noInterpolate?: boolean;
+    noNormalize?: boolean;
+    noPathResolution?: boolean;
+    output?: string;
+    profiles?: boolean;
+    quiet?: boolean;
+    resolveImageDigests?: boolean;
+    services?: boolean;
+    volumes?: boolean;
 }
 
 export interface DockerComposeCpArgs extends DockerComposeArgs {
-    src?: string 
-    dest?: string
-    archive?: boolean
-    dryRun?: boolean
-    followLink?: boolean
-    index?: number
+    src?: string;
+    dest?: string;
+    archive?: boolean;
+    dryRun?: boolean;
+    followLink?: boolean;
+    index?: number;
 }
 
 export interface DockerComposeCreateArgs extends DockerComposeArgs {
-    service?: string[],
-    build?: boolean
-    dryRun?: boolean
-    forceRecreate?: boolean
-    noBuild?: boolean
-    noRecreate?: boolean
-    pull?: 'always' | 'missing' | 'never'
-    removeOrphans?: boolean
-    scales?: string
+    service?: string[];
+    build?: boolean;
+    dryRun?: boolean;
+    forceRecreate?: boolean;
+    noBuild?: boolean;
+    noRecreate?: boolean;
+    pull?: "always" | "missing" | "never";
+    removeOrphans?: boolean;
+    scales?: string;
 }
 
 export interface DockerComposeDownArgs extends DockerComposeArgs {
-    service?: string[],
-    dryRun?: boolean
-    removeOrphans?: boolean
-    rmi?: "all" | "local"
-    timeout?: number
-    volumes?: boolean
+    service?: string[];
+    dryRun?: boolean;
+    removeOrphans?: boolean;
+    rmi?: "all" | "local";
+    timeout?: number;
+    volumes?: boolean;
 }
 
 export interface DockerComposeEventsArgs extends DockerComposeArgs {
-    service?: string[],
-    dryRun?: boolean
-    json?: boolean
+    service?: string[];
+    dryRun?: boolean;
+    json?: boolean;
 }
 
 export interface DockerComposeExecArgs extends DockerComposeArgs {
-    service: string,
-    command: string
-    args?: string[]
-    detach?: boolean
-    dryRun?: boolean
-    env?: string[]
-    index?: number
-    noTTY?: boolean
-    privileged?: boolean
-    user?: string
-    workdir?: string
+    service: string;
+    command: string;
+    args?: string[];
+    detach?: boolean;
+    dryRun?: boolean;
+    env?: string[];
+    index?: number;
+    noTTY?: boolean;
+    privileged?: boolean;
+    user?: string;
+    workdir?: string;
 }
 
 export interface DockerComposeImagesArgs extends DockerComposeArgs {
-    service?: string[],
-    dryRun?: boolean
-    removeOrphans?: boolean
-    signal?: string
+    service?: string[];
+    dryRun?: boolean;
+    removeOrphans?: boolean;
+    signal?: string;
 }
 
 export interface DockerComposeKillArgs extends DockerComposeArgs {
-    service?: string[],
-    dryRun?: boolean
-    format?: 'table' | 'json'
-    quiet?: boolean
+    service?: string[];
+    dryRun?: boolean;
+    format?: "table" | "json";
+    quiet?: boolean;
 }
 
 export interface DockerComposeLogsArgs extends DockerComposeArgs {
-    service?: string[],
-    dryRun?: boolean
-    follow?: boolean
-    noColor?: boolean
-    noLogPrefix?: boolean
-    since?: string
-    tail?: string
-    timestamps?: boolean
-    until?: string
+    service?: string[];
+    dryRun?: boolean;
+    follow?: boolean;
+    noColor?: boolean;
+    noLogPrefix?: boolean;
+    since?: string;
+    tail?: string;
+    timestamps?: boolean;
+    until?: string;
 }
 
 export interface DockerComposeLsArgs extends DockerComposeArgs {
-    service?: string[],
-    all?: boolean
-    dryRun?: boolean
-    filter?: string
-    format?: 'table' | 'json'
-    quiet?: boolean
+    service?: string[];
+    all?: boolean;
+    dryRun?: boolean;
+    filter?: string;
+    format?: "table" | "json";
+    quiet?: boolean;
 }
 
 export interface DockerComposePauseArgs extends DockerComposeArgs {
-    dryRun?: boolean
+    dryRun?: boolean;
 }
 
 export interface DockerComposePortArgs extends DockerComposeArgs {
-    service?: string
-    privatePort?: string
-    dryRun?: boolean
-    index?: number
-    protocol?: 'tcp' | 'udp'
+    service?: string;
+    privatePort?: string;
+    dryRun?: boolean;
+    index?: number;
+    protocol?: "tcp" | "udp";
 }
 
 export interface DockerComposePsArgs extends DockerComposeArgs {
-    service?: string[],
-    all?: boolean
-    dryRun?: boolean
-    filter?: string
-    format?: 'table' | 'json'
-    quiet?: boolean
-    services?: boolean
-    status?: Array<'created' | 'restarting' | 'running' | 'removing' | 'paused' | 'exited' | 'dead'>
+    service?: string[];
+    all?: boolean;
+    dryRun?: boolean;
+    filter?: string;
+    format?: "table" | "json";
+    quiet?: boolean;
+    services?: boolean;
+    status?: Array<"created" | "restarting" | "running" | "removing" | "paused" | "exited" | "dead">;
 }
 
 export interface DockerComposePullArgs extends DockerComposeArgs {
-    service?: string[],
-    dryRun?: boolean
-    ignoreBuildable?: boolean
-    ignorePullFailures?: boolean
-    includeDeps?: boolean
-    quiet?: boolean
+    service?: string[];
+    dryRun?: boolean;
+    ignoreBuildable?: boolean;
+    ignorePullFailures?: boolean;
+    includeDeps?: boolean;
+    quiet?: boolean;
 }
 
 export interface DockerComposePushArgs extends DockerComposeArgs {
-    service?: string[],
-    dryRun?: boolean
-    ignorePushFailures?: boolean
-    includeDeps?: boolean
-    quiet?: boolean
+    service?: string[];
+    dryRun?: boolean;
+    ignorePushFailures?: boolean;
+    includeDeps?: boolean;
+    quiet?: boolean;
 }
 
 export interface DockerComposeRestartArgs extends DockerComposeArgs {
-    service?: string[],
-    dryRun?: boolean
-    noDeps?: boolean
-    timeout?: number
+    service?: string[];
+    dryRun?: boolean;
+    noDeps?: boolean;
+    timeout?: number;
 }
 
 export interface DockerComposeRmArgs extends DockerComposeArgs {
-    service?: string[],
-    dryRun?: boolean
-    force?: boolean
-    stop?: boolean
-    volumes?: boolean
+    service?: string[];
+    dryRun?: boolean;
+    force?: boolean;
+    stop?: boolean;
+    volumes?: boolean;
 }
 
 export interface DockerComposeRunArgs extends DockerComposeArgs {
-    service: string,
-    command: string
-    args?: string[]
-    build?: boolean
-    capAdd?: string[]
-    capDrop?: string[]
-    detach?: boolean
-    dryRun?: boolean
-    entrypoint?: string
-    env?: string[]
-    interactive?: boolean
-    label?: string[]
-    name?: string
-    noTTY?: boolean
-    noDeps?: boolean
-    publish?: string[]
-    quietPull?: boolean
-    removeOrphans?: boolean
-    rm?: boolean
-    servicePorts?: boolean
-    useAliases?: boolean
-    user?: string
-    volume?: string[]
-    workdir?: string
+    service: string;
+    command: string;
+    args?: string[];
+    build?: boolean;
+    capAdd?: string[];
+    capDrop?: string[];
+    detach?: boolean;
+    dryRun?: boolean;
+    entrypoint?: string;
+    env?: string[];
+    interactive?: boolean;
+    label?: string[];
+    name?: string;
+    noTTY?: boolean;
+    noDeps?: boolean;
+    publish?: string[];
+    quietPull?: boolean;
+    removeOrphans?: boolean;
+    rm?: boolean;
+    servicePorts?: boolean;
+    useAliases?: boolean;
+    user?: string;
+    volume?: string[];
+    workdir?: string;
 }
 
 export interface DockerComposeStartArgs extends DockerComposeArgs {
-    service: string[],
-    dryRun?: boolean
+    service: string[];
+    dryRun?: boolean;
 }
 
 export interface DockerComposeStopArgs extends DockerComposeArgs {
-    service: string[],
-    dryRun?: boolean
+    service: string[];
+    dryRun?: boolean;
 }
 
 export interface DockerComposeTopArgs extends DockerComposeArgs {
-    service: string[],
-    dryRun?: boolean
+    service: string[];
+    dryRun?: boolean;
 }
 
 export interface DockerComposeUnpauseArgs extends DockerComposeArgs {
-    service: string[],
-    dryRun?: boolean
+    service: string[];
+    dryRun?: boolean;
 }
 
 export interface DockerComposeUpArgs extends DockerComposeArgs {
-    service?: string[],
-    abortOnContainerExit?: boolean
-    alwaysRecreateDeps?: boolean
-    attach?: string[]
-    attachDependencies?: boolean
-    build?: boolean
-    detach?: boolean
-    dryRun?: boolean
-    exitCodeFrom?: string
-    forceRecreate?: boolean
-    noAttach?: string[]
-    noBuild?: boolean
-    noColor?: boolean
-    noDeps?: boolean
-    noRecreate?: boolean
-    noStart?: boolean
-    pull?: 'always' | 'missing' | 'never'
-    quietPull?: boolean
-    removeOrphans?: boolean
-    renewAnonVolumes?: boolean
-    scale?: string[]
-    timeout?: number
-    timestamps?: boolean
-    wait?: boolean
-    waitTimeout?: number
+    service?: string[];
+    abortOnContainerExit?: boolean;
+    alwaysRecreateDeps?: boolean;
+    attach?: string[];
+    attachDependencies?: boolean;
+    build?: boolean;
+    detach?: boolean;
+    dryRun?: boolean;
+    exitCodeFrom?: string;
+    forceRecreate?: boolean;
+    noAttach?: string[];
+    noBuild?: boolean;
+    noColor?: boolean;
+    noDeps?: boolean;
+    noRecreate?: boolean;
+    noStart?: boolean;
+    pull?: "always" | "missing" | "never";
+    quietPull?: boolean;
+    removeOrphans?: boolean;
+    renewAnonVolumes?: boolean;
+    scale?: string[];
+    timeout?: number;
+    timestamps?: boolean;
+    wait?: boolean;
+    waitTimeout?: number;
 }
 
 export interface DockerComposeVersionArgs extends DockerComposeArgs {
-    dryRun?: boolean
-    format?: 'pretty' | 'json'
-    short?: boolean
+    dryRun?: boolean;
+    format?: "pretty" | "json";
+    short?: boolean;
 }
 
 function splatComposeArgs(command: string, args: DockerComposeArgs, argumentNames?: string[]) {
@@ -277,14 +270,14 @@ function splatComposeArgs(command: string, args: DockerComposeArgs, argumentName
     const splatArgs = splat(args as unknown as Record<string, unknown>, {
         includes: ["ansi", "compatibility", "parallel", "projectDirectory", "profile", "progress", "projectName"],
     });
-    const commandArgs = splat(args as unknown as Record<string, unknown>, { 
+    const commandArgs = splat(args as unknown as Record<string, unknown>, {
         command: [command],
         excludes: ["ansi", "compatibility", "parallel", "projectDirectory", "profile", "progress", "projectName"],
         arguments: argumentNames,
         appendArguments: true,
     });
 
-    return splatArgs.concat(commandArgs)
+    return splatArgs.concat(commandArgs);
 }
 
 export function build(args: DockerComposeBuildArgs, options?: IExecOptions) {

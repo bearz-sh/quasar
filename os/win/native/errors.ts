@@ -1,5 +1,3 @@
-
-
 export const ERROR_SUCCESS = 0x0;
 export const ERROR_INVALID_FUNCTION = 0x1;
 export const ERROR_FILE_NOT_FOUND = 0x2;

@@ -1,20 +1,9 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    findExe, 
-    findExeSync, 
-    registerExe,
-    splat,
-} from "../../mod.ts";
-
-
+import { exec, execSync, findExe, findExeSync, IExecOptions, IExecSyncOptions, registerExe, splat } from "../../mod.ts";
 
 registerExe("docker", {
     windows: [
         "%ProgramFiles%\\Docker\\Docker\\resources\\bin\\docker.exe",
-    ]
+    ],
 });
 
 export function docker(args?: string[], options?: IExecOptions) {
@@ -22,16 +11,16 @@ export function docker(args?: string[], options?: IExecOptions) {
 }
 
 docker.cli = docker;
-docker.sync = function(args?: string[], options?: IExecSyncOptions) {
+docker.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("docker", args, options);
-}
+};
 
 export interface DockerArgs extends Record<string, unknown> {
     config?: string;
     context?: string;
     debug?: boolean;
-    host?: string[],
-    logLevel?: 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+    host?: string[];
+    logLevel?: "debug" | "info" | "warn" | "error" | "fatal";
     tls?: boolean;
     tlscacert?: string;
     tlscert?: string;
@@ -47,9 +36,8 @@ registerExe("docker-buildx", {
     linux: [
         "/usr/local/bin/docker-buildx",
         "${HOME}/.rd/bin/docker-buildx",
-    ]
+    ],
 });
-
 
 export async function buildx(args?: string[], options?: IExecOptions) {
     const exe = await findExe("docker-buildx");
@@ -58,28 +46,30 @@ export async function buildx(args?: string[], options?: IExecOptions) {
         return exec(exe, args, options);
     }
 
-    if (args)
+    if (args) {
         args.splice(0, 0, "buildx");
-    else
+    } else {
         args = ["buildx"];
+    }
 
     return exec("docker", args, options);
 }
 
-buildx.sync = function(args?: string[], options?: IExecSyncOptions) {
+buildx.sync = function (args?: string[], options?: IExecSyncOptions) {
     const exe = findExeSync("docker-buildx");
 
     if (exe) {
         return execSync(exe, args, options);
     }
 
-    if (args)
+    if (args) {
         args.splice(0, 0, "buildx");
-    else
+    } else {
         args = ["buildx"];
+    }
 
     return execSync("docker", args, options);
-}
+};
 
 registerExe("docker-compose", {
     windows: [
@@ -88,7 +78,7 @@ registerExe("docker-compose", {
     linux: [
         "/usr/local/bin/docker-compose",
         "${HOME}/.rd/bin/docker-compose",
-    ]
+    ],
 });
 
 export async function compose(args?: string[], options?: IExecOptions) {
@@ -98,42 +88,44 @@ export async function compose(args?: string[], options?: IExecOptions) {
         return exec(exe, args, options);
     }
 
-    if (args)
+    if (args) {
         args.splice(0, 0, "compose");
-    else
+    } else {
         args = ["compose"];
+    }
 
     return exec("docker", args, options);
 }
 
-compose.sync = function(args?: string[], options?: IExecSyncOptions) {
+compose.sync = function (args?: string[], options?: IExecSyncOptions) {
     const exe = findExeSync("docker-compose");
 
     if (exe) {
         return execSync(exe, args, options);
     }
 
-    if (args)
+    if (args) {
         args.splice(0, 0, "compose");
-    else
+    } else {
         args = ["compose"];
+    }
 
     return execSync("docker", args, options);
-}
+};
 
 export interface DockerVersionArgs extends DockerArgs {
     format?: string;
 }
 
 export interface DockerLoginArgs extends DockerArgs {
-    server?: string
+    server?: string;
     username?: string;
     password?: string;
     passwordStdin?: boolean;
 }
 
 export interface DockerLogoutArgs extends DockerArgs {
-    server?: string
+    server?: string;
 }
 
 export interface DockerSearchArgs extends DockerArgs {
@@ -173,8 +165,7 @@ export function logoutSync(args: DockerLogoutArgs, options?: IExecSyncOptions) {
 function command(command: string, args?: string[], options?: IExecOptions) {
     if (args?.length) {
         args.splice(0, 0, command);
-    }
-    else {
+    } else {
         args = [command];
     }
 
@@ -184,8 +175,7 @@ function command(command: string, args?: string[], options?: IExecOptions) {
 function commandSync(command: string, args?: string[], options?: IExecSyncOptions) {
     if (args?.length) {
         args.splice(0, 0, command);
-    }
-    else {
+    } else {
         args = [command];
     }
 
@@ -208,7 +198,7 @@ export function contextSync(args?: string[], options?: IExecSyncOptions) {
     return commandSync("context", args, options);
 }
 
-export function volume(args?: string[],options?: IExecOptions) {
+export function volume(args?: string[], options?: IExecOptions) {
     return command("volume", args, options);
 }
 
@@ -280,7 +270,6 @@ export function configSync(args?: string[], options?: IExecSyncOptions) {
     return commandSync("config", args, options);
 }
 
-
 export function plugin(args?: string[], options?: IExecOptions) {
     return command("plugin", args, options);
 }
@@ -298,17 +287,23 @@ export function trustSync(args?: string[], options?: IExecSyncOptions) {
 }
 
 export function search(args: DockerSearchArgs, options?: IExecOptions) {
-    return docker(["search", ...splat(args, {
-        arguments: ["term"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "search",
+        ...splat(args, {
+            arguments: ["term"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function searchSync(args: DockerSearchArgs, options?: IExecSyncOptions) {
-    return docker.sync(["search", ...splat(args, {
-        arguments: ["term"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "search",
+        ...splat(args, {
+            arguments: ["term"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function system(args?: string[], options?: IExecOptions) {

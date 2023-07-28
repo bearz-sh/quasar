@@ -10,12 +10,12 @@ export class GitHubEnvProvider implements ICiEnvProvider {
     get name(): string {
         return "github";
     }
-    
+
     get isCi(): boolean {
         if (this.#isCi === undefined) {
             this.#isCi = env.get("GITHUB_ACTIONS") === "true";
         }
-        
+
         return this.#isCi;
     }
 
@@ -36,7 +36,7 @@ export class GitHubEnvProvider implements ICiEnvProvider {
         return env.get("GITHUB_RUN_ID") || "";
     }
 
-    get refName() : string {
+    get refName(): string {
         return env.get("GITHUB_REFNAME") || "";
     }
 
@@ -49,8 +49,7 @@ export class GitHubEnvProvider implements ICiEnvProvider {
     }
 }
 
-export class GitHubCiHost extends CiHost
-{
+export class GitHubCiHost extends CiHost {
     override startGroup(name: string): CiHost {
         this.groups.push(name);
         printf(`::group::${name}\n`);
@@ -83,7 +82,6 @@ export class GitHubCiHost extends CiHost
     }
 
     override exportVariable(name: string, value: string, secret = false): ICiHost {
-       
         if (secret) {
             printf(`::add-mask::${value}\n`);
         }
@@ -95,7 +93,6 @@ export class GitHubCiHost extends CiHost
         }
         const content = readTextFileSync(file);
         writeTextFileSync(file, `${content}"\n${name}="${value}`);
-        
 
         return super.exportVariable(name, value, secret);
     }

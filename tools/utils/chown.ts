@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("chown", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("chown", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\chown.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\chown.exe",
         "%SystemDrive%\\msys\\usr\\bin\\chown.exe",
-    ]
+    ],
 });
 
 export function chown(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function chown(args?: string[], options?: IExecOptions) {
 }
 
 chown.cli = chown;
-chown.sync = function(args?: string[], options?: IExecSyncOptions) {
+chown.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("chown", args, options);
-}
+};

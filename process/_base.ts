@@ -1,39 +1,40 @@
-import { IWriter, IWriterSync, ICloser, IReader, IReaderSync } from '../streams/interfaces.ts';
+import { ICloser, IReader, IReaderSync, IWriter, IWriterSync } from "../streams/interfaces.ts";
 
-export type Signal = | "SIGABRT"
-| "SIGALRM"
-| "SIGBREAK"
-| "SIGBUS"
-| "SIGCHLD"
-| "SIGCONT"
-| "SIGEMT"
-| "SIGFPE"
-| "SIGHUP"
-| "SIGILL"
-| "SIGINFO"
-| "SIGINT"
-| "SIGIO"
-| "SIGKILL"
-| "SIGPIPE"
-| "SIGPROF"
-| "SIGPWR"
-| "SIGQUIT"
-| "SIGSEGV"
-| "SIGSTKFLT"
-| "SIGSTOP"
-| "SIGSYS"
-| "SIGTERM"
-| "SIGTRAP"
-| "SIGTSTP"
-| "SIGTTIN"
-| "SIGTTOU"
-| "SIGURG"
-| "SIGUSR1"
-| "SIGUSR2"
-| "SIGVTALRM"
-| "SIGWINCH"
-| "SIGXCPU"
-| "SIGXFSZ";
+export type Signal =
+    | "SIGABRT"
+    | "SIGALRM"
+    | "SIGBREAK"
+    | "SIGBUS"
+    | "SIGCHLD"
+    | "SIGCONT"
+    | "SIGEMT"
+    | "SIGFPE"
+    | "SIGHUP"
+    | "SIGILL"
+    | "SIGINFO"
+    | "SIGINT"
+    | "SIGIO"
+    | "SIGKILL"
+    | "SIGPIPE"
+    | "SIGPROF"
+    | "SIGPWR"
+    | "SIGQUIT"
+    | "SIGSEGV"
+    | "SIGSTKFLT"
+    | "SIGSTOP"
+    | "SIGSYS"
+    | "SIGTERM"
+    | "SIGTRAP"
+    | "SIGTSTP"
+    | "SIGTTIN"
+    | "SIGTTOU"
+    | "SIGURG"
+    | "SIGUSR1"
+    | "SIGUSR2"
+    | "SIGVTALRM"
+    | "SIGWINCH"
+    | "SIGXCPU"
+    | "SIGXFSZ";
 
 export interface ICommandStatus {
     readonly code: number;
@@ -87,19 +88,18 @@ export function isatty(rid: number): boolean {
 
 export const pid = Deno.pid;
 
-
 export type Stdout = IWriter & IWriterSync & ICloser & {
     readonly rid: number;
-    readonly writable: WritableStream<Uint8Array>
+    readonly writable: WritableStream<Uint8Array>;
 };
 
 export type Stdin = IReader & IReaderSync & ICloser & {
     readonly rid: number;
-    readonly readable: ReadableStream<Uint8Array>
-}
+    readonly readable: ReadableStream<Uint8Array>;
+};
 
-export const stdout : Stdout = Deno.stdout;
-export const stderr : Stdout = Deno.stderr;
-export const stdin : Stdin = Deno.stdin;
+export const stdout: Stdout = Deno.stdout;
+export const stderr: Stdout = Deno.stderr;
+export const stdin: Stdin = Deno.stdin;
 
 export const args = Deno.args;

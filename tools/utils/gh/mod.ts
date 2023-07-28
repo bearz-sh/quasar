@@ -1,14 +1,14 @@
 // deno-lint-ignore-file no-unused-vars
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
-    upm,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
-    PsOutput
+    PsOutput,
+    registerExe,
+    upm,
 } from "../../mod.ts";
 
 const findOptions = registerExe("gh", {});
@@ -19,6 +19,6 @@ export function gh(args?: string[], options?: IExecOptions) {
 
 gh.cli = gh;
 gh.findOptions = findOptions;
-gh.sync = function(args?: string[], options?: IExecSyncOptions) {
+gh.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("gh", args, options);
-}
+};

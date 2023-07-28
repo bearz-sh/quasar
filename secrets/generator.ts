@@ -1,5 +1,5 @@
-import { isLetterCodePoint, isUpperCodePoint, isDigitCodePoint } from '../char.ts';
-import { randomBytes } from '../random/mod.ts';
+import { isDigitCodePoint, isLetterCodePoint, isUpperCodePoint } from "../char.ts";
+import { randomBytes } from "../random/mod.ts";
 
 export function validate(data: Uint8Array) {
     let isDigit = false;
@@ -29,7 +29,6 @@ export function validate(data: Uint8Array) {
             continue;
         }
 
-        
         isSpecial = true;
     }
 
@@ -58,7 +57,7 @@ export default class SecretGenerator {
 
     addDefaults() {
         this.add(
-            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-#@~*:{}',
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-#@~*:{}",
         );
         return this;
     }
@@ -88,12 +87,12 @@ export default class SecretGenerator {
         const maxAttempts = 5000;
         let attempts = 0;
 
-        while (!valid && attempts <  maxAttempts) {
+        while (!valid && attempts < maxAttempts) {
             chars.fill(0);
             const bytes = randomBytes(length);
 
             for (let i = 0; i < length; i++) {
-                const bit = (Math.abs(bytes[i]) % this.#codes.length);
+                const bit = Math.abs(bytes[i]) % this.#codes.length;
                 chars[i] = this.#codes[bit];
             }
 
@@ -101,8 +100,8 @@ export default class SecretGenerator {
             valid = this.#validator(chars);
         }
 
-        if(!valid) {
-            throw new Error('Failed to generate secret');
+        if (!valid) {
+            throw new Error("Failed to generate secret");
         }
 
         return chars;

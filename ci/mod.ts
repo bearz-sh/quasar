@@ -8,13 +8,12 @@ export class CiProvider implements ICiEnvProvider {
         this.#providers = [];
     }
 
-
     get provider(): ICiEnvProvider {
         if (this.#provider) {
             return this.#provider;
         }
 
-        this.#provider = this.#providers.find(p => p.isCi);
+        this.#provider = this.#providers.find((p) => p.isCi);
         if (!this.#provider) {
             throw new Error("No CI provider found");
         }

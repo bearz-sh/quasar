@@ -1,13 +1,6 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    splat,
-} from "../../mod.ts";
+import { IExecOptions, IExecSyncOptions, splat } from "../../mod.ts";
 
-import {
-    DockerArgs,
-    docker,
-} from './base.ts'
+import { docker, DockerArgs } from "./base.ts";
 
 export interface DockerSystemEventsArgs extends DockerArgs {
     filter?: string[];
@@ -27,7 +20,6 @@ export interface DockerSystemPruneArgs extends DockerArgs {
     force?: boolean;
     volumes?: boolean;
 }
-
 
 export interface DockerSystemInfoArgs extends DockerArgs {
     format?: string;
@@ -64,6 +56,3 @@ export function info(args: DockerSystemInfoArgs, options?: IExecOptions) {
 export function infoSync(args: DockerSystemInfoArgs, options?: IExecSyncOptions) {
     return docker.sync(["system", "info", ...splat(args)], options);
 }
-
-
-

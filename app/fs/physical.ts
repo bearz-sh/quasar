@@ -1,13 +1,11 @@
 import { IDirectoryContents, IFileInfo, IFileProvider } from "./interfaces.ts";
-import { exists, isFile } from "../../fs/mod.ts";
-import { join, isAbsolute, basename } from "../../path/mod.ts";
+import { exists } from "../../fs/mod.ts";
+import { basename, isAbsolute, join } from "../../path/mod.ts";
 
-export class PhyiscalFileProvider implements IFileProvider
-{
+export class PhyiscalFileProvider implements IFileProvider {
     #basePath: string;
 
-    constructor(basePath: string)
-    {
+    constructor(basePath: string) {
         this.#basePath = basePath;
     }
 
@@ -17,8 +15,7 @@ export class PhyiscalFileProvider implements IFileProvider
         }
 
         const fileExists = await exists(path);
-        if (!fileExists) 
-        {
+        if (!fileExists) {
             return {
                 exists: false,
                 length: 0,
@@ -29,8 +26,8 @@ export class PhyiscalFileProvider implements IFileProvider
                 createReadStream: () => {
                     const file = Deno.openSync(path, { read: true });
                     return file.readable;
-                }
-            }
+                },
+            };
         }
 
         const fileInfo = await Deno.stat(path);
@@ -43,8 +40,8 @@ export class PhyiscalFileProvider implements IFileProvider
             isDirectory: fileInfo.isDirectory,
             createReadStream: () => {
                 return Deno.openSync(path, { read: true }).readable;
-            }
-        }
+            },
+        };
     }
 
     async getDirectoryContents(path: string): Promise<IDirectoryContents> {
@@ -56,13 +53,13 @@ export class PhyiscalFileProvider implements IFileProvider
         if (!dirExists) {
             return {
                 exitsts: false,
-                [Symbol.asyncIterator]: async function* () { }
-            }
+                [Symbol.asyncIterator]: async function* () {},
+            };
         }
 
         return {
             exitsts: true,
-            [Symbol.asyncIterator]: async function*() {
+            [Symbol.asyncIterator]: async function* () {
                 for await (const entry of Deno.readDir(path)) {
                     const fileInfo = await Deno.stat(entry.name);
                     const mtime = fileInfo.mtime ?? undefined;
@@ -79,11 +76,10 @@ export class PhyiscalFileProvider implements IFileProvider
                             }
 
                             return Deno.openSync(entry.name, { read: true }).readable;
-                        }
-                    }
+                        },
+                    };
                 }
-            }
-        }
+            },
+        };
     }
-    
 }

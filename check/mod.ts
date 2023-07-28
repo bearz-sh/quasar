@@ -1,4 +1,4 @@
-import { isWhiteSpaceAt } from '../char.ts';
+import { isWhiteSpaceAt } from "../char.ts";
 
 import {
     ArgumentEmptyError,
@@ -6,7 +6,7 @@ import {
     ArgumentWhiteSpaceError,
     InvalidOperationError,
     NullReferenceError,
-} from '../errors/mod.ts';
+} from "../errors/mod.ts";
 
 export function notNull<T>(value: T | undefined | null, parameterName: string): asserts value is NonNullable<T>;
 export function notNull(value: unknown, parameterName: string): asserts value is NonNullable<unknown> {

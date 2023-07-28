@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("mv", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("mv", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\mv.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\mv.exe",
         "%SystemDrive%\\msys\\usr\\bin\\mv.exe",
-    ]
+    ],
 });
 
 export function mv(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function mv(args?: string[], options?: IExecOptions) {
 }
 
 mv.cli = mv;
-mv.sync = function(args?: string[], options?: IExecSyncOptions) {
+mv.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("mv", args, options);
-}
+};

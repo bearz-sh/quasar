@@ -1,6 +1,6 @@
-import { test, assert } from "../testing/mod.ts";
+import { assert, test } from "../testing/mod.ts";
 import { isReadEnabled } from "../testing/deno_permissions.ts";
-import { cwd, chdir } from "./_base.ts";
+import { chdir, cwd } from "./_base.ts";
 
 const hasRead = await isReadEnabled();
 
@@ -12,7 +12,7 @@ test.when(hasRead, "cwd: returns directory", () => {
 test.when(hasRead, "chdir: changes directory", () => {
     const dir = cwd();
     try {
-        const newDir = Deno.build.os === 'windows' ? 'C:\\' : '/';
+        const newDir = Deno.build.os === "windows" ? "C:\\" : "/";
         chdir(newDir);
         assert.equals(cwd(), newDir);
     } finally {

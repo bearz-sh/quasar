@@ -9,11 +9,10 @@ export const IS_BROWSER = g.window !== undefined;
 
 export type Runtimes = "bun" | "deno" | "node" | "browser" | "unknown";
 
-let runtimeName : Runtimes = "unknown";
+let runtimeName: Runtimes = "unknown";
 if (IS_BUN) {
     runtimeName = "bun";
-}
-else if (IS_DENO) {
+} else if (IS_DENO) {
     runtimeName = "deno";
 } else if (IS_NODE) {
     runtimeName = "node";
@@ -23,18 +22,16 @@ else if (IS_DENO) {
     runtimeName = "unknown";
 }
 
-export const RUNTIME : Runtimes = runtimeName
+export const RUNTIME: Runtimes = runtimeName;
 
 let trace = false;
 let debug = false;
 
-if (g.IS_TRACE)
-{
+if (g.IS_TRACE) {
     trace = true;
 }
 
-if (g.IS_DEBUG)
-{
+if (g.IS_DEBUG) {
     debug = true;
 }
 

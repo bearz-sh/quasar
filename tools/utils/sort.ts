@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("sort", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("sort", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\sort.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\sort.exe",
         "%SystemDrive%\\msys\\usr\\bin\\sort.exe",
-    ]
+    ],
 });
 
 export function sort(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function sort(args?: string[], options?: IExecOptions) {
 }
 
 sort.cli = sort;
-sort.sync = function(args?: string[], options?: IExecSyncOptions) {
+sort.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("sort", args, options);
-}
+};

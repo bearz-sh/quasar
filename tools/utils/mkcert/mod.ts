@@ -1,14 +1,14 @@
 // deno-lint-ignore-file no-unused-vars
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
-    upm,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
-    PsOutput
+    PsOutput,
+    registerExe,
+    upm,
 } from "../../mod.ts";
 
 const findOptions = registerExe("mkcert", {});
@@ -19,6 +19,6 @@ export function mkcert(args?: string[], options?: IExecOptions) {
 
 mkcert.cli = mkcert;
 mkcert.findOptions = findOptions;
-mkcert.sync = function(args?: string[], options?: IExecSyncOptions) {
+mkcert.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("mkcert", args, options);
-}
+};

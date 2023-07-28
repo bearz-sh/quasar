@@ -1,13 +1,9 @@
 import { handlebars } from "./deps.ts";
-import { trimEnd, trimStart, trim, isNullOrEmpty, isNullOrWhiteSpace } from "../str.ts";
-import * as inflections from 'npm:inflection@2.0.1';
-import * as os from '../os/mod.ts';
-
-
-
+import { isNullOrEmpty, isNullOrWhiteSpace, trim, trimEnd, trimStart } from "../str.ts";
+import * as inflections from "npm:inflection@2.0.1";
+import * as os from "../os/mod.ts";
 
 const stringHelpers = {
-   
     trim: function (str: string, chars?: string) {
         return trim(str, chars);
     },
@@ -15,7 +11,7 @@ const stringHelpers = {
         return trimEnd(str, chars);
     },
 
-    trimStart: function(str: string, chars?: string) {
+    trimStart: function (str: string, chars?: string) {
         return trimStart(str, chars);
     },
 
@@ -52,15 +48,15 @@ const stringHelpers = {
     },
 
     pluralize: function (str: string) {
-        return inflections.pluralize(str); 
+        return inflections.pluralize(str);
     },
 
     singularize: function (str: string) {
-        return inflections.pluralize(str); 
+        return inflections.pluralize(str);
     },
 
     titleize: function (str: string) {
-        return inflections.titleize(str); 
+        return inflections.titleize(str);
     },
 
     dasherize: function (str: string) {
@@ -79,18 +75,14 @@ const stringHelpers = {
         return inflections.humanize(str);
     },
 
-    contains: function<T>(str: string | Array<T>, value: string | T) {
+    contains: function <T>(str: string | Array<T>, value: string | T) {
         if (Array.isArray(str)) {
             return str.includes(value as T);
         }
 
         return str.toString().includes(value as string);
-    }
-
-}
-
-
-
+    },
+};
 
 export function registerStringHelpers(hb?: typeof handlebars) {
     if (hb) {
@@ -105,23 +97,21 @@ export function registerStringHelpers(hb?: typeof handlebars) {
     }
 }
 
-
 export function registerEnvHelpers(hb?: typeof handlebars) {
     const ev = os.toObject();
     const envHelpers = {
-        'env-get': function (v: string) {
+        "env-get": function (v: string) {
             return ev[v];
         },
-    
-        'env-has': function (v: string) {
+
+        "env-has": function (v: string) {
             return ev[v] !== undefined;
         },
-    
-        'env-set': function (k: string, v: string) {
+
+        "env-set": function (k: string, v: string) {
             ev[k] = v;
-        }
-    }
-    
+        },
+    };
 
     if (hb) {
         for (const [k, v] of Object.entries(envHelpers)) {

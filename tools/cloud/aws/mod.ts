@@ -1,14 +1,14 @@
 // deno-lint-ignore-file no-unused-vars
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
-    upm,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
-    PsOutput
+    PsOutput,
+    registerExe,
+    upm,
 } from "../../mod.ts";
 
 const findOptions = registerExe("aws", {});
@@ -19,6 +19,6 @@ export function aws(args?: string[], options?: IExecOptions) {
 
 aws.cli = aws;
 aws.findOptions = findOptions;
-aws.sync = function(args?: string[], options?: IExecSyncOptions) {
+aws.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("aws", args, options);
-}
+};

@@ -1,12 +1,12 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
-    PsOutput,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
+    PsOutput,
+    registerExe,
     upm,
 } from "../../mod.ts";
 
@@ -14,7 +14,7 @@ registerExe("choco", {
     windows: [
         "%ChocolateyInstall%\\bin\\choco.exe",
         "%ProgramData%\\chocolatey\\bin\\choco.exe",
-    ]
+    ],
 });
 
 export function choco(args?: string[], options?: IExecOptions) {
@@ -22,15 +22,14 @@ export function choco(args?: string[], options?: IExecOptions) {
 }
 
 choco.cli = choco;
-choco.sync = function(args?: string[], options?: IExecSyncOptions) {
+choco.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("choco", args, options);
-}
-
+};
 
 export class ChocoManager implements IPkgMgr {
     #version: string | undefined;
     #isV2: boolean | undefined;
-    
+
     readonly name: string = "choco";
 
     install(name: string, version?: string, args?: string[]): Promise<PsOutput> {
@@ -45,7 +44,7 @@ export class ChocoManager implements IPkgMgr {
 
         return choco(splat, { stdout: "inherit", stderr: "inherit" });
     }
- 
+
     uninstall(name: string, args?: string[]): Promise<PsOutput> {
         const splat = ["uninstall", name, "-y"];
 
@@ -55,7 +54,7 @@ export class ChocoManager implements IPkgMgr {
 
         return choco(splat, { stdout: "inherit", stderr: "inherit" });
     }
- 
+
     upgrade(name: string, args?: string[]): Promise<PsOutput> {
         const splat = ["upgrade", name, "-y"];
 
@@ -64,12 +63,13 @@ export class ChocoManager implements IPkgMgr {
         }
         return choco(splat, { stdout: "inherit", stderr: "inherit" });
     }
- 
+
     async list(query?: string, args?: string[]): Promise<IPkgInfo[]> {
         const splat = ["list"];
 
-        if (query?.length)
+        if (query?.length) {
             splat.push(query);
+        }
 
         splat.push("-r");
 
@@ -88,14 +88,15 @@ export class ChocoManager implements IPkgMgr {
         if (!this.#isV2 && !args?.includes("-l")) {
             splat.push("-l");
         }
-        
+
         const out = await choco(splat, { stdout: "piped", stderr: "inherit" });
         const results: IPkgInfo[] = [];
         for (let i = 0; i < out.stdoutAsLines.length; i++) {
             const line = out.stdoutAsLines[i];
             const parts = line.split("|");
-            if (parts.length < 2) 
+            if (parts.length < 2) {
                 continue;
+            }
             const name = parts[0].trim();
             const version = parts[1].trim();
             results.push({ name, version });
@@ -104,11 +105,12 @@ export class ChocoManager implements IPkgMgr {
         return results;
     }
 
-    async search(query?: string,args?: string[]): Promise<IPkgInfo[]> {
+    async search(query?: string, args?: string[]): Promise<IPkgInfo[]> {
         const splat = ["search"];
 
-        if (query?.length)
+        if (query?.length) {
             splat.push(query);
+        }
 
         splat.push("-r");
 

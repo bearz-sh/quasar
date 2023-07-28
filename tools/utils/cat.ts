@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("cat", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("cat", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\cat.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\cat.exe",
         "%SystemDrive%\\msys\\usr\\bin\\cat.exe",
-    ]
+    ],
 });
 
 export function cat(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function cat(args?: string[], options?: IExecOptions) {
 }
 
 cat.cli = cat;
-cat.sync = function(args?: string[], options?: IExecSyncOptions) {
+cat.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("cat", args, options);
-}
+};

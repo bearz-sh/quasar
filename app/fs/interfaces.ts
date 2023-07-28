@@ -1,6 +1,4 @@
-
-export interface IFileInfo 
-{
+export interface IFileInfo {
     exists: boolean;
 
     length: number;
@@ -16,13 +14,11 @@ export interface IFileInfo
     createReadStream(): ReadableStream<Uint8Array>;
 }
 
-export interface IDirectoryContents extends AsyncIterable<IFileInfo>
-{
+export interface IDirectoryContents extends AsyncIterable<IFileInfo> {
     exitsts: boolean;
 }
 
-export interface IFileProvider
-{
+export interface IFileProvider {
     getFileInfo(path: string): Promise<IFileInfo>;
 
     getDirectoryContents(path: string): Promise<IDirectoryContents>;

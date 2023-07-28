@@ -2,7 +2,7 @@ import { StringBuilder } from "../../string-builder.ts";
 
 export function pwstrFromFfi(ptr: Deno.PointerValue): string | null {
     if (ptr === null) {
-      return null;
+        return null;
     }
 
     const view = new Deno.UnsafePointerView(ptr);
@@ -12,20 +12,17 @@ export function pwstrFromFfi(ptr: Deno.PointerValue): string | null {
         if (code === 0) {
             break;
         }
-      
+
         sb.appendU16Char(code);
-      
     }
     return sb.toString();
 }
 
-export class Pstr 
-{
+export class Pstr {
     #bytes?: Uint8Array;
 
-    constructor(str: string | Uint8Array | null)
-    {
-        if (typeof str === 'string') {
+    constructor(str: string | Uint8Array | null) {
+        if (typeof str === "string") {
             this.#bytes = new TextEncoder().encode(str + "\0");
         }
 
@@ -34,53 +31,49 @@ export class Pstr
         }
     }
 
-    get isNone(): boolean
-    {
+    get isNone(): boolean {
         return this.#bytes === undefined;
     }
 
-    get bytes(): Uint8Array
-    {
-        if (this.#bytes === undefined) 
-           throw new Error("Object is none");
+    get bytes(): Uint8Array {
+        if (this.#bytes === undefined) {
+            throw new Error("Object is none");
+        }
 
         return this.#bytes;
     }
 
-    get length(): number
-    {
+    get length(): number {
         return this.#bytes?.length ?? 0;
     }
 
-    static fromU8(bytes: Uint8Array): Pstr
-    {
+    static fromU8(bytes: Uint8Array): Pstr {
         return new Pstr(bytes);
     }
 
-    static fromPtr(ptr: Deno.PointerValue)
-    {
-        if (ptr === null)
+    static fromPtr(ptr: Deno.PointerValue) {
+        if (ptr === null) {
             return new Pstr(null);
+        }
 
         return new Pstr(Deno.UnsafePointerView.getCString(ptr));
     }
 
     toString() {
-        if (!this.#bytes)
+        if (!this.#bytes) {
             return null;
+        }
 
         return new TextDecoder().decode(this.#bytes);
     }
 }
 
-export class Pwstr 
-{
+export class Pwstr {
     #bytes?: Uint8Array;
 
-    constructor(str: string | Uint8Array | Uint16Array | null)
-    {
-        if (typeof str === 'string') {
-            const u8 = new TextEncoder().encode(str + '\0');
+    constructor(str: string | Uint8Array | Uint16Array | null) {
+        if (typeof str === "string") {
+            const u8 = new TextEncoder().encode(str + "\0");
             const u16 = new Uint16Array(u8);
             this.#bytes = new Uint8Array(u16.buffer);
         }
@@ -94,48 +87,43 @@ export class Pwstr
         }
     }
 
-    get isNone(): boolean
-    {
+    get isNone(): boolean {
         return this.#bytes === undefined;
     }
 
-    get bytes(): Uint8Array
-    {
-        if (this.#bytes === undefined) 
-           throw new Error("Object is none");
+    get bytes(): Uint8Array {
+        if (this.#bytes === undefined) {
+            throw new Error("Object is none");
+        }
 
         return this.#bytes;
     }
 
-    get length(): number
-    {
+    get length(): number {
         return this.#bytes?.length ?? 0;
     }
 
-    static fromU8(bytes: Uint8Array): Pwstr
-    {
+    static fromU8(bytes: Uint8Array): Pwstr {
         return new Pwstr(new TextDecoder().decode(bytes));
     }
 
-    static fromU16(bytes: Uint16Array): Pwstr
-    {
+    static fromU16(bytes: Uint16Array): Pwstr {
         return new Pwstr(new Uint8Array(bytes.buffer));
     }
 
-    static fromPtr(ptr: Deno.PointerValue): Pwstr
-    {
+    static fromPtr(ptr: Deno.PointerValue): Pwstr {
         const str = pwstrFromFfi(ptr);
         return new Pwstr(str);
     }
 
-    static fromString(str: string): Pwstr
-    {
+    static fromString(str: string): Pwstr {
         return new Pwstr(str);
     }
 
     toString() {
-        if (!this.#bytes)
+        if (!this.#bytes) {
             return null;
+        }
         return new TextDecoder().decode(this.#bytes);
     }
 }

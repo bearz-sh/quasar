@@ -1,16 +1,9 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    splat,
-} from "../../mod.ts";
+import { IExecOptions, IExecSyncOptions, splat } from "../../mod.ts";
 
-import {
-    DockerArgs,
-    docker,
-} from './base.ts'
+import { docker, DockerArgs } from "./base.ts";
 
 export interface DockerContainerAttachArgs extends DockerArgs {
-    container: string 
+    container: string;
     detachKeys?: string;
     noStdin?: boolean;
     sigProxy?: boolean;
@@ -32,8 +25,6 @@ export interface DockerContainerCpArgs extends DockerArgs {
     followLink?: boolean;
     quiet?: boolean;
 }
-
-
 
 export interface DockerContainerCreateArgs extends DockerArgs {
     image: string;
@@ -70,7 +61,7 @@ export interface DockerContainerCreateArgs extends DockerArgs {
     env?: string[];
     envFile?: string[];
     expose?: string[];
-    gpus?: string
+    gpus?: string;
     groupAdd?: string[];
     healthCmd?: string;
     healthInterval?: string;
@@ -110,7 +101,7 @@ export interface DockerContainerCreateArgs extends DockerArgs {
     privileged?: boolean;
     publish?: string[];
     publishAll?: boolean;
-    pull?: 'always' | 'missing' | 'never';
+    pull?: "always" | "missing" | "never";
     quiet?: boolean;
     readOnly?: boolean;
     restart?: string;
@@ -222,8 +213,6 @@ export interface DockerContainerRmArgs extends DockerArgs {
     volumes: boolean;
 }
 
-
-
 export interface DockerRunArgs extends DockerArgs {
     image: string;
     command?: string;
@@ -263,7 +252,7 @@ export interface DockerRunArgs extends DockerArgs {
     env?: string[];
     envFile?: string[];
     expose?: string[];
-    gpus?: string
+    gpus?: string;
     groupAdd?: string[];
     healthCmd?: string;
     healthInterval?: string;
@@ -303,7 +292,7 @@ export interface DockerRunArgs extends DockerArgs {
     privileged?: boolean;
     publish?: string[];
     publishAll?: boolean;
-    pull?: 'always' | 'missing' | 'never';
+    pull?: "always" | "missing" | "never";
     quiet?: boolean;
     readOnly?: boolean;
     restart?: string;
@@ -334,7 +323,6 @@ export interface DockerStartArgs extends DockerArgs {
     interactive?: boolean;
 }
 
-
 export interface DockerStatsArgs extends DockerArgs {
     container?: string[];
     all?: boolean;
@@ -342,7 +330,6 @@ export interface DockerStatsArgs extends DockerArgs {
     noStream?: boolean;
     noTrunc?: boolean;
 }
-
 
 export interface DockerStopArgs extends DockerArgs {
     container: string[];
@@ -359,7 +346,7 @@ export interface DockerUnpauseArgs extends DockerArgs {
 }
 
 export interface DockerUpdateArgs extends DockerArgs {
-    container: string[]
+    container: string[];
     blkioWeight?: number;
     cpuPeriod?: number;
     cpuQuota?: number;
@@ -378,157 +365,235 @@ export interface DockerUpdateArgs extends DockerArgs {
 
 export interface DockerWaitArgs extends DockerArgs {
     container: string[];
-    condition?: 'not-running' | 'next-exit' | 'removed' | 'exited';
+    condition?: "not-running" | "next-exit" | "removed" | "exited";
 }
 
 function container(options: IExecOptions) {
     return docker(["container"], options);
 }
 
-container.sync = function(options: IExecSyncOptions) {
+container.sync = function (options: IExecSyncOptions) {
     return docker.sync(["container"], options);
-}
+};
 
 export function attach(args: DockerContainerAttachArgs, options?: IExecOptions) {
-    return docker(["container", "attach", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "attach",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function attachSync(args: DockerContainerAttachArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "attach", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "attach",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function commit(args: DockerContainerCommitArgs, options?: IExecOptions) {
-    return docker(["container", "commit", ...splat(args, {
-        arguments: ["container", "repository"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "commit",
+        ...splat(args, {
+            arguments: ["container", "repository"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function commitSync(args: DockerContainerCommitArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "commit", ...splat(args, {
-        arguments: ["container", "repository"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "commit",
+        ...splat(args, {
+            arguments: ["container", "repository"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function cp(args: DockerContainerCpArgs, options?: IExecOptions) {
-    return docker(["container", "cp", ...splat(args, {
-        arguments: ["src", "dest"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "cp",
+        ...splat(args, {
+            arguments: ["src", "dest"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function cpSync(args: DockerContainerCpArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "cp", ...splat(args, {
-        arguments: ["src", "dest"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "cp",
+        ...splat(args, {
+            arguments: ["src", "dest"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function create(args: DockerContainerCreateArgs, options?: IExecOptions) {
-    return docker(["container", "create", ...splat(args, {
-        arguments: ["image", "command", "args"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "create",
+        ...splat(args, {
+            arguments: ["image", "command", "args"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function createSync(args: DockerContainerCreateArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "create", ...splat(args, {
-        arguments: ["image", "command", "args"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "create",
+        ...splat(args, {
+            arguments: ["image", "command", "args"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
-
 export function diff(args: DockerContainerDiffArgs, options?: IExecOptions) {
-    return docker(["container", "diff", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "diff",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function diffSync(args: DockerContainerDiffArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "diff", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "diff",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function exec(args: DockerContainerExecArgs, options?: IExecOptions) {
-    return docker(["container", "exec", ...splat(args, {
-        arguments: ["container", "command", "args"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "exec",
+        ...splat(args, {
+            arguments: ["container", "command", "args"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function execSync(args: DockerContainerExecArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "exec", ...splat(args, {
-        arguments: ["container", "command", "args"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "exec",
+        ...splat(args, {
+            arguments: ["container", "command", "args"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function _export(args: DockerContainerExportArgs, options?: IExecOptions) {
-    return docker(["container", "export", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "export",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function exportSync(args: DockerContainerExportArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "export", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "export",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function inspect(args: DockerContainerInspectArgs, options?: IExecOptions) {
-    return docker(["container", "inspect", ...splat(args, {
-        arguments: ["nameOrId"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "inspect",
+        ...splat(args, {
+            arguments: ["nameOrId"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function inspectSync(args: DockerContainerInspectArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "inspect", ...splat(args, {
-        arguments: ["nameOrId"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "inspect",
+        ...splat(args, {
+            arguments: ["nameOrId"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function kill(args: DockerContainerKillArgs, options?: IExecOptions) {
-    return docker(["container", "kill", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "kill",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function killSync(args: DockerContainerKillArgs, options?: IExecSyncOptions) {
-
-    return docker.sync(["container", "kill", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "kill",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function logs(args: DockerContainerLogs, options?: IExecOptions) {
-    return docker(["container", "logs", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "logs",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function logsSync(args: DockerContainerLogs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "logs", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "logs",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function ls(args: DockerContainerLsArgs, options?: IExecOptions) {
@@ -540,31 +605,47 @@ export function lsSync(args: DockerContainerLsArgs, options?: IExecSyncOptions) 
 }
 
 export function pause(args: DockerPauseArgs, options?: IExecOptions) {
-    return docker(["container", "pause", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "pause",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function pauseSync(args: DockerPauseArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "pause", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "pause",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function port(args: DockerPortArgs, options?: IExecOptions) {
-    return docker(["container", "port", ...splat(args, {
-        arguments: ["container", "port"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "port",
+        ...splat(args, {
+            arguments: ["container", "port"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function portSync(args: DockerPortArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "port", ...splat(args, {
-        arguments: ["container", "port"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "port",
+        ...splat(args, {
+            arguments: ["container", "port"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function prune(args: DockerContainerPruneArgs, options?: IExecOptions) {
@@ -576,155 +657,243 @@ export function pruneSync(args: DockerContainerPruneArgs, options?: IExecSyncOpt
 }
 
 export function rename(args: DockerContainerRenameArgs, options?: IExecOptions) {
-    return docker(["container", "rename", ...splat(args, {
-        arguments: ["container", "name"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "rename",
+        ...splat(args, {
+            arguments: ["container", "name"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function renameSync(args: DockerContainerRenameArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "rename", ...splat(args, {
-        arguments: ["container", "name"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "rename",
+        ...splat(args, {
+            arguments: ["container", "name"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function restart(args: DockerContainerRestartArgs, options?: IExecOptions) {
-    return docker(["container", "restart", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "restart",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function restartSync(args: DockerContainerRestartArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "restart", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "restart",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function rm(args: DockerContainerRmArgs, options?: IExecOptions) {
-    return docker(["container", "rm", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "rm",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function rmSync(args: DockerContainerRmArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "rm", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "rm",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function run(args: DockerRunArgs, options?: IExecOptions) {
-    return docker(["container", "run", ...splat(args, {
-        arguments: ["image", "command", "args"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "run",
+        ...splat(args, {
+            arguments: ["image", "command", "args"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function runSync(args: DockerRunArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "run", ...splat(args, {
-        arguments: ["image", "command", "args"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "run",
+        ...splat(args, {
+            arguments: ["image", "command", "args"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function start(args: DockerStartArgs, options?: IExecOptions) {
-    return docker(["container", "start", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "start",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function startSync(args: DockerStartArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "start", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "start",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function stats(args: DockerStatsArgs, options?: IExecOptions) {
-    return docker(["container", "stats", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "stats",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function statsSync(args: DockerStatsArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "stats", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "stats",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function stop(args: DockerStopArgs, options?: IExecOptions) {
-    return docker(["container", "stop", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "stop",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function stopSync(args: DockerStopArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "stop", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "stop",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function top(args: DockerTopArgs, options?: IExecOptions) {
-    return docker(["container", "top", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "top",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function topSync(args: DockerTopArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "top", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "top",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function unpause(args: DockerUnpauseArgs, options?: IExecOptions) {
-    return docker(["container", "unpause", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "unpause",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function unpauseSync(args: DockerUnpauseArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "unpause", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "unpause",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function update(args: DockerUpdateArgs, options?: IExecOptions) {
-    return docker(["container", "update", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "update",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function updateSync(args: DockerUpdateArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "update", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "update",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function wait(args: DockerWaitArgs, options?: IExecOptions) {
-    return docker(["container", "wait", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "container",
+        "wait",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function waitSync(args: DockerWaitArgs, options?: IExecSyncOptions) {
-    return docker.sync(["container", "wait", ...splat(args, {
-        arguments: ["container"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "container",
+        "wait",
+        ...splat(args, {
+            arguments: ["container"],
+            appendArguments: true,
+        }),
+    ], options);
 }

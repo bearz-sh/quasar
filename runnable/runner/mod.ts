@@ -1,13 +1,7 @@
-
-export class Runner 
-{
-    constructor()
-    {
-
+export class Runner {
+    constructor() {
     }
 
-    async run()
-    {
-        
+    async run() {
     }
 }

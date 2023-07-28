@@ -1,13 +1,13 @@
-import { which, whichSync } from './which.ts';
-import { expand, get, set } from '../os/env.ts';
-import { isFile, isFileSync, readTextFileSync } from '../fs/mod.ts';
-import { IS_WINDOWS, IS_DARWIN } from '../os/constants.ts';
-import { IPsStartInfo, PsOutput, output, outputSync } from './ps.ts';
-import { NotFoundOnPathError } from './errors.ts';
-import { isAbsolute } from 'https://deno.land/std@0.194.0/path/posix.ts';
-import { existsSync } from '../mod.ts';
-import { StringBuilder } from '../string-builder.ts';
-import { writeTextFileSync } from '../mod.ts';
+import { which, whichSync } from "./which.ts";
+import { expand, get, set } from "../os/env.ts";
+import { isFile, isFileSync, readTextFileSync } from "../fs/mod.ts";
+import { IS_DARWIN, IS_WINDOWS } from "../os/constants.ts";
+import { IPsStartInfo, output, outputSync, PsOutput } from "./ps.ts";
+import { NotFoundOnPathError } from "./errors.ts";
+import { isAbsolute } from "https://deno.land/std@0.194.0/path/posix.ts";
+import { existsSync } from "../mod.ts";
+import { StringBuilder } from "../string-builder.ts";
+import { writeTextFileSync } from "../mod.ts";
 
 export interface IPathFinderOptions {
     name: string;
@@ -23,30 +23,36 @@ export interface IPathFinderOptions {
 const registry = new Map<string, IPathFinderOptions>();
 
 export function registerExe(name: string, options?: Partial<IPathFinderOptions>, force = false) {
-
     let o = registry.get(name);
     if (o) {
         if (force && options) {
-            if(options.cached)
+            if (options.cached) {
                 o.cached = options.cached;
+            }
 
-            if(options.envVariable)
+            if (options.envVariable) {
                 o.envVariable = options.envVariable;
+            }
 
-            if(options.executable)
+            if (options.executable) {
                 o.executable = options.executable;
+            }
 
-            if(options.paths)
+            if (options.paths) {
                 o.paths = options.paths;
+            }
 
-            if(options.windows)
+            if (options.windows) {
                 o.windows = options.windows;
+            }
 
-            if(options.linux)
+            if (options.linux) {
                 o.linux = options.linux;
+            }
 
-            if(options.darwin)
+            if (options.darwin) {
                 o.darwin = options.darwin;
+            }
         }
 
         return o;
@@ -54,10 +60,10 @@ export function registerExe(name: string, options?: Partial<IPathFinderOptions>,
 
     o = {
         ...options,
-        name: name
+        name: name,
     };
 
-    o.envVariable ??= (name.toUpperCase() + '_PATH');
+    o.envVariable ??= name.toUpperCase() + "_PATH";
     registry.set(name, o);
 
     return o;
@@ -72,7 +78,7 @@ export function findExeSync(name: string) {
     if (!options) {
         options ??= {} as IPathFinderOptions;
         options.name = name;
-        options.envVariable ??= (options.name.toUpperCase() + '_PATH');
+        options.envVariable ??= options.name.toUpperCase() + "_PATH";
         options.paths ??= [];
         options.windows ??= [];
         options.linux ??= [];
@@ -151,7 +157,7 @@ export async function findExe(name: string) {
     if (!options) {
         options ??= {} as IPathFinderOptions;
         options.name = name;
-        options.envVariable ??= (options.name.toUpperCase() + '_PATH');
+        options.envVariable ??= options.name.toUpperCase() + "_PATH";
         options.paths ??= [];
         options.windows ??= [];
         options.linux ??= [];
@@ -223,10 +229,10 @@ export async function findExe(name: string) {
 
 export interface IExecSyncOptions {
     /**
-    * The working directory of the process.
-    *
-    * If not specified, the `cwd` of the parent process is used.
-    */
+     * The working directory of the process.
+     *
+     * If not specified, the `cwd` of the parent process is used.
+     */
     cwd?: string | URL;
     /**
      * Clear environmental variables from parent process.
@@ -264,7 +270,6 @@ export interface IExecSyncOptions {
 }
 
 export interface IExecOptions extends IExecSyncOptions {
-
     /**
      * An {@linkcode AbortSignal} that allows closing the process using the
      * corresponding {@linkcode AbortController} by sending the process a
@@ -277,88 +282,90 @@ export interface IExecOptions extends IExecSyncOptions {
     input?: string | Uint8Array | PsOutput | ReadableStream<Uint8Array>;
 }
 
-
 export async function exec(name: string, args?: string[], options?: IExecOptions) {
     const path = await findExe(name);
     if (!path) {
         throw new NotFoundOnPathError(name);
     }
 
-    const si : IPsStartInfo = {
+    const si: IPsStartInfo = {
         ...options,
         file: path,
-        args: args
+        args: args,
+    };
+
+    if (si.stdout === undefined) {
+        si.stdout = "inherit";
     }
 
-    if (si.stdout === undefined)
-        si.stdout = 'inherit';
+    if (si.stderr === undefined) {
+        si.stderr = "inherit";
+    }
 
-    if (si.stderr === undefined)
-        si.stderr = 'inherit';
-
-    if (si.input)
-        si.stdin = 'piped';
+    if (si.input) {
+        si.stdin = "piped";
+    }
 
     return await output(si);
 }
 
 export function execSync(name: string, args?: string[], options?: IExecSyncOptions) {
-
     const path = findExeSync(name);
     if (!path) {
         throw new NotFoundOnPathError(name);
     }
 
-    const si : IPsStartInfo = {
+    const si: IPsStartInfo = {
         ...options,
         file: path,
-        args: args
+        args: args,
+    };
+
+    if (si.stdout === undefined) {
+        si.stdout = "inherit";
     }
 
-    if (si.stdout === undefined)
-        si.stdout = 'inherit';
-
-    if (si.stderr === undefined)
-        si.stderr = 'inherit';
+    if (si.stderr === undefined) {
+        si.stderr = "inherit";
+    }
 
     return outputSync(si);
 }
 
 export function generateScriptFileSync(script: string, ext: string, tpl?: string) {
-    const scriptFile = Deno.makeTempFileSync({ prefix: 'quasar_scripts', suffix: ext });
+    const scriptFile = Deno.makeTempFileSync({ prefix: "quasar_scripts", suffix: ext });
     if (tpl) {
-        Deno.writeTextFileSync(scriptFile, tpl.replace('{{script}}', script));
+        Deno.writeTextFileSync(scriptFile, tpl.replace("{{script}}", script));
     } else {
         Deno.writeTextFileSync(scriptFile, script);
     }
 
-    return scriptFile.replaceAll('\\', '/');
+    return scriptFile.replaceAll("\\", "/");
 }
 
 export async function generateScriptFile(script: string, ext: string, tpl?: string) {
-    const scriptFile = Deno.makeTempFileSync({ prefix: 'quasar_scripts', suffix: ext });
+    const scriptFile = Deno.makeTempFileSync({ prefix: "quasar_scripts", suffix: ext });
     if (tpl) {
-        await Deno.writeTextFile(scriptFile, tpl.replace('{{script}}', script));
+        await Deno.writeTextFile(scriptFile, tpl.replace("{{script}}", script));
     } else {
         await Deno.writeTextFile(scriptFile, script);
     }
 
-    return scriptFile.replaceAll('\\', '/');
+    return scriptFile.replaceAll("\\", "/");
 }
 
 function updateProfile(profile: string, name: string, path: string) {
     const lines = readTextFileSync(profile).split(`\n`);
     let updated = false;
     const sb = new StringBuilder();
-    for(let i = 0; i < lines.length; i++)
-    {
+    for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         if (line.startsWith(`### QUASAR ${name} ### `)) {
             sb.appendLine(line);
             sb.appendLine(`export PATH=\"$PATH:${path}\"`);
             sb.appendLine(`### END QUASAR ${name} ###`);
-            sb.appendLine("")
-            i = i+3;
+            sb.appendLine("");
+            i = i + 3;
             updated = true;
             break;
         }
@@ -371,111 +378,106 @@ function updateProfile(profile: string, name: string, path: string) {
         sb.appendLine(`### QUASAR ${name} ### `);
         sb.appendLine(`export PATH=\"$PATH:${path}\"`);
         sb.appendLine(`### END QUASAR ${name} ###`);
-        sb.appendLine("")                                      
+        sb.appendLine("");
     }
 
     writeTextFileSync(profile, sb.toString());
 }
 
-export function switchPath(name: string, path: string, target: 'user' | 'machine' | 'process' = 'process') {
+export function switchPath(name: string, path: string, target: "user" | "machine" | "process" = "process") {
     const options = registry.get(name);
     if (!options) {
         throw new Error(`Unknown tool ${name}`);
     }
 
-    options.envVariable ??= (options.name.toUpperCase() + '_PATH');
+    options.envVariable ??= options.name.toUpperCase() + "_PATH";
     set(options.envVariable, path);
 
-    switch(target) {
-        case 'process':
+    switch (target) {
+        case "process":
             return;
-        case 'user':
+        case "user":
             if (IS_WINDOWS) {
-                execSync('setx', [options.envVariable, path]);
+                execSync("setx", [options.envVariable, path]);
                 return;
             } else {
-                const home = get('HOME');
-                const shell = get('SHELL');
+                const home = get("HOME");
+                const shell = get("SHELL");
                 if (!home || !shell) {
-                    throw new Error('Unable to determine home directory or shell');
+                    throw new Error("Unable to determine home directory or shell");
                 }
 
-                switch(shell) {
-                    case '/bin/bash':
-                        {
-                            const profiles = [
-                                `${home}/.bash_profile`,
-                                `${home}/.bash_login`,
-                                `${home}/.profile`,
-                            ]
+                switch (shell) {
+                    case "/bin/bash": {
+                        const profiles = [
+                            `${home}/.bash_profile`,
+                            `${home}/.bash_login`,
+                            `${home}/.profile`,
+                        ];
 
-                            for (const profile of profiles) {
-                                if (existsSync(profile)) {
-                                    updateProfile(profile, options.name, path);
+                        for (const profile of profiles) {
+                            if (existsSync(profile)) {
+                                updateProfile(profile, options.name, path);
 
-                                    return;
-                                }
+                                return;
                             }
-
-                            throw new Error(`Unable to find profile for ${shell}`);
                         }
 
-                    case '/bin/zsh':
-                        { 
-                            const profiles = [
-                                `${home}/.zshenv`,
-                                `${home}/.zprofile`,
-                                `${home}/.zshrc`,
-                            ]
+                        throw new Error(`Unable to find profile for ${shell}`);
+                    }
 
-                            for (const profile of profiles) {
-                                if (existsSync(profile)) {
-                                    updateProfile(profile, options.name, path);
-                                    set(options.envVariable, path);
-                                    return;
-                                }
+                    case "/bin/zsh": {
+                        const profiles = [
+                            `${home}/.zshenv`,
+                            `${home}/.zprofile`,
+                            `${home}/.zshrc`,
+                        ];
+
+                        for (const profile of profiles) {
+                            if (existsSync(profile)) {
+                                updateProfile(profile, options.name, path);
+                                set(options.envVariable, path);
+                                return;
                             }
-
-                            throw new Error(`Unable to find profile for ${shell}`);
                         }
 
-                    default: 
+                        throw new Error(`Unable to find profile for ${shell}`);
+                    }
+
+                    default:
                         throw new Error(`Unknown shell ${shell}`);
                 }
             }
-    
-        case 'machine':
+
+        case "machine":
             if (IS_WINDOWS) {
-                execSync('setx', [options.envVariable, path, '/m']);
+                execSync("setx", [options.envVariable, path, "/m"]);
                 return;
-            }
-            else {
-                const shell = get('SHELL');
+            } else {
+                const shell = get("SHELL");
                 if (!shell) {
-                    throw new Error('Unable to determine shell');
+                    throw new Error("Unable to determine shell");
                 }
 
-                switch(shell) {
-                    case '/bin/bash':
-                        {
-                            const profile = '/etc/profile';
-                            if (!existsSync(profile)) {
-                                throw new Error(`Unable to find ${profile}`);
-                            }
-
-                            updateProfile(profile, options.name, path);
-                            return;
+                switch (shell) {
+                    case "/bin/bash": {
+                        const profile = "/etc/profile";
+                        if (!existsSync(profile)) {
+                            throw new Error(`Unable to find ${profile}`);
                         }
-                    case '/bin/zsh':
-                        {
-                            const profile = '/etc/zprofile';
-                            if (!existsSync(profile)) {
-                                throw new Error(`Unable to find ${profile}`);
-                            }
 
-                            updateProfile(profile, options.name, path);
-                            return;
+                        updateProfile(profile, options.name, path);
+                        return;
+                    }
+                    case "/bin/zsh": {
+                        const profile = "/etc/zprofile";
+                        if (!existsSync(profile)) {
+                            throw new Error(`Unable to find ${profile}`);
                         }
+
+                        updateProfile(profile, options.name, path);
+                        return;
+                    }
 
                     default:
                         throw new Error(`Unknown shell ${shell}`);

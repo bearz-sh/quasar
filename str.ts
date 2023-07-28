@@ -1,6 +1,6 @@
-import { Char, isWhiteSpaceAt } from './char.ts';
+import { Char, isWhiteSpaceAt } from "./char.ts";
 
-export const EMPTY = '';
+export const EMPTY = "";
 
 export function trimEnd(str: string, chars: string = EMPTY): string {
     let size = str.length;
@@ -72,17 +72,16 @@ export function indexOfIgnoreCase(str: string, search: string, start = 0, locale
 
     let i = start;
     while (i <= strLen - searchLen) {
-      let j = 0;
-      while (j < searchLen && str[i + j].localeCompare(search[j], locales, { sensitivity: 'accent' }) === 0) {
-        j++;
-      }
-      if (j === searchLen) {
-        return i;
-      }
-      i++;
+        let j = 0;
+        while (j < searchLen && str[i + j].localeCompare(search[j], locales, { sensitivity: "accent" }) === 0) {
+            j++;
+        }
+        if (j === searchLen) {
+            return i;
+        }
+        i++;
     }
     return -1;
-
 }
 
 export function startsWithIgnoreCase(str: string, search: string, start = 0, locales?: string | string[]) {
@@ -95,14 +94,14 @@ export function startsWithIgnoreCase(str: string, search: string, start = 0, loc
 
     let i = start;
     while (i <= strLen - searchLen) {
-      let j = 0;
-      while (j < searchLen && str[i + j].localeCompare(search[j], locales, { sensitivity: 'accent' }) === 0) {
-        j++;
-      }
-      if (j === searchLen) {
-        return true;
-      }
-      i++;
+        let j = 0;
+        while (j < searchLen && str[i + j].localeCompare(search[j], locales, { sensitivity: "accent" }) === 0) {
+            j++;
+        }
+        if (j === searchLen) {
+            return true;
+        }
+        i++;
     }
     return false;
 }
@@ -118,7 +117,7 @@ export function endsWithIgnoreCase(str: string, search: string, end = str.length
     let i = end - searchLen;
     while (i >= 0) {
         let j = 0;
-        while (j < searchLen && str[i + j].localeCompare(search[j], locales, { sensitivity: 'accent' }) === 0) {
+        while (j < searchLen && str[i + j].localeCompare(search[j], locales, { sensitivity: "accent" }) === 0) {
             j++;
         }
         if (j === searchLen) {
@@ -128,8 +127,6 @@ export function endsWithIgnoreCase(str: string, search: string, end = str.length
     }
     return false;
 }
-
-
 
 export function trimStart(str: string, chars: string = EMPTY): string {
     let size = str.length;
@@ -179,7 +176,6 @@ export function trimStart(str: string, chars: string = EMPTY): string {
             }
 
             continue;
-
         } else {
             break;
         }
@@ -209,7 +205,7 @@ export function equalsIgnoreCase(left?: string | null, right?: string | null, lo
         return false;
     }
 
-    return left.localeCompare(right, locales, { sensitivity: 'accent' }) === 0;
+    return left.localeCompare(right, locales, { sensitivity: "accent" }) === 0;
 }
 
 export function includesIgnoreCase(str: string, search: string, start = 0, locales?: string | string[]) {
@@ -217,20 +213,20 @@ export function includesIgnoreCase(str: string, search: string, start = 0, local
     const strLen = str.length;
     let i = start;
     while (i <= strLen - searchLen) {
-      let j = 0;
-      while (j < searchLen && str[i + j].localeCompare(search[j], locales, { sensitivity: 'accent' }) === 0) {
-        j++;
-      }
-      if (j === searchLen) {
-        return true;
-      }
-      i++;
+        let j = 0;
+        while (j < searchLen && str[i + j].localeCompare(search[j], locales, { sensitivity: "accent" }) === 0) {
+            j++;
+        }
+        if (j === searchLen) {
+            return true;
+        }
+        i++;
     }
     return false;
 }
 
 export function toCharacterArray(str: string): string[] {
-    return str.split('');
+    return str.split("");
 }
 
 export function toCharArray(str: string): Char[] {

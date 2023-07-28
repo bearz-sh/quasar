@@ -1,14 +1,14 @@
 // deno-lint-ignore-file no-unused-vars
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
-    upm,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
-    PsOutput
+    PsOutput,
+    registerExe,
+    upm,
 } from "../../mod.ts";
 
 const findOptions = registerExe("vault", {});
@@ -19,6 +19,6 @@ export function vault(args?: string[], options?: IExecOptions) {
 
 vault.cli = vault;
 vault.findOptions = findOptions;
-vault.sync = function(args?: string[], options?: IExecSyncOptions) {
+vault.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("vault", args, options);
-}
+};

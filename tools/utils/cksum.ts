@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("cksum", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("cksum", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\chsum.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\chsum.exe",
         "%SystemDrive%\\msys\\usr\\bin\\chsum.exe",
-    ]
+    ],
 });
 
 export function cksum(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function cksum(args?: string[], options?: IExecOptions) {
 }
 
 cksum.cli = chsum;
-cksum.sync = function(args?: string[], options?: IExecSyncOptions) {
+cksum.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("chsum", args, options);
-}
+};

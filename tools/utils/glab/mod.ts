@@ -1,14 +1,14 @@
 // deno-lint-ignore-file no-unused-vars
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
-    upm,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
-    PsOutput
+    PsOutput,
+    registerExe,
+    upm,
 } from "../../mod.ts";
 
 const findOptions = registerExe("glab", {});
@@ -19,6 +19,6 @@ export function glab(args?: string[], options?: IExecOptions) {
 
 glab.cli = glab;
 glab.findOptions = findOptions;
-glab.sync = function(args?: string[], options?: IExecSyncOptions) {
+glab.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("glab", args, options);
-}
+};

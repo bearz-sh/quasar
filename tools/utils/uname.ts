@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("uname", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("uname", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\uname.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\uname.exe",
         "%SystemDrive%\\msys\\usr\\bin\\uname.exe",
-    ]
+    ],
 });
 
 export function uname(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function uname(args?: string[], options?: IExecOptions) {
 }
 
 uname.cli = uname;
-uname.sync = function(args?: string[], options?: IExecSyncOptions) {
+uname.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("uname", args, options);
-}
+};

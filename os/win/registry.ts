@@ -1,9 +1,7 @@
-import  { Pwstr, Ptr } from "./native/core.ts";
-import { openKey2, closeKey, close } from "./native/registry.ts";
+import { Ptr } from "./native/core.ts";
+import { close, closeKey, openKey2 } from "./native/registry.ts";
 
-
-export enum RegistryHive
-{
+export enum RegistryHive {
     ClassesRoot = 0x80000000,
     CurrentUser = 0x80000001,
     LocalMachine = 0x80000002,
@@ -12,15 +10,13 @@ export enum RegistryHive
     CurrentConfig = 0x80000005,
 }
 
-export enum RegistryView
-{
+export enum RegistryView {
     Default = 0x00000000,
     Registry64 = 0x00000100,
     Registry32 = 0x00000200,
 }
 
-export enum RegistryKeyPermissionCheck
-{
+export enum RegistryKeyPermissionCheck {
     Default = 0,
     ReadSubTree = 1,
     ReadWriteSubTree = 2,
@@ -34,17 +30,14 @@ const KEY_NOTIFY = 0x0010;
 const KEY_CREATE_LINK = 0x0020;
 const READ_CONTROL = 0x00020000;
 const SYNCHRONIZE = 0x00100000;
-const KEY_READ = ((READ_CONTROL |KEY_QUERY_VALUE |
+const KEY_READ = (READ_CONTROL | KEY_QUERY_VALUE |
     KEY_ENUMERATE_SUB_KEYS |
-    KEY_NOTIFY)
-   &
-   (~SYNCHRONIZE));
+    KEY_NOTIFY) &
+    (~SYNCHRONIZE);
 
-const KEY_WRITE = ((READ_CONTROL | KEY_SET_VALUE | KEY_CREATE_SUB_KEY) & (~SYNCHRONIZE));
+const KEY_WRITE = (READ_CONTROL | KEY_SET_VALUE | KEY_CREATE_SUB_KEY) & (~SYNCHRONIZE);
 
-
-export enum RegistryRights
-{
+export enum RegistryRights {
     QueryValues = KEY_QUERY_VALUE,
     SetValue = KEY_SET_VALUE,
     CreateSubKey = KEY_CREATE_SUB_KEY,
@@ -52,17 +45,16 @@ export enum RegistryRights
     Notify = KEY_NOTIFY,
     CreateLink = KEY_CREATE_LINK,
 
-    ReadKey = (READ_CONTROL |KEY_QUERY_VALUE | KEY_ENUMERATE_SUB_KEYS | KEY_NOTIFY),
+    ReadKey = (READ_CONTROL | KEY_QUERY_VALUE | KEY_ENUMERATE_SUB_KEYS | KEY_NOTIFY),
     WriteKey = (READ_CONTROL | KEY_SET_VALUE | KEY_CREATE_SUB_KEY),
-    ExecuteKey = (READ_CONTROL |KEY_QUERY_VALUE | KEY_ENUMERATE_SUB_KEYS | KEY_NOTIFY),
+    ExecuteKey = (READ_CONTROL | KEY_QUERY_VALUE | KEY_ENUMERATE_SUB_KEYS | KEY_NOTIFY),
     ReadPermissions = 0x20000,
     ChangePermissions = 0x40000,
     TakeOwnership = 0x80000,
     FullControl = (0xF003F | READ_CONTROL | READ_CONTROL),
 }
 
-function getRegistryKeyAccess(mode: RegistryKeyPermissionCheck)
-{
+function getRegistryKeyAccess(mode: RegistryKeyPermissionCheck) {
     switch (mode) {
         case RegistryKeyPermissionCheck.Default:
             return KEY_READ;
@@ -78,8 +70,7 @@ function getRegistryKeyAccess(mode: RegistryKeyPermissionCheck)
     }
 }
 
-class RegistryKey
-{
+class RegistryKey {
     #hkey: Ptr;
     #keyName: string;
     #checkMode: RegistryKeyPermissionCheck;
@@ -90,8 +81,15 @@ class RegistryKey
     #view: RegistryView;
     #disposed: boolean;
 
-    constructor(hkey: Ptr, keyName = "", writable: boolean, systemkey = false, remoteKey = false, isPerfData = false, view = RegistryView.Default)
-    {
+    constructor(
+        hkey: Ptr,
+        keyName = "",
+        writable: boolean,
+        systemkey = false,
+        remoteKey = false,
+        isPerfData = false,
+        view = RegistryView.Default,
+    ) {
         this.#disposed = false;
         this.#hkey = hkey;
         this.#keyName = keyName;
@@ -103,37 +101,47 @@ class RegistryKey
         this.#checkMode = RegistryKeyPermissionCheck.Default;
     }
 
-    get disposed(): boolean
-    {
+    get disposed(): boolean {
         return this.#disposed;
     }
 
-    get name(): string
-    {
+    get name(): string {
         return this.#keyName;
     }
 
-    dispose()
-    {
-        if (this.disposed)
+    dispose() {
+        if (this.disposed) {
             return;
+        }
 
         if (this.#hkey !== undefined) {
             closeKey(this.#hkey);
         }
     }
 
-    openSubKey(name: string, permissionCheck?: RegistryKeyPermissionCheck, rights?: RegistryRights): RegistryKey | null
-    {
+    openSubKey(
+        name: string,
+        permissionCheck?: RegistryKeyPermissionCheck,
+        rights?: RegistryRights,
+    ): RegistryKey | null {
         const out = new Ptr();
-        permissionCheck = permissionCheck ?? this.#writable ? RegistryKeyPermissionCheck.ReadWriteSubTree : RegistryKeyPermissionCheck.ReadSubTree;
+        permissionCheck = permissionCheck ?? this.#writable
+            ? RegistryKeyPermissionCheck.ReadWriteSubTree
+            : RegistryKeyPermissionCheck.ReadSubTree;
         rights = rights ?? getRegistryKeyAccess(permissionCheck);
-      
-        const sam = RegistryRights.ReadKey;
 
         const result = openKey2(this.#hkey, name, 0, RegistryRights.ReadKey, out);
 
-        console.debug("RegOpenKeyExW", this.#keyName, name, Deno.UnsafePointer.value(this.#hkey.value), result, 0, RegistryRights.FullControl, out.value);
+        console.debug(
+            "RegOpenKeyExW",
+            this.#keyName,
+            name,
+            Deno.UnsafePointer.value(this.#hkey.value),
+            result,
+            0,
+            RegistryRights.FullControl,
+            out.value,
+        );
         if (result === 0) {
             const v = Deno.UnsafePointer.value(out.value);
             console.log("v", v);
@@ -144,20 +152,19 @@ class RegistryKey
             }
         }
 
-        if (result === 0x57)
+        if (result === 0x57) {
             throw new Error("Invalid parameter");
+        }
 
-        if (result === 0x5 || result ===  0x542)
+        if (result === 0x5 || result === 0x542) {
             throw new Error("Access denied");
-       
+        }
+
         return null;
     }
 }
 
-
-
-function openBaseKey(hKey: RegistryHive, view: RegistryView): RegistryKey
-{
+function openBaseKey(hKey: RegistryHive, view: RegistryView): RegistryKey {
     if (view === RegistryView.Registry64) {
         throw new Error("Registry64 is not supported");
     }
@@ -202,20 +209,18 @@ function openBaseKey(hKey: RegistryHive, view: RegistryView): RegistryKey
 }
 
 interface IRegistryKeyCache {
-    hkcr?: RegistryKey,
-    hklm?: RegistryKey,
-    hkcu?: RegistryKey,
-    hku?: RegistryKey,
-    hkpd?: RegistryKey,
-    hkcc?: RegistryKey,
+    hkcr?: RegistryKey;
+    hklm?: RegistryKey;
+    hkcu?: RegistryKey;
+    hku?: RegistryKey;
+    hkpd?: RegistryKey;
+    hkcc?: RegistryKey;
 }
 
-const keyCache : IRegistryKeyCache = {}
+const keyCache: IRegistryKeyCache = {};
 
-export class Registry
-{
-    static get hkcr(): RegistryKey
-    {
+export class Registry {
+    static get hkcr(): RegistryKey {
         if (keyCache.hkcr === undefined) {
             keyCache.hkcr = openBaseKey(RegistryHive.ClassesRoot, RegistryView.Default);
         }
@@ -223,8 +228,7 @@ export class Registry
         return keyCache.hkcr;
     }
 
-    static get hklm(): RegistryKey
-    {
+    static get hklm(): RegistryKey {
         if (keyCache.hklm === undefined) {
             keyCache.hklm = openBaseKey(RegistryHive.LocalMachine, RegistryView.Default);
         }
@@ -232,8 +236,7 @@ export class Registry
         return keyCache.hklm;
     }
 
-    static get hkcu(): RegistryKey
-    {
+    static get hkcu(): RegistryKey {
         if (keyCache.hkcu === undefined) {
             keyCache.hkcu = openBaseKey(RegistryHive.CurrentUser, RegistryView.Default);
         }
@@ -241,8 +244,7 @@ export class Registry
         return keyCache.hkcu;
     }
 
-    static get hku(): RegistryKey
-    {
+    static get hku(): RegistryKey {
         if (keyCache.hku === undefined) {
             keyCache.hku = openBaseKey(RegistryHive.Users, RegistryView.Default);
         }
@@ -250,8 +252,7 @@ export class Registry
         return keyCache.hku;
     }
 
-    static get hkpd(): RegistryKey
-    {
+    static get hkpd(): RegistryKey {
         if (keyCache.hkpd === undefined) {
             keyCache.hkpd = openBaseKey(RegistryHive.PerformanceData, RegistryView.Default);
         }
@@ -259,8 +260,7 @@ export class Registry
         return keyCache.hkpd;
     }
 
-    static get hkcc(): RegistryKey
-    {
+    static get hkcc(): RegistryKey {
         if (keyCache.hkcc === undefined) {
             keyCache.hkcc = openBaseKey(RegistryHive.CurrentConfig, RegistryView.Default);
         }
@@ -268,8 +268,7 @@ export class Registry
         return keyCache.hkcc;
     }
 
-    static close()
-    {
+    static close() {
         close();
     }
 }

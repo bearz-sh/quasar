@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("dirname", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("dirname", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\dirname.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\dirname.exe",
         "%SystemDrive%\\msys\\usr\\bin\\dirname.exe",
-    ]
+    ],
 });
 
 export function dirname(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function dirname(args?: string[], options?: IExecOptions) {
 }
 
 dirname.cli = dirname;
-dirname.sync = function(args?: string[], options?: IExecSyncOptions) {
+dirname.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("dirname", args, options);
-}
+};

@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("rm", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("rm", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\rm.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\rm.exe",
         "%SystemDrive%\\msys\\usr\\bin\\rm.exe",
-    ]
+    ],
 });
 
 export function rm(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function rm(args?: string[], options?: IExecOptions) {
 }
 
 rm.cli = rm;
-rm.sync = function(args?: string[], options?: IExecSyncOptions) {
+rm.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("rm", args, options);
-}
+};

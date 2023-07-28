@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("relpath", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("relpath", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\relpath.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\relpath.exe",
         "%SystemDrive%\\msys\\usr\\bin\\relpath.exe",
-    ]
+    ],
 });
 
 export function relpath(args?: string[], options?: IExecOptions) {
@@ -20,9 +14,9 @@ export function relpath(args?: string[], options?: IExecOptions) {
 }
 
 relpath.cli = relpath;
-relpath.sync = function(args?: string[], options?: IExecSyncOptions) {
+relpath.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("relpath", args, options);
-}
+};
 
 export function relpathSync(args?: string[], options?: IExecSyncOptions) {
     return execSync("relpath", args, options);

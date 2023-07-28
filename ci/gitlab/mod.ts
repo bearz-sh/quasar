@@ -12,12 +12,12 @@ export class GitLabEnvProvider implements ICiEnvProvider {
     get name(): string {
         return "gitlab";
     }
-    
+
     get isCi(): boolean {
         if (this.#isCi === undefined) {
             this.#isCi = env.get("GITHUB_ACTIONS") === "true";
         }
-        
+
         return this.#isCi;
     }
 
@@ -33,7 +33,7 @@ export class GitLabEnvProvider implements ICiEnvProvider {
         return env.get("CI_PIPELINE_ID") || "";
     }
 
-    get refName() : string {
+    get refName(): string {
         return env.get("CI_COMMIT_REF_NAME") || "";
     }
 
@@ -46,13 +46,12 @@ export class GitLabEnvProvider implements ICiEnvProvider {
     }
 }
 
-export class GitLabCiHost extends CiHost
-{
+export class GitLabCiHost extends CiHost {
     override startGroup(name: string): CiHost {
         const title = name;
         name = name.replace(/[^a-zA-Z0-9_]/g, "_");
         this.groups.push(name);
-        
+
         printf(`\e[0Ksection_start:${Math.round((new Date()).getTime() / 1000)}:${name}\r\e[0K${title}\n`);
         return this;
     }
@@ -68,9 +67,8 @@ export class GitLabCiHost extends CiHost
         if (existsSync(file)) {
             content = readTextFileSync(file);
         }
-       
+
         writeTextFileSync(file, `${content}\n${name}="${value}"`);
-        
 
         return super.exportVariable(name, value, secret);
     }

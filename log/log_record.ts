@@ -6,7 +6,7 @@ export interface LogRecordOptions {
     level: number;
     loggerName: string;
 }
-  
+
 /**
  * An object that encapsulates provided message and arguments as well some
  * metadata that can be later used when formatting a message.
@@ -18,7 +18,7 @@ export class LogRecord {
     readonly level: number;
     readonly levelName: string;
     readonly loggerName: string;
-  
+
     constructor(options: LogRecordOptions) {
         this.msg = options.msg;
         this.#args = [...options.args];

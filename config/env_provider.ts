@@ -4,21 +4,18 @@ import { ConfigProvider } from "./provider.ts";
 import { toObject } from "../os/env.ts";
 import { configPath } from "./sections.ts";
 
-export interface IEnvSourceArgs
-{
+export interface IEnvSourceArgs {
     prefix?: string;
     sepatator?: string;
 }
 
-export class EnvSource implements IConfigSource
-{
-    constructor(args?: Partial<IEnvSourceArgs>)
-    {
+export class EnvSource implements IConfigSource {
+    constructor(args?: Partial<IEnvSourceArgs>) {
         this.prefix = args?.prefix ?? "APP_";
         this.separator = args?.sepatator ?? "_";
     }
 
-    prefix: string;file:///home/dev_user/projects/quasar/tasks
+    prefix: string;
 
     separator: string;
 
@@ -27,13 +24,11 @@ export class EnvSource implements IConfigSource
     }
 }
 
-export class EnvProvider extends ConfigProvider
-{
+export class EnvProvider extends ConfigProvider {
     #prefix: string;
     #separator: string;
 
-    constructor(source: EnvSource)
-    {
+    constructor(source: EnvSource) {
         super();
         this.#prefix = source.prefix;
         this.#separator = source.separator;
@@ -42,30 +37,31 @@ export class EnvProvider extends ConfigProvider
     override load(): void {
         const env = toObject();
         const data = new CaseInsensitiveMap<string>();
-        for(const key of Object.keys(env))
-        {
+        for (const key of Object.keys(env)) {
             const value = env[key];
-            if (value  === undefined || value === null)
+            if (value === undefined || value === null) {
                 continue;
+            }
 
             let name = key;
-            if (this.#prefix.length > 0)
-            {
-                if (!key.startsWith(this.#prefix))
+            if (this.#prefix.length > 0) {
+                if (!key.startsWith(this.#prefix)) {
                     continue;
+                }
 
                 name = key.substring(this.#prefix.length).replaceAll(this.#separator, configPath.separator);
-                if (name.length === 0)
+                if (name.length === 0) {
                     continue;
-
+                }
 
                 data.set(name, value);
                 continue;
             }
 
             name = key.replaceAll(this.#separator, configPath.separator);
-            if (name.length === 0)
+            if (name.length === 0) {
                 continue;
+            }
 
             data.set(name, value);
         }

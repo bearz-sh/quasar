@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("more", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("more", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\more.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\more.exe",
         "%SystemDrive%\\msys\\usr\\bin\\more.exe",
-    ]
+    ],
 });
 
 export function more(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function more(args?: string[], options?: IExecOptions) {
 }
 
 more.cli = more;
-more.sync = function(args?: string[], options?: IExecSyncOptions) {
+more.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("more", args, options);
-}
+};

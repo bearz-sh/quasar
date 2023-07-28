@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("cp", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("cp", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\cp.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\cp.exe",
         "%SystemDrive%\\msys\\usr\\bin\\cp.exe",
-    ]
+    ],
 });
 
 export function cp(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function cp(args?: string[], options?: IExecOptions) {
 }
 
 cp.cli = cp;
-cp.sync = function(args?: string[], options?: IExecSyncOptions) {
+cp.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("cp", args, options);
-}
+};

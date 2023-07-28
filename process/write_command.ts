@@ -1,7 +1,6 @@
-
-import { ISecretMasker, secretMasker } from '../secrets/masker.ts';
-import { stdout } from './_base.ts';
-import { cyan } from 'https://deno.land/std@0.194.0/fmt/colors.ts';
+import { ISecretMasker, secretMasker } from "../secrets/masker.ts";
+import { stdout } from "./_base.ts";
+import { cyan } from "https://deno.land/std@0.194.0/fmt/colors.ts";
 
 export const writeCommandOptions = {
     enabled: true,
@@ -16,13 +15,13 @@ export function writeCommand(fileName: string, args: string[]) {
     }
 
     const masker = writeCommandOptions.masker;
-    let cmd = `${fileName} ${args.join(' ')}`;
+    let cmd = `${fileName} ${args.join(" ")}`;
 
     // mask any secrets written to the console
     cmd = masker.mask(cmd) as string;
 
     // TODO: write to stdout instead of console
     // @p42-ignore-next-line
-    
-    stdout.writeSync(new TextEncoder().encode(cyan(cmd) + '\n'));
+
+    stdout.writeSync(new TextEncoder().encode(cyan(cmd) + "\n"));
 }

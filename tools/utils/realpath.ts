@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("realpath", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("realpath", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\realpath.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\realpath.exe",
         "%SystemDrive%\\msys\\usr\\bin\\realpath.exe",
-    ]
+    ],
 });
 
 export function realpath(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function realpath(args?: string[], options?: IExecOptions) {
 }
 
 realpath.cli = realpath;
-realpath.sync = function(args?: string[], options?: IExecSyncOptions) {
+realpath.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("realpath", args, options);
-}
+};

@@ -1,13 +1,12 @@
 import { ITask } from "./interfaces.ts";
 import { Tasks } from "./task_collection.ts";
-import { parse } from "https://deno.land/std@0.195.0/flags/mod.ts"
+import { parse } from "https://deno.land/std@0.195.0/flags/mod.ts";
 import { HostWriter } from "../fmt/host_writer.ts";
 import { green, magenta, red, yellow } from "../deps.ts";
 
 export const hostWriter = new HostWriter();
 
-interface IRunArgs 
-{
+interface IRunArgs {
     [x: string]: unknown;
     "skip-deps": unknown;
     timeout: unknown;
@@ -23,10 +22,10 @@ function listTasks() {
     hostWriter.writeLine(`TASKS:`);
     const maxTask = tasks
         .toArray()
-        .map(t => t.id.length)
+        .map((t) => t.id.length)
         .reduce((a, b) => Math.max(a, b), 0);
-    for(const task of tasks) {
-        hostWriter.writeLine(`  ${task.id.padEnd(maxTask)}  ${task.description ?? ''}`);
+    for (const task of tasks) {
+        hostWriter.writeLine(`  ${task.id.padEnd(maxTask)}  ${task.description ?? ""}`);
     }
 }
 
@@ -45,41 +44,46 @@ function writeHelp() {
     const tasks = Tasks;
     const maxTask = tasks
         .toArray()
-        .map(t => t.id.length)
+        .map((t) => t.id.length)
         .reduce((a, b) => Math.max(a, b), 0);
-    for(const task of tasks) {
-        hostWriter.writeLine(`  ${task.id.padEnd(maxTask)}  ${task.description ?? ''}`);
+    for (const task of tasks) {
+        hostWriter.writeLine(`  ${task.id.padEnd(maxTask)}  ${task.description ?? ""}`);
     }
 }
 
 export interface ITasksResult {
-    status: 'ok' | 'failed' | 'timedout' | 'skipped';
+    status: "ok" | "failed" | "timedout" | "skipped";
     task: ITask;
 }
 
-async function runTask(task: ITask, signal: AbortSignal, state: Map<string, unknown>, timeoutValue: number, results: ITasksResult[]) {
+async function runTask(
+    task: ITask,
+    signal: AbortSignal,
+    state: Map<string, unknown>,
+    timeoutValue: number,
+    results: ITasksResult[],
+) {
     let failed = false;
     const onAbort = () => {
         hostWriter.warn(`${task.name} timed out after ${timeoutValue} seconds`);
         failed = true;
-        results.push({ status: 'timedout', task });
+        results.push({ status: "timedout", task });
     };
-    signal.addEventListener('abort', onAbort, { once: true });
+    signal.addEventListener("abort", onAbort, { once: true });
 
     try {
         await task.run(state, signal);
-        results.push({ status: 'ok', task });
+        results.push({ status: "ok", task });
     } catch (e) {
         failed = true;
-        results.push({ status: 'failed', task });
+        results.push({ status: "failed", task });
         if (e instanceof Error) {
             hostWriter.error(e, `${task.name} failed: ${e.message}`);
-        }
-        else {
+        } else {
             hostWriter.error(`${task.name} failed: ${e}`);
         }
-      
-        signal.removeEventListener('abort', onAbort);
+
+        signal.removeEventListener("abort", onAbort);
     }
 
     return failed;
@@ -97,21 +101,21 @@ async function runTasks(tasks: ITask[], args: IRunArgs) {
 
     let failed = false;
     const results: ITasksResult[] = [];
-    for(const task of tasks) {
+    for (const task of tasks) {
         const force = task.force ?? false;
 
         if (task.skip) {
-            if (typeof task.skip === 'function') {
+            if (typeof task.skip === "function") {
                 const skip = await task.skip();
                 if (skip) {
                     hostWriter.startGroup(`${task.name} (skipped)`);
                     hostWriter.endGroup();
-                    results.push({ status: 'skipped', task });
+                    results.push({ status: "skipped", task });
                     continue;
                 }
             }
             hostWriter.startGroup(`${task.name} (skipped)`);
-            results.push({ status: 'skipped', task });
+            results.push({ status: "skipped", task });
             hostWriter.endGroup();
             continue;
         }
@@ -119,8 +123,8 @@ async function runTasks(tasks: ITask[], args: IRunArgs) {
         if (failed && !force) {
             hostWriter.startGroup(`${task.name} (skipped)`);
             hostWriter.endGroup();
-            results.push({ status: 'skipped', task });
-            continue
+            results.push({ status: "skipped", task });
+            continue;
         }
 
         const to = task.timeout;
@@ -133,58 +137,57 @@ async function runTasks(tasks: ITask[], args: IRunArgs) {
                 controller.abort();
             }, timeoutValue * 1000);
 
-            
             const r = await runTask(task, signal, state, timeoutValue, results);
-            if (r) { failed = true; }
+            if (r) failed = true;
             hostWriter.writeLine();
             clearTimeout(handle);
         } else {
             const r = await runTask(task, mainSignal, state, timeout, results);
-            if (r) { failed = true; }
+            if (r) failed = true;
         }
         hostWriter.endGroup();
-    } 
+    }
 
     clearTimeout(timeoutId);
     hostWriter.writeLine();
     hostWriter.writeLine(`SUMMARY:`);
-    const max = results.map(r => r.task.name.length).reduce((a, b) => Math.max(a, b), 0);
+    const max = results.map((r) => r.task.name.length).reduce((a, b) => Math.max(a, b), 0);
 
-    for(const result of results) {
-        switch(result.status) {
-            case 'ok':
+    for (const result of results) {
+        switch (result.status) {
+            case "ok":
                 {
                     if (hostWriter.supportsColor.stdout.level) {
-                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  ${green('completed')}`);
+                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  ${green("completed")}`);
                     } else {
                         hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  completed`);
                     }
                 }
                 break;
-            case 'failed':
+            case "failed":
                 {
                     if (hostWriter.supportsColor.stdout.level) {
-                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  ${red('failed')}`);
+                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  ${red("failed")}`);
                     } else {
                         hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  failed`);
                     }
                 }
-               
+
                 console.log();
                 break;
-            case 'skipped':
+            case "skipped":
                 {
                     if (hostWriter.supportsColor.stdout.level) {
-                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  ${yellow('skipped')}`);
+                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  ${yellow("skipped")}`);
                     } else {
                         hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  skipped`);
                     }
                 }
                 break;
-            case 'timedout':
+            case "timedout":
                 {
                     if (hostWriter.supportsColor.stdout.level) {
-                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  ${magenta('timed out')}`);
+                        hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  ${magenta("timed out")}`);
                     } else {
                         hostWriter.writeLine(`  ${result.task.name.padEnd(max)}  timed out`);
                     }
@@ -193,19 +196,19 @@ async function runTasks(tasks: ITask[], args: IRunArgs) {
         }
     }
 
-    return results.some(r => r.status === 'failed' || r.status === 'timedout') ? 1 : 0;
+    return results.some((r) => r.status === "failed" || r.status === "timedout") ? 1 : 0;
 }
 
 function detectCycles(tasks: ITask[]) {
     const stack = new Set<string>();
     const resolve = (task: ITask) => {
         if (stack.has(task.id)) {
-            hostWriter.error(`Cycle detected in task dependencies: ${[...stack.values(), task.id].join(' -> ')}`);
+            hostWriter.error(`Cycle detected in task dependencies: ${[...stack.values(), task.id].join(" -> ")}`);
             Deno.exit(1);
         }
 
         stack.add(task.id);
-        for(const dep of task.deps) {
+        for (const dep of task.deps) {
             const depTask = Tasks.get(dep);
             if (!depTask) {
                 hostWriter.error(`Dependency task '${dep}' not found for task '${task.name}'`);
@@ -216,9 +219,9 @@ function detectCycles(tasks: ITask[]) {
         }
 
         stack.delete(task.id);
-    }
+    };
 
-    for(const task of tasks) {
+    for (const task of tasks) {
         resolve(task);
     }
 }
@@ -227,13 +230,13 @@ function flattenTasks(tasks: ITask[]) {
     const result: ITask[] = [];
 
     // detect cycles
-    
 
-    for(const task of tasks) {
-        if (!task)
+    for (const task of tasks) {
+        if (!task) {
             continue;
+        }
 
-        for(const dep of task.deps) {
+        for (const dep of task.deps) {
             const depTask = Tasks.get(dep);
             if (!depTask) {
                 hostWriter.error(`Dependency task '${dep}' not found for task '${task.name}'`);
@@ -241,12 +244,14 @@ function flattenTasks(tasks: ITask[]) {
             }
 
             result.push(...flattenTasks([depTask]));
-            if (!result.includes(depTask))
+            if (!result.includes(depTask)) {
                 result.push(depTask);
+            }
         }
 
-        if (!result.includes(task))
+        if (!result.includes(task)) {
             result.push(task);
+        }
     }
 
     return result;
@@ -254,12 +259,12 @@ function flattenTasks(tasks: ITask[]) {
 
 export async function runTaskRunner() {
     const args = Deno.args;
-    const cmds : string[] = [];
-    const optArgs : string[] = [];
+    const cmds: string[] = [];
+    const optArgs: string[] = [];
     let collectOpts = false;
-    for(let i = 0; i < args.length; i++) {
+    for (let i = 0; i < args.length; i++) {
         const arg = args[i];
-        if (arg.startsWith('-')) {
+        if (arg.startsWith("-")) {
             collectOpts = true;
         }
 
@@ -271,8 +276,8 @@ export async function runTaskRunner() {
         cmds.push(arg);
     }
 
-    const flags : IRunArgs = parse(optArgs, {
-        boolean: ['skip-deps', 'skipDeps'],
+    const flags: IRunArgs = parse(optArgs, {
+        boolean: ["skip-deps", "skipDeps"],
         alias: {
             h: "help",
             s: "skip-deps",
@@ -286,7 +291,7 @@ export async function runTaskRunner() {
     });
 
     if (cmds.length === 0) {
-        cmds.push('default');
+        cmds.push("default");
     }
 
     if (flags.help === true) {
@@ -294,25 +299,20 @@ export async function runTaskRunner() {
         Deno.exit(0);
     }
 
-    switch(cmds[0])
-    {
-        case 'tasks':
+    switch (cmds[0]) {
+        case "tasks":
             {
-                if (cmds.length > 1)
-                {
-                    switch(cmds[1])
-                    {
-                        case 'list':
+                if (cmds.length > 1) {
+                    switch (cmds[1]) {
+                        case "list":
                             listTasks();
                             Deno.exit(0);
-                        break;
+                            break;
                         default:
                             hostWriter.error(`Unknown tasks sub command '${cmds[1]}'`);
                             Deno.exit(1);
                     }
-                }
-                else 
-                {
+                } else {
                     listTasks();
                     Deno.exit(0);
                 }
@@ -320,22 +320,21 @@ export async function runTaskRunner() {
 
             break;
 
-        default: 
+        default:
             {
-                const topLevelTasks : ITask[] = [];
-                for(const cmd of cmds)
-                {
+                const topLevelTasks: ITask[] = [];
+                for (const cmd of cmds) {
                     const task = Tasks.get(cmd);
                     if (!task) {
-                        if(cmd === 'default') {
+                        if (cmd === "default") {
                             hostWriter.error("No default task found");
-                            writeHelp()
+                            writeHelp();
                             Deno.exit(1);
                         }
 
                         console.error(`Task '${cmd}' not found`);
-                        writeHelp()
-                        Deno.exit(1);   
+                        writeHelp();
+                        Deno.exit(1);
                     }
 
                     topLevelTasks.push(task);
@@ -346,16 +345,15 @@ export async function runTaskRunner() {
                     Deno.exit(result);
                 }
 
-                if (flags['skip-deps'] === true) {
-                   const result = await runTasks(topLevelTasks, flags);
-                   Deno.exit(result);
+                if (flags["skip-deps"] === true) {
+                    const result = await runTasks(topLevelTasks, flags);
+                    Deno.exit(result);
                 }
 
                 detectCycles(topLevelTasks);
                 const tasks = flattenTasks(topLevelTasks);
                 const result = await runTasks(tasks, flags);
                 Deno.exit(result);
-    
             }
             break;
     }

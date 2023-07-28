@@ -1,22 +1,22 @@
 // deno-lint-ignore-file no-unused-vars
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
-    upm,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
+    IS_WINDOWS,
+    PlatformNotSupportedError,
     PsOutput,
-IS_WINDOWS,
-PlatformNotSupportedError
+    registerExe,
+    upm,
 } from "../../mod.ts";
 
 const findOptions = registerExe("jq", {
     windows: [
         "%SystemRoot%\\System32\\Dism.exe",
-    ]
+    ],
 });
 
 export function dism(args?: string[], options?: IExecOptions) {
@@ -29,9 +29,9 @@ export function dism(args?: string[], options?: IExecOptions) {
 
 dism.cli = dism;
 dism.findOptions = findOptions;
-dism.sync = function(args?: string[], options?: IExecSyncOptions) {
+dism.sync = function (args?: string[], options?: IExecSyncOptions) {
     if (!IS_WINDOWS) {
         throw new PlatformNotSupportedError("wmic is only supported on Windows");
     }
     return execSync("dism", args, options);
-}
+};

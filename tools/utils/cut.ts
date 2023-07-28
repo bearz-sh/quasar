@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("cut", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("cut", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\cut.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\cut.exe",
         "%SystemDrive%\\msys\\usr\\bin\\cut.exe",
-    ]
+    ],
 });
 
 export function cut(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function cut(args?: string[], options?: IExecOptions) {
 }
 
 cut.cli = cut;
-cut.sync = function(args?: string[], options?: IExecSyncOptions) {
+cut.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("cut", args, options);
-}
+};

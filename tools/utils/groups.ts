@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("groups", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("groups", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\groups.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\groups.exe",
         "%SystemDrive%\\msys\\usr\\bin\\groups.exe",
-    ]
+    ],
 });
 
 export function groups(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function groups(args?: string[], options?: IExecOptions) {
 }
 
 groups.cli = groups;
-groups.sync = function(args?: string[], options?: IExecSyncOptions) {
+groups.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("groups", args, options);
-}
+};

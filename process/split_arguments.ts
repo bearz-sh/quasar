@@ -5,7 +5,7 @@ export function splitArguments(value: string): string[] {
         Double = 2,
     }
 
-    let token = '';
+    let token = "";
     let quote = Quote.None;
     const tokens = [];
 
@@ -13,15 +13,15 @@ export function splitArguments(value: string): string[] {
         const c = value[i];
 
         if (quote > Quote.None) {
-            if (quote === Quote.Single && c === '\'') {
+            if (quote === Quote.Single && c === "'") {
                 quote = Quote.None;
                 tokens.push(token);
-                token = '';
+                token = "";
                 continue;
             } else if (quote === Quote.Double && c === '"') {
                 quote = Quote.None;
                 tokens.push(token);
-                token = '';
+                token = "";
                 continue;
             }
 
@@ -29,7 +29,7 @@ export function splitArguments(value: string): string[] {
             continue;
         }
 
-        if (c === ' ') {
+        if (c === " ") {
             const remaining = (value.length - 1) - i;
             if (remaining > 2) {
                 // if the line ends with characters that normally allow for scripts with multiline
@@ -40,24 +40,24 @@ export function splitArguments(value: string): string[] {
                 // ' `\r\n'
                 const j = value[i + 1];
                 const k = value[i + 2];
-                if (j === '\'' || j === '`') {
-                    if (k === '\n') {
+                if (j === "'" || j === "`") {
+                    if (k === "\n") {
                         i += 2;
                         if (token.length > 0) {
                             tokens.push(token);
                         }
-                        token = '';
+                        token = "";
                         continue;
                     }
 
                     if (remaining > 3) {
                         const l = value[i + 3];
-                        if (k === '\r' && l === '\n') {
+                        if (k === "\r" && l === "\n") {
                             i += 3;
                             if (token.length > 0) {
                                 tokens.push(token);
                             }
-                            token = '';
+                            token = "";
                             continue;
                         }
                     }
@@ -66,13 +66,13 @@ export function splitArguments(value: string): string[] {
 
             if (token.length > 0) {
                 tokens.push(token);
-                token = '';
+                token = "";
             }
             continue;
         }
 
         if (token.length === 0) {
-            if (c === '\'') {
+            if (c === "'") {
                 quote = Quote.Single;
                 continue;
             }

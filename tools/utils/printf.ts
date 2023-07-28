@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("printf", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("printf", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\printf.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\printf.exe",
         "%SystemDrive%\\msys\\usr\\bin\\printf.exe",
-    ]
+    ],
 });
 
 export function printf(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function printf(args?: string[], options?: IExecOptions) {
 }
 
 printf.cli = printf;
-printf.sync = function(args?: string[], options?: IExecSyncOptions) {
+printf.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("printf", args, options);
-}
+};

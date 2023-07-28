@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("hashsum", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("hashsum", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\hashsum.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\hashsum.exe",
         "%SystemDrive%\\msys\\usr\\bin\\hashsum.exe",
-    ]
+    ],
 });
 
 export function hashsum(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function hashsum(args?: string[], options?: IExecOptions) {
 }
 
 hashsum.cli = hashsum;
-hashsum.sync = function(args?: string[], options?: IExecSyncOptions) {
+hashsum.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("hashsum", args, options);
-}
+};

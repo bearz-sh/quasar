@@ -21,13 +21,13 @@ export interface ICreateDirectoryOptions {
     mode?: number;
 }
 
- /**
-   * Options which can be set when using {@linkcode Deno.makeTempDir},
-   * {@linkcode Deno.makeTempDirSync}, {@linkcode Deno.makeTempFile}, and
-   * {@linkcode Deno.makeTempFileSync}.
-   *
-   * @category File System */
- export interface IMakeTempOptions {
+/**
+ * Options which can be set when using {@linkcode Deno.makeTempDir},
+ * {@linkcode Deno.makeTempDirSync}, {@linkcode Deno.makeTempFile}, and
+ * {@linkcode Deno.makeTempFileSync}.
+ *
+ * @category File System */
+export interface IMakeTempOptions {
     /** Directory where the temporary directory should be created (defaults to
      * the env variable `TMPDIR`, or the system's default, usually `/tmp`).
      *
@@ -41,7 +41,7 @@ export interface ICreateDirectoryOptions {
     /** String that should follow the random portion of the temporary
      * directory's name. */
     suffix?: string;
-  }
+}
 
 export interface ICopyOptions {
     overwrite?: boolean;

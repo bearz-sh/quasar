@@ -8,12 +8,12 @@ export class AzDoEnvProvider implements ICiEnvProvider {
     get name(): string {
         return "azdo";
     }
-    
+
     get isCi(): boolean {
         if (this.#isCi === undefined) {
             this.#isCi = env.get("TF_BUILD") === "true";
         }
-        
+
         return this.#isCi;
     }
 
@@ -26,14 +26,14 @@ export class AzDoEnvProvider implements ICiEnvProvider {
     }
 
     get workingDirectory(): string {
-        return  env.get("BUILD_REPOSITORY_LOCALPATH") || env.get("SYSTEM_DEFAULTWORKINGDIRECTORY") || "";
+        return env.get("BUILD_REPOSITORY_LOCALPATH") || env.get("SYSTEM_DEFAULTWORKINGDIRECTORY") || "";
     }
 
     get buildNumber(): string {
         return env.get("BUILD_BUILDNUMBER") || "";
     }
 
-    get refName() : string {
+    get refName(): string {
         return env.get("BUILD_SOURCEBRANCH") || "";
     }
 

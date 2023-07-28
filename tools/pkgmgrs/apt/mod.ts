@@ -1,14 +1,14 @@
 // deno-lint-ignore-file no-unused-vars
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
-    upm,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
-    PsOutput
+    PsOutput,
+    registerExe,
+    upm,
 } from "../../mod.ts";
 
 const findOptions = registerExe("apt", {});
@@ -19,9 +19,9 @@ export function apt(args?: string[], options?: IExecOptions) {
 
 apt.cli = apt;
 apt.findOptions = findOptions;
-apt.sync = function(args?: string[], options?: IExecSyncOptions) {
+apt.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("apt", args, options);
-}
+};
 
 export interface AptPkgInfo extends IPkgInfo {
     repos: string[];
@@ -36,7 +36,7 @@ export class AptManager implements IPkgMgr {
         const pkg = version ? `${name}=${version}` : name;
         return apt(["install", pkg, "-y"], { stdout: "inherit", stderr: "inherit" });
     }
- 
+
     uninstall(name: string, args?: string[]): Promise<PsOutput> {
         return apt(["remove", name, "-y"], { stdout: "inherit", stderr: "inherit" });
     }
@@ -44,24 +44,23 @@ export class AptManager implements IPkgMgr {
     update(args?: string[]): Promise<PsOutput> {
         return apt(["update"], { stdout: "inherit", stderr: "inherit" });
     }
- 
+
     upgrade(name: string, args?: string[]): Promise<PsOutput> {
         return apt(["upgrade", "-y"], { stdout: "inherit", stderr: "inherit" });
     }
- 
+
     async list(query: string, args?: string[]): Promise<IPkgInfo[]> {
-        
         const out = await apt(["list", "--installed", query, "-qq"], { stdout: "piped", stderr: "inherit" });
         let consumeDescription = false;
         let pkg: AptPkgInfo | undefined;
         const results: AptPkgInfo[] = [];
 
         // TODO: parse the output to lower string allocations
-        for(let i = 0; i < out.stdoutAsLines.length; i++) {
+        for (let i = 0; i < out.stdoutAsLines.length; i++) {
             const line = out.stdoutAsLines[i];
 
             if (consumeDescription) {
-                if(pkg) {
+                if (pkg) {
                     pkg.desc += line;
                     pkg = undefined;
                     consumeDescription = false;
@@ -69,7 +68,7 @@ export class AptManager implements IPkgMgr {
 
                 continue;
             }
-            
+
             if (!consumeDescription && line.includes("/")) {
                 const parts = line.split(" ");
                 const first = parts[0];
@@ -87,17 +86,17 @@ export class AptManager implements IPkgMgr {
         return results;
     }
 
-    async search(query: string,args?: string[]): Promise<IPkgInfo[]> {
+    async search(query: string, args?: string[]): Promise<IPkgInfo[]> {
         const out = await apt(["search", query, "-qq"], { stdout: "piped", stderr: "inherit" });
 
         let consumeDescription = false;
         let pkg: AptPkgInfo | undefined;
         const results: AptPkgInfo[] = [];
-        for(let i = 0; i < out.stdoutAsLines.length; i++) {
+        for (let i = 0; i < out.stdoutAsLines.length; i++) {
             const line = out.stdoutAsLines[i];
 
             if (consumeDescription) {
-                if(pkg) {
+                if (pkg) {
                     pkg.desc += line;
                     pkg = undefined;
                     consumeDescription = false;

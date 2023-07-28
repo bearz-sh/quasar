@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../../mod.ts";
 
 registerExe("nvs", {
     windows: [
@@ -13,7 +7,7 @@ registerExe("nvs", {
 
     linux: [
         "${HOME}/.nvs/nvs",
-    ]
+    ],
 });
 
 export function nvs(args?: string[], options?: IExecOptions) {
@@ -21,6 +15,6 @@ export function nvs(args?: string[], options?: IExecOptions) {
 }
 
 nvs.cli = nvs;
-nvs.sync = function(args?: string[], options?: IExecSyncOptions) {
+nvs.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("nvs", args, options);
-}
+};

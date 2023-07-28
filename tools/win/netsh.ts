@@ -1,22 +1,22 @@
 // deno-lint-ignore-file no-unused-vars
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
-    upm,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
+    IS_WINDOWS,
+    PlatformNotSupportedError,
     PsOutput,
-IS_WINDOWS,
-PlatformNotSupportedError
+    registerExe,
+    upm,
 } from "../mod.ts";
 
 const findOptions = registerExe("netsh", {
     windows: [
         "%SystemRoot%\\System32\\netsh.exe",
-    ]
+    ],
 });
 
 export function netsh(args?: string[], options?: IExecOptions) {
@@ -29,9 +29,9 @@ export function netsh(args?: string[], options?: IExecOptions) {
 
 netsh.cli = netsh;
 netsh.findOptions = findOptions;
-netsh.sync = function(args?: string[], options?: IExecSyncOptions) {
+netsh.sync = function (args?: string[], options?: IExecSyncOptions) {
     if (!IS_WINDOWS) {
         throw new PlatformNotSupportedError("wmic is only supported on Windows");
     }
     return execSync("netsh", args, options);
-}
+};

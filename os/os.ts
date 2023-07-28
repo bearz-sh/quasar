@@ -1,5 +1,5 @@
 import { HOME_VAR_NAME, HOST_VAR_NAME, TEMP_VAR_NAME, USER_VAR_NAME } from "./constants.ts";
-import { getRequired, get } from "./env.ts";
+import { get, getRequired } from "./env.ts";
 import { isWindowsAdmin } from "./win.ts";
 
 export function endianness(): "BE" | "LE" {
@@ -27,16 +27,16 @@ export function tmpDir(): string {
     return get(TEMP_VAR_NAME) ?? "/tmp";
 }
 
-export function uid() : number | null {
+export function uid(): number | null {
     return Deno.uid();
 }
 
-export function gid() : number | null {
+export function gid(): number | null {
     return Deno.gid();
 }
 
-export function isProcessElevated() : boolean {
-    if(Deno.build.os === "windows") {
+export function isProcessElevated(): boolean {
+    if (Deno.build.os === "windows") {
         return isWindowsAdmin();
     }
 

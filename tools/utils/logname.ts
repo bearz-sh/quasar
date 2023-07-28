@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("logname", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("logname", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\logname.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\logname.exe",
         "%SystemDrive%\\msys\\usr\\bin\\logname.exe",
-    ]
+    ],
 });
 
 export function logname(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function logname(args?: string[], options?: IExecOptions) {
 }
 
 logname.cli = logname;
-logname.sync = function(args?: string[], options?: IExecSyncOptions) {
+logname.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("logname", args, options);
-}
+};

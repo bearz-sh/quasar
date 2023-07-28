@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("yes", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("yes", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\yes.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\yes.exe",
         "%SystemDrive%\\msys\\usr\\bin\\yes.exe",
-    ]
+    ],
 });
 
 export function yes(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function yes(args?: string[], options?: IExecOptions) {
 }
 
 yes.cli = yes;
-yes.sync = function(args?: string[], options?: IExecSyncOptions) {
+yes.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("yes", args, options);
-}
+};

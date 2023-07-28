@@ -1,13 +1,10 @@
-
 export const disposableSymbol = Symbol("dispose");
 export const asyncDisposableSymbol = Symbol("asyncDispose");
 
-export interface IDisposable
-{
+export interface IDisposable {
     [disposableSymbol](): void;
 }
 
-export interface IAsyncDisposable
-{
+export interface IAsyncDisposable {
     [asyncDisposableSymbol](): Promise<void>;
 }

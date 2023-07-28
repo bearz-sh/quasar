@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("arch", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("arch", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\arch.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\arch.exe",
         "%SystemDrive%\\msys\\usr\\bin\\arch.exe",
-    ]
+    ],
 });
 
 export function arch(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function arch(args?: string[], options?: IExecOptions) {
 }
 
 arch.cli = arch;
-arch.sync = function(args?: string[], options?: IExecSyncOptions) {
+arch.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("arch", args, options);
-}
+};

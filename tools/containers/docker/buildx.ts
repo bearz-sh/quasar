@@ -1,26 +1,20 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    splat,
-} from "../../mod.ts";
+import { IExecOptions, IExecSyncOptions, splat } from "../../mod.ts";
 
-import {
-    buildx,
-} from './base.ts'
+import { buildx } from "./base.ts";
 
 export interface DockerBuildxArgs extends Record<string, unknown> {
     builder?: string;
 }
 
 export interface DockerBuildxBakeArgs extends DockerBuildxArgs {
-    target: string[],
-    file?: string[]
+    target: string[];
+    file?: string[];
     load?: boolean;
     metadataFile?: string;
     noCache?: boolean;
-    print?: boolean
-    progress?: 'auto' | 'plain' | 'tty';
-    provenance?: string
+    print?: boolean;
+    progress?: "auto" | "plain" | "tty";
+    provenance?: string;
     pull?: boolean;
     push?: boolean;
     sbom?: string;
@@ -47,7 +41,7 @@ export interface DockerBuildxBuildArgs extends DockerBuildxArgs {
     noCacheFrom?: string[];
     output?: string[];
     platform?: string[];
-    progress?: 'auto' | 'plain' | 'tty';
+    progress?: "auto" | "plain" | "tty";
     provenance?: string;
     pull?: boolean;
     push?: boolean;
@@ -62,7 +56,7 @@ export interface DockerBuildxBuildArgs extends DockerBuildxArgs {
 }
 
 export interface DockerBuildxCreateArgs extends DockerBuildxArgs {
-    ['_']: string[];
+    ["_"]: string[];
     append?: boolean;
     bootstrap?: boolean;
     bildkitFlags?: string;
@@ -73,7 +67,7 @@ export interface DockerBuildxCreateArgs extends DockerBuildxArgs {
     name?: string;
     node?: string;
     platform?: string[];
-    use?: boolean
+    use?: boolean;
 }
 
 export interface DockerBuildxDuArgs extends DockerBuildxArgs {
@@ -88,14 +82,12 @@ export interface DockerBuildxInspectArgs extends DockerBuildxArgs {
 
 export interface DockerBuildxPruneArgs extends DockerBuildxArgs {
     all?: boolean;
-    builder?: string 
+    builder?: string;
     filter?: string;
     force?: boolean;
     keepStorage?: string;
     verbose?: boolean;
 }
-
-
 
 export interface DockerBuildxRmArgs extends DockerBuildxArgs {
     name: string;
@@ -106,56 +98,73 @@ export interface DockerBuildxRmArgs extends DockerBuildxArgs {
 }
 
 export interface DockerBuildxStopArgs extends DockerBuildxArgs {
-    name: string 
+    name: string;
 }
 
 export interface DockerBuildxUseArgs extends DockerBuildxArgs {
-    name: string 
-    default?: boolean
-    global?: boolean
+    name: string;
+    default?: boolean;
+    global?: boolean;
 }
 
 export function bake(args: DockerBuildxBakeArgs, options?: IExecOptions) {
-    return buildx(splat(args, {
-        arguments: ["target"],
-        appendArguments: true
-    }), options);
+    return buildx(
+        splat(args, {
+            arguments: ["target"],
+            appendArguments: true,
+        }),
+        options,
+    );
 }
 
 export function bakeSync(args: DockerBuildxBakeArgs, options?: IExecSyncOptions) {
-    return buildx.sync(splat(args, {
-        arguments: ["target"],
-        appendArguments: true
-    }), options);
+    return buildx.sync(
+        splat(args, {
+            arguments: ["target"],
+            appendArguments: true,
+        }),
+        options,
+    );
 }
 
 export function build(args: DockerBuildxBuildArgs, options?: IExecOptions) {
-    return buildx(splat(args, {
-        arguments: ["path"],
-        appendArguments: true
-    }), options);
+    return buildx(
+        splat(args, {
+            arguments: ["path"],
+            appendArguments: true,
+        }),
+        options,
+    );
 }
 
 export function buildSync(args: DockerBuildxBuildArgs, options?: IExecSyncOptions) {
-    return buildx.sync(splat(args, {
-        arguments: ["path"],
-        appendArguments: true
-    }), options);
+    return buildx.sync(
+        splat(args, {
+            arguments: ["path"],
+            appendArguments: true,
+        }),
+        options,
+    );
 }
 
-
 export function create(args: DockerBuildxCreateArgs, options?: IExecOptions) {
-    return buildx(splat(args, {
-        arguments: ["context"],
-        appendArguments: true 
-    }), options);
+    return buildx(
+        splat(args, {
+            arguments: ["context"],
+            appendArguments: true,
+        }),
+        options,
+    );
 }
 
 export function createSync(args: DockerBuildxCreateArgs, options?: IExecSyncOptions) {
-    return buildx.sync(splat(args, {
-        arguments: ["context"],
-        appendArguments: true
-    }), options);
+    return buildx.sync(
+        splat(args, {
+            arguments: ["context"],
+            appendArguments: true,
+        }),
+        options,
+    );
 }
 
 export function du(args: DockerBuildxDuArgs, options?: IExecOptions) {
@@ -167,9 +176,12 @@ export function duSync(args: DockerBuildxDuArgs, options?: IExecSyncOptions) {
 }
 
 export function inspect(args: DockerBuildxInspectArgs, options?: IExecOptions) {
-    return buildx(splat(args, {
-        arguments: ["name"]
-    }), options);
+    return buildx(
+        splat(args, {
+            arguments: ["name"],
+        }),
+        options,
+    );
 }
 
 export function inspectSync(args: DockerBuildxInspectArgs, options?: IExecSyncOptions) {
@@ -193,41 +205,56 @@ export function pruneSync(args: DockerBuildxPruneArgs, options?: IExecSyncOption
 }
 
 export function rm(args: DockerBuildxRmArgs, options?: IExecOptions) {
-    return buildx(splat(args, {
-        arguments: ["name"]
-    }), options);
+    return buildx(
+        splat(args, {
+            arguments: ["name"],
+        }),
+        options,
+    );
 }
 
 export function rmSync(args: DockerBuildxRmArgs, options?: IExecSyncOptions) {
-    return buildx.sync(splat(args, {
-        arguments: ["name"]
-    }), options);
+    return buildx.sync(
+        splat(args, {
+            arguments: ["name"],
+        }),
+        options,
+    );
 }
 
 export function stop(args: DockerBuildxStopArgs, options?: IExecOptions) {
-    return buildx(splat(args, {
-        arguments: ["name"]
-    }), options);
+    return buildx(
+        splat(args, {
+            arguments: ["name"],
+        }),
+        options,
+    );
 }
 
 export function stopSync(args: DockerBuildxStopArgs, options?: IExecSyncOptions) {
-    return buildx.sync(splat(args, {
-        arguments: ["name"]
-    }), options);
+    return buildx.sync(
+        splat(args, {
+            arguments: ["name"],
+        }),
+        options,
+    );
 }
 
 export function use(args: DockerBuildxUseArgs, options?: IExecOptions) {
-    return buildx(splat(args, {
-        arguments: ["name"]
-    }), options);
+    return buildx(
+        splat(args, {
+            arguments: ["name"],
+        }),
+        options,
+    );
 }
 
 export function useSync(args: DockerBuildxUseArgs, options?: IExecSyncOptions) {
-    return buildx.sync(splat(args, {
-        arguments: ["name"],
-        appendArguments: true
-    }), options);
+    return buildx.sync(
+        splat(args, {
+            arguments: ["name"],
+            appendArguments: true,
+        }),
+        options,
+    );
 }
-
-
-

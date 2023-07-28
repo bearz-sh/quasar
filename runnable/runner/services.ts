@@ -1,27 +1,27 @@
 import { IProcess } from "../interfaces.ts";
-import { args, cwd, chdir, capture, run, IExecOptions, exec as exec2  } from '../../process/mod.ts'
+import { args, capture, chdir, cwd, exec as exec2, IExecOptions, run } from "../../process/mod.ts";
 import { isProcessElevated } from "../../os/os.ts";
-import { ok, err } from "../../optional/result.ts";
+import { err, ok } from "../../optional/result.ts";
 import { IEnvSubstitutionOptions } from "../../os/env.ts";
 import { IEnv, IEnvPath } from "../interfaces.ts";
 import * as env from "../../os/env.ts";
 import { secretMasker } from "../../secrets/mod.ts";
 import { CaseInsensitiveMap } from "../../collections/case_insensitive_map.ts";
 import { equalsIgnoreCase } from "../../str.ts";
-import { IOperatingSystem } from '../interfaces.ts';
+import { IOperatingSystem } from "../interfaces.ts";
 
-import { 
-    IS_DARWIN,
-    RUNTIME_ARCH, 
-    IS_LINUX, 
-    IS_WINDOWS, 
-    NEW_LINE, 
-    PATH_SEPARATOR,
+import {
     DIR_SEPARATOR,
-    PATH_VAR_NAME as PATH
-} from '../../os/constants.ts';
+    IS_DARWIN,
+    IS_LINUX,
+    IS_WINDOWS,
+    NEW_LINE,
+    PATH_SEPARATOR,
+    PATH_VAR_NAME as PATH,
+    RUNTIME_ARCH,
+} from "../../os/constants.ts";
 
-export { CaseInsensitiveMap }
+export { CaseInsensitiveMap };
 
 export const os: IOperatingSystem = {
     arch: RUNTIME_ARCH,
@@ -31,26 +31,21 @@ export const os: IOperatingSystem = {
     isLinux: IS_LINUX,
     isWindows: IS_WINDOWS,
     newLine: NEW_LINE,
-    pathSeparator: PATH_SEPARATOR
-}
-
-
-
+    pathSeparator: PATH_SEPARATOR,
+};
 
 function findPathIndex(paths: string[], path: string): number {
     if (IS_WINDOWS) {
-        return paths.findIndex(p => equalsIgnoreCase(p, path));
+        return paths.findIndex((p) => equalsIgnoreCase(p, path));
     }
 
-    return paths.findIndex(p => p === path);
+    return paths.findIndex((p) => p === path);
 }
 
-class EnvPath implements IEnvPath
-{
+class EnvPath implements IEnvPath {
     #env: IEnv;
 
-    constructor(env: IEnv)
-    {
+    constructor(env: IEnv) {
         this.#env = env;
     }
 
@@ -62,7 +57,7 @@ class EnvPath implements IEnvPath
         this.#env.set(PATH, path);
     }
 
-    add(value: string,prepend?: boolean|undefined): void {
+    add(value: string, prepend?: boolean | undefined): void {
         const paths = this.split();
         if (findPathIndex(paths, value) < 0) {
             return;
@@ -79,7 +74,7 @@ class EnvPath implements IEnvPath
 
     remove(value: string): void {
         const paths = this.split();
-        
+
         const index = findPathIndex(paths, value);
         if (index > -1) {
             paths.splice(index, 1);
@@ -99,13 +94,11 @@ class EnvPath implements IEnvPath
  * Implementation of IEnv that doesn't modify the process environment.
  * which will allow multiple jobs to run in parallel without interfering with each other.
  */
-export class Env implements IEnv 
-{
+export class Env implements IEnv {
     #env: Map<string, string>;
     #path: IEnvPath;
 
-    constructor()
-    {
+    constructor() {
         this.#env = new CaseInsensitiveMap<string>();
         const data = env.toObject();
         for (const key of Object.keys(data)) {
@@ -125,56 +118,54 @@ export class Env implements IEnv
         return this.#path;
     }
 
-    expand(template: string,options?: IEnvSubstitutionOptions): string {
+    expand(template: string, options?: IEnvSubstitutionOptions): string {
         options = options || {};
         options.getVariable = (name: string) => this.get(name);
-        return env.expand(template,options);
+        return env.expand(template, options);
     }
 
-    get(name: string): string|undefined {
+    get(name: string): string | undefined {
         return this.#env.get(name);
     }
 
-    getOrDefault(key: string,defaultValue: string): string {
+    getOrDefault(key: string, defaultValue: string): string {
         return this.get(key) || defaultValue;
     }
 
     getRequired(name: string): string {
         const v = this.get(name);
-        if (v === undefined)
-        {
+        if (v === undefined) {
             throw new Error(`Environment variable '${name}' is not defined`);
         }
 
         return v;
     }
 
-    set(key: string,value: string): void;
-    set(key: string,value: string,isSecret: boolean): void;
-    set(map: { [key: string]: string; }): void;
+    set(key: string, value: string): void;
+    set(key: string, value: string, isSecret: boolean): void;
+    set(map: { [key: string]: string }): void;
     set(): void {
-        switch(arguments.length) {
+        switch (arguments.length) {
             case 1:
                 {
-                    const map = arguments[0] as { [key: string] : string };
-                    for (const key in map)
-                    {
+                    const map = arguments[0] as { [key: string]: string };
+                    for (const key in map) {
                         const value = map[key];
                         this.#env.set(key, value);
                     }
                 }
-            
+
                 break;
-    
+
             case 2:
                 {
                     const key = arguments[0] as string;
                     const value = arguments[1] as string;
                     this.#env.set(key, value);
                 }
-    
+
                 break;
-    
+
             case 3:
                 {
                     const key = arguments[0] as string;
@@ -184,12 +175,12 @@ export class Env implements IEnv
                         secrets.set(key, value);
                         secretMasker.add(value);
                     }
-    
+
                     this.#env.set(key, value);
                 }
-    
+
                 break;
-    
+
             default:
                 throw new Error("Invalid number of arguments.");
         }
@@ -203,14 +194,14 @@ export class Env implements IEnv
         return this.#env.has(name);
     }
 
-    toObject(): Record<string,string|undefined> {
-        const result: Record<string,string|undefined> = {};
-        for (const [key,value] of this.#env){
+    toObject(): Record<string, string | undefined> {
+        const result: Record<string, string | undefined> = {};
+        for (const [key, value] of this.#env) {
             result[key] = value;
         }
 
         return result;
-    }    
+    }
 }
 
 const defaultCwd = cwd();
@@ -218,7 +209,7 @@ const cwdHistory: string[] = [];
 
 export const ps: IProcess = {
     args: args,
-    cwd: "", 
+    cwd: "",
     isElevated: isProcessElevated(),
     push(path: string) {
         cwdHistory.push(cwd());
@@ -232,7 +223,7 @@ export const ps: IProcess = {
     async capture(...args: string[]) {
         try {
             const result = await capture(...args);
-            return ok(result)
+            return ok(result);
         } catch (error) {
             return err(error);
         }
@@ -240,7 +231,7 @@ export const ps: IProcess = {
     async run(...args: string[]) {
         try {
             const result = await run(...args);
-            return ok(result)
+            return ok(result);
         } catch (error) {
             return err(error);
         }
@@ -249,19 +240,18 @@ export const ps: IProcess = {
     async exec(exec: string, args?: string[], options?: IExecOptions) {
         try {
             const result = await exec2(exec, args, options);
-            return ok(result)
+            return ok(result);
         } catch (error) {
             return err(error);
         }
-    }
-}
+    },
+};
 
 Reflect.defineProperty(ps, "cwd", {
     get: () => cwd(),
     set: (value: string) => chdir(value),
     enumerable: true,
-    configurable: true
+    configurable: true,
 });
-
 
 export const secrets = new CaseInsensitiveMap<string>();

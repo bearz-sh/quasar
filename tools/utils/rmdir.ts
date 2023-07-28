@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("rmdir", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("rmdir", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\rmdir.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\rmdir.exe",
         "%SystemDrive%\\msys\\usr\\bin\\rmdir.exe",
-    ]
+    ],
 });
 
 export function rmdir(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function rmdir(args?: string[], options?: IExecOptions) {
 }
 
 rmdir.cli = rmdir;
-rmdir.sync = function(args?: string[], options?: IExecSyncOptions) {
+rmdir.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("rmdir", args, options);
-}
+};

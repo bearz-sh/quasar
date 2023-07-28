@@ -1,22 +1,22 @@
 // deno-lint-ignore-file no-unused-vars
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
-    upm,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
+    IS_WINDOWS,
+    PlatformNotSupportedError,
     PsOutput,
-IS_WINDOWS,
-PlatformNotSupportedError
+    registerExe,
+    upm,
 } from "../mod.ts";
 
 const findOptions = registerExe("wsl", {
     windows: [
         "%SystemRoot%\\System32\\wsl.exe",
-    ]
+    ],
 });
 
 export function wsl(args?: string[], options?: IExecOptions) {
@@ -29,9 +29,9 @@ export function wsl(args?: string[], options?: IExecOptions) {
 
 wsl.cli = wsl;
 wsl.findOptions = findOptions;
-wsl.sync = function(args?: string[], options?: IExecSyncOptions) {
+wsl.sync = function (args?: string[], options?: IExecSyncOptions) {
     if (!IS_WINDOWS) {
         throw new PlatformNotSupportedError("wsl is only supported on Windows");
     }
     return execSync("wsl", args, options);
-}
+};

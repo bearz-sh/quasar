@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("touch", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("touch", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\touch.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\touch.exe",
         "%SystemDrive%\\msys\\usr\\bin\\touch.exe",
-    ]
+    ],
 });
 
 export function touch(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function touch(args?: string[], options?: IExecOptions) {
 }
 
 touch.cli = touch;
-touch.sync = function(args?: string[], options?: IExecSyncOptions) {
+touch.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("touch", args, options);
-}
+};

@@ -1,6 +1,5 @@
-import  { IExecOptions, IExecSyncOptions } from '../process/exec.ts';
-import { PsOutput } from '../process/ps.ts';
-
+import { IExecOptions, IExecSyncOptions } from "../process/exec.ts";
+import { PsOutput } from "../process/ps.ts";
 
 export interface IScriptRunner {
     run(script: string, options?: IExecOptions): Promise<PsOutput>;

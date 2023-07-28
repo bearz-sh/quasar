@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("base64", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("base64", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\base64.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\base64.exe",
         "%SystemDrive%\\msys\\usr\\bin\\base64.exe",
-    ]
+    ],
 });
 
 export function base64(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function base64(args?: string[], options?: IExecOptions) {
 }
 
 base64.cli = base64;
-base64.sync = function(args?: string[], options?: IExecSyncOptions) {
+base64.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("base64", args, options);
-}
+};

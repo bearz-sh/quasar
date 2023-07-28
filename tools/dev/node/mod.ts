@@ -1,42 +1,41 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    generateScriptFile, 
-    generateScriptFileSync, 
-    registerExe,
-    NotFoundOnPathError,
+import {
     cwd,
-    join,
-    IS_WINDOWS,
+    exec,
+    execSync,
     exists,
     existsSync,
-    rm,
-    rmSync,
+    generateScriptFile,
+    generateScriptFileSync,
+    IExecOptions,
+    IExecSyncOptions,
+    IS_WINDOWS,
     isDirectory,
     isDirectorySync,
-    which, 
-    whichSync
+    join,
+    NotFoundOnPathError,
+    registerExe,
+    rm,
+    rmSync,
+    which,
+    whichSync,
 } from "../../mod.ts";
 
 registerExe("node", {
     windows: [
-        "%ProgramFiles%\\nodejs\\node.exe"
-    ]
+        "%ProgramFiles%\\nodejs\\node.exe",
+    ],
 });
-
 
 registerExe("npm", {
     windows: [
-        "%ProgramFiles%\\nodejs\\npm.cmd"
-    ]
+        "%ProgramFiles%\\nodejs\\npm.cmd",
+    ],
 });
 
 registerExe("yarn", {
     windows: [
-        "%ProgramFiles(x86)%\\Yarn\\bin\\yarn.cmd"
-    ]
+        "%ProgramFiles(x86)%\\Yarn\\bin\\yarn.cmd",
+    ],
 });
 
 export function node(args?: string[], options?: IExecOptions) {
@@ -44,68 +43,65 @@ export function node(args?: string[], options?: IExecOptions) {
 }
 
 node.cli = node;
-node.sync = function(args?: string[], options?: IExecSyncOptions) {
+node.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("node", args, options);
-}
+};
 
-node.scriptFile = async function(scriptFile: string, options?: IExecOptions) {
+node.scriptFile = async function (scriptFile: string, options?: IExecOptions) {
     return await node.cli([scriptFile], options);
-}
+};
 
-node.scriptFileSync = function(scriptFile: string, options?: IExecSyncOptions) {
+node.scriptFileSync = function (scriptFile: string, options?: IExecSyncOptions) {
     return node.sync([scriptFile], options);
-}
+};
 
-node.script = async function(script: string, options?: IExecOptions) {
+node.script = async function (script: string, options?: IExecOptions) {
     const scriptFile = await generateScriptFile(script, ".js");
-    try  {
+    try {
         return await node.cli([scriptFile], options);
     } finally {
         if (await exists(scriptFile)) {
-            await rm(scriptFile)
+            await rm(scriptFile);
         }
     }
-}
+};
 
-node.scriptSync = function(script: string, options?: IExecSyncOptions) {
+node.scriptSync = function (script: string, options?: IExecSyncOptions) {
     const scriptFile = generateScriptFileSync(script, ".js");
-    try  {
+    try {
         return node.sync([scriptFile], options);
     } finally {
         if (existsSync(scriptFile)) {
-            rmSync(scriptFile)
+            rmSync(scriptFile);
         }
     }
-}
-
+};
 
 export function npm(args?: string[], options?: IExecOptions) {
     return exec("npm", args, options);
 }
 
 npm.cli = npm;
-npm.sync = function(args?: string[], options?: IExecSyncOptions) {
+npm.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("npm", args, options);
-}
+};
 
 export function yarn(args?: string[], options?: IExecOptions) {
     return exec("yarn", args, options);
 }
 
 yarn.cli = yarn;
-yarn.sync = function(args?: string[], options?: IExecSyncOptions) {
+yarn.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("yarn", args, options);
-}
+};
 
-
-export function findNpmBinFileSync(exe: string, workingDirectory?: string) : string | undefined {
+export function findNpmBinFileSync(exe: string, workingDirectory?: string): string | undefined {
     exe = IS_WINDOWS ? `${exe}.cmd` : exe;
     workingDirectory ||= cwd();
-    
+
     const npmBin = join(workingDirectory, "node_modules", ".bin");
 
-    if (isDirectorySync(npmBin))
-    {
+    if (isDirectorySync(npmBin)) {
         const file = join(npmBin, exe);
         if (existsSync(file)) {
             return file;
@@ -115,10 +111,10 @@ export function findNpmBinFileSync(exe: string, workingDirectory?: string) : str
     return whichSync(exe);
 }
 
-export async function findNpmBinFile(exe: string, workingDirectory?: string) : Promise<string | undefined> {
+export async function findNpmBinFile(exe: string, workingDirectory?: string): Promise<string | undefined> {
     exe = IS_WINDOWS ? `${exe}.cmd` : exe;
     workingDirectory ||= cwd();
-    
+
     const npmBin = join(workingDirectory, "node_modules", ".bin");
 
     if (await isDirectory(npmBin)) {
@@ -132,47 +128,46 @@ export async function findNpmBinFile(exe: string, workingDirectory?: string) : P
 }
 
 export async function tsc(args?: string[], options?: IExecOptions) {
-    const cli = await findNpmBinFile('tsc');
+    const cli = await findNpmBinFile("tsc");
     if (!cli) {
-        throw new NotFoundOnPathError('tsc');
+        throw new NotFoundOnPathError("tsc");
     }
     return exec(cli, args, options);
 }
 
 tsc.cli = tsc;
-tsc.sync = function(args?: string[], options?: IExecSyncOptions) {
-    const cli = findNpmBinFileSync('tsc');
+tsc.sync = function (args?: string[], options?: IExecSyncOptions) {
+    const cli = findNpmBinFileSync("tsc");
     if (!cli) {
-        throw new NotFoundOnPathError('tsc');
+        throw new NotFoundOnPathError("tsc");
     }
 
     return execSync(cli, args, options);
-}
-
+};
 
 export async function tsnode(args?: string[], options?: IExecOptions) {
-    const cli = await findNpmBinFile('ts-node');
+    const cli = await findNpmBinFile("ts-node");
     if (!cli) {
-        throw new NotFoundOnPathError('ts-node');
+        throw new NotFoundOnPathError("ts-node");
     }
     return exec(cli, args, options);
 }
 
 tsnode.cli = tsnode;
-tsnode.sync = function(args?: string[], options?: IExecSyncOptions) {
-    const cli = findNpmBinFileSync('ts-node');
+tsnode.sync = function (args?: string[], options?: IExecSyncOptions) {
+    const cli = findNpmBinFileSync("ts-node");
     if (!cli) {
-        throw new NotFoundOnPathError('ts-node');
+        throw new NotFoundOnPathError("ts-node");
     }
-    
+
     return execSync(cli, args, options);
-}
+};
 
 export function tsnodeSync(args?: string[], options?: IExecOptions) {
-    const cli = findNpmBinFileSync('ts-node');
+    const cli = findNpmBinFileSync("ts-node");
     if (!cli) {
-        throw new NotFoundOnPathError('ts-node');
+        throw new NotFoundOnPathError("ts-node");
     }
-    
+
     return execSync(cli, args, options);
 }

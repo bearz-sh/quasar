@@ -1,4 +1,12 @@
-import { ICreateDirectoryOptions, IDirectoryInfo, IFileInfo, IMakeTempOptions, IRemoveOptions, ISymlinkOptions, IWriteOptions } from "../fs/_interfaces.ts";
+import {
+    ICreateDirectoryOptions,
+    IDirectoryInfo,
+    IFileInfo,
+    IMakeTempOptions,
+    IRemoveOptions,
+    ISymlinkOptions,
+    IWriteOptions,
+} from "../fs/_interfaces.ts";
 import { Result } from "../optional/result.ts";
 import { OsFamily, RuntimeArch } from "../os/constants.ts";
 import { IEnvSubstitutionOptions } from "../os/env.ts";
@@ -9,7 +17,7 @@ import { PsOutput } from "../process/ps.ts";
 export interface IEnvPath {
     get(): string;
 
-    set(path: string): void
+    set(path: string): void;
 
     add(value: string, prepend?: boolean): void;
 
@@ -21,17 +29,17 @@ export interface IEnvPath {
 }
 
 export interface IEnv {
-    expand(template: string, options?: IEnvSubstitutionOptions): string
+    expand(template: string, options?: IEnvSubstitutionOptions): string;
 
     get(name: string): string | undefined;
 
-    getOrDefault(key: string, defaultValue: string) : string
+    getOrDefault(key: string, defaultValue: string): string;
 
     getRequired(name: string): string;
 
-    set(key: string, value: string) : void;
-    set(key: string, value: string, isSecret: boolean) : void;
-    set(map: { [key: string] : string }) : void;
+    set(key: string, value: string): void;
+    set(key: string, value: string, isSecret: boolean): void;
+    set(map: { [key: string]: string }): void;
 
     remove(name: string): void;
 
@@ -39,7 +47,7 @@ export interface IEnv {
 
     toObject(): Record<string, string | undefined>;
 
-    path: IEnvPath
+    path: IEnvPath;
 }
 
 export interface IPath {
@@ -63,11 +71,10 @@ export interface IPath {
 
     parse(pathString: string): ParsedPath;
 
-    fromFileUrl (url: string | URL): string;
+    fromFileUrl(url: string | URL): string;
 
-    toFileUrl (path: string): URL;
+    toFileUrl(path: string): URL;
 }
-
 
 export interface IOperatingSystem {
     platform: OsFamily;
@@ -81,77 +88,76 @@ export interface IOperatingSystem {
 }
 
 export interface IProcess {
-
-    readonly isElevated : boolean;
+    readonly isElevated: boolean;
 
     cwd: string;
 
-    readonly args: string[]
+    readonly args: string[];
 
-    run(...args: string[]) : Promise<Result<PsOutput, Error>>;
+    run(...args: string[]): Promise<Result<PsOutput, Error>>;
 
-    capture(...args: string[]) : Promise<Result<PsOutput, Error>>
+    capture(...args: string[]): Promise<Result<PsOutput, Error>>;
 
-    exec(exec: string, args?: string[], options?: IExecOptions) : Promise<Result<PsOutput, Error>>
+    exec(exec: string, args?: string[], options?: IExecOptions): Promise<Result<PsOutput, Error>>;
 
-    push(path: string) : void;
+    push(path: string): void;
 
-    pop() : void;
+    pop(): void;
 }
 
 export interface IFileSystem {
-    chmod(path: string | URL, mode: number) : Promise<void>
+    chmod(path: string | URL, mode: number): Promise<void>;
 
-    chown(path: string | URL, uid: number, gid: number) : Promise<void>
+    chown(path: string | URL, uid: number, gid: number): Promise<void>;
 
-    readDirectory(path: string | URL) : AsyncIterable<IDirectoryInfo>
+    readDirectory(path: string | URL): AsyncIterable<IDirectoryInfo>;
 
-    rename(oldPath: string | URL, newPath: string | URL) : Promise<void> 
+    rename(oldPath: string | URL, newPath: string | URL): Promise<void>;
 
-    readTextFile(path: string | URL) : Promise<string>
+    readTextFile(path: string | URL): Promise<string>;
 
-    readLink(path: string | URL) : Promise<string> 
+    readLink(path: string | URL): Promise<string>;
 
-    mkdir(path: string | URL, options?: ICreateDirectoryOptions | undefined) : Promise<void>
+    mkdir(path: string | URL, options?: ICreateDirectoryOptions | undefined): Promise<void>;
 
-    makeDirectory(path: string | URL, options?: ICreateDirectoryOptions) : Promise<void>
+    makeDirectory(path: string | URL, options?: ICreateDirectoryOptions): Promise<void>;
 
-    makeTempDirectory(options?: IMakeTempOptions) : Promise<string>
+    makeTempDirectory(options?: IMakeTempOptions): Promise<string>;
 
-    makeTempFile(options?: IMakeTempOptions) : Promise<string> 
+    makeTempFile(options?: IMakeTempOptions): Promise<string>;
 
-    stat(path: string | URL) : Promise<IFileInfo>
+    stat(path: string | URL): Promise<IFileInfo>;
 
-    isDirectory(path: string | URL) : Promise<boolean>
+    isDirectory(path: string | URL): Promise<boolean>;
 
-    isDirectorySync(path: string | URL) : boolean
+    isDirectorySync(path: string | URL): boolean;
 
-    isFile(path: string | URL) : Promise<boolean>
+    isFile(path: string | URL): Promise<boolean>;
 
-    isFileSync(path: string | URL) : boolean
+    isFileSync(path: string | URL): boolean;
 
-    link(oldPath: string, newPath: string) : Promise<void> 
+    link(oldPath: string, newPath: string): Promise<void>;
 
-    lstat(path: string | URL) : Promise<IFileInfo>
+    lstat(path: string | URL): Promise<IFileInfo>;
 
     exists(path: string): Promise<boolean>;
 
     existsSync(path: string): boolean;
 
-    readFile(path: string | URL) : Promise<Uint8Array> 
+    readFile(path: string | URL): Promise<Uint8Array>;
 
-    remove(path: string | URL, options?: IRemoveOptions) : Promise<void> 
+    remove(path: string | URL, options?: IRemoveOptions): Promise<void>;
 
-    symlink(target: string | URL, path: string | URL, type?: ISymlinkOptions) : Promise<void>
+    symlink(target: string | URL, path: string | URL, type?: ISymlinkOptions): Promise<void>;
 
-    writeTextFile(path: string | URL, data: string) : Promise<void>
+    writeTextFile(path: string | URL, data: string): Promise<void>;
 
     writeFile(
-        path: string | URL, 
-        data: Uint8Array | ReadableStream<Uint8Array>, 
-        options?: IWriteOptions | undefined) : Promise<void>
+        path: string | URL,
+        data: Uint8Array | ReadableStream<Uint8Array>,
+        options?: IWriteOptions | undefined,
+    ): Promise<void>;
 }
-
 
 export type TaskRun = (state?: Map<string, unknown>, signal?: AbortSignal) => Promise<void>;
 
@@ -167,7 +173,7 @@ export interface ITask {
 }
 
 export interface ITaskBuilder {
-    set(attributes: Partial<Omit<ITask, 'id' | 'run'>>): ITaskBuilder;
+    set(attributes: Partial<Omit<ITask, "id" | "run">>): ITaskBuilder;
     description(description: string): ITaskBuilder;
     timeout(timeout: number): ITaskBuilder;
     name(name: string): ITaskBuilder;

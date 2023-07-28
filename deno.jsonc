@@ -3,6 +3,11 @@
     "compilerOptions": {
         "lib": ["deno.ns", "deno.unstable", "dom"]
     },
+    "fmt": {
+        "indentWidth": 4,
+        "useTabs": false,
+        "lineWidth": 120
+    },
     "tasks": {
         "test": "deno test -A -q --unstable"
     }

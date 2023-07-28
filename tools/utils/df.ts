@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("df", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("df", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\df.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\df.exe",
         "%SystemDrive%\\msys\\usr\\bin\\df.exe",
-    ]
+    ],
 });
 
 export function df(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function df(args?: string[], options?: IExecOptions) {
 }
 
 df.cli = df;
-df.sync = function(args?: string[], options?: IExecSyncOptions) {
+df.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("df", args, options);
-}
+};

@@ -1,26 +1,9 @@
-
 import * as path from "../../path/mod.ts";
-import * as fs from '../../fs/mod.ts';
-import { 
-    IExecutionContext, 
-    IFileSystem, 
-    IPath, 
-    IEnv, 
-    IOperatingSystem,
-    IProcess 
-} from "../interfaces.ts";
-import { 
-    Env,
-    ps,
-    os,
-    secrets,
-    CaseInsensitiveMap 
+import * as fs from "../../fs/mod.ts";
+import { IEnv, IExecutionContext, IFileSystem, IOperatingSystem, IPath, IProcess } from "../interfaces.ts";
+import { CaseInsensitiveMap, Env, os, ps, secrets } from "./services.ts";
 
-} from './services.ts'
-
-
-export class ExecutionContext implements IExecutionContext
-{
+export class ExecutionContext implements IExecutionContext {
     readonly env: IEnv;
     readonly path: IPath;
     readonly fs: IFileSystem;
@@ -30,8 +13,7 @@ export class ExecutionContext implements IExecutionContext
     readonly os: IOperatingSystem;
     readonly ps: IProcess;
 
-    constructor(context?: ExecutionContext)
-    {
+    constructor(context?: ExecutionContext) {
         if (context) {
             const ctx = context;
             this.env = ctx.env;
@@ -47,7 +29,7 @@ export class ExecutionContext implements IExecutionContext
         this.env = new Env();
         this.path = path;
         this.fs = fs;
-        this.secrets= secrets;
+        this.secrets = secrets;
         this.outputs = new CaseInsensitiveMap<string>();
         this.os = os;
         this.ps = ps;

@@ -1,29 +1,27 @@
 export {
-    docker,
-    version,
-    versionSync,
-    login,
-    loginSync,
-    logout,
-    logoutSync,
-    compose,
     buildx,
-    context,
-    contextSync,
+    compose,
     config,
     configSync,
     container,
     containerSync,
-    imageSync,
+    context,
+    contextSync,
+    docker,
     image,
+    imageSync,
+    login,
+    loginSync,
+    logout,
+    logoutSync,
     network,
     networkSync,
     plugin,
     pluginSync,
-    secret,
-    secretSync,
     search,
     searchSync,
+    secret,
+    secretSync,
     serivce,
     serviceSync,
     stack,
@@ -32,9 +30,12 @@ export {
     swarmSync,
     system,
     systemSync,
-} from './base.ts'
+    version,
+    versionSync,
+} from "./base.ts";
 
 export {
+    _export,
     attach,
     attachSync,
     commit,
@@ -45,7 +46,6 @@ export {
     createSync,
     diff,
     diffSync,
-    _export,
     exportSync,
     inspect,
     inspectSync,
@@ -81,7 +81,7 @@ export {
     updateSync,
     wait,
     waitSync,
-} from './container.ts'
+} from "./container.ts";
 
 export {
     build,
@@ -98,11 +98,6 @@ export {
     saveSync,
     tag,
     tagSync,
-} from './image.ts'
+} from "./image.ts";
 
-export {
-    events,
-    eventsSync,
-    info,
-    infoSync,
-} from './system.ts'
+export { events, eventsSync, info, infoSync } from "./system.ts";

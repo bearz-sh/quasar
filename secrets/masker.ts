@@ -41,9 +41,9 @@ export default class SecretMasker {
 
         let str: string = value;
         this.#secrets.forEach((next) => {
-            const regex = new RegExp(`${next}`, 'gi');
+            const regex = new RegExp(`${next}`, "gi");
 
-            str = str.replace(regex, '*******');
+            str = str.replace(regex, "*******");
         });
 
         return str;

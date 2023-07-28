@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("paste", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("paste", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\paste.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\paste.exe",
         "%SystemDrive%\\msys\\usr\\bin\\paste.exe",
-    ]
+    ],
 });
 
 export function paste(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function paste(args?: string[], options?: IExecOptions) {
 }
 
 paste.cli = paste;
-paste.sync = function(args?: string[], options?: IExecSyncOptions) {
+paste.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("paste", args, options);
-}
+};

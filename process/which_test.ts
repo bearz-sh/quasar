@@ -1,10 +1,9 @@
-
-import { test, assert } from "../testing/mod.ts";
+import { assert, test } from "../testing/mod.ts";
 import { isEnvEnabled, isReadEnabled } from "../testing/deno_permissions.ts";
 import { which, whichSync } from "./which.ts";
 
 const hasEnv = await isEnvEnabled();
-const hasRead  = await isReadEnabled();
+const hasRead = await isReadEnabled();
 
 test.when(hasEnv && hasRead, "which: found", async () => {
     const gitPath = await which("git");

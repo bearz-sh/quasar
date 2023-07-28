@@ -1,14 +1,12 @@
-import { test, assert, isRunEnabled, isEnvEnabled, isReadEnabled, isWriteEnabled  } from "../../../testing/mod.ts";
+import { assert, isEnvEnabled, isReadEnabled, isRunEnabled, isWriteEnabled, test } from "../../../testing/mod.ts";
 import { dotnet, DotNetToolManager } from "./mod.ts";
-import { which, ensureDir, makeTempDirectory, rm, } from "../../mod.ts"
-
+import { ensureDir, makeTempDirectory, rm, which } from "../../mod.ts";
 
 const hasRun = await isRunEnabled();
 const hasEnv = await isEnvEnabled();
 const hasRead = await isReadEnabled();
 const hasWrite = await isWriteEnabled();
 const hasRequirements = hasRun && hasEnv && hasRead && await which("dotnet") !== undefined;
-
 
 test.when(hasRequirements, "dotnet: success", async () => {
     const out = await dotnet(["--version"]);
@@ -35,7 +33,7 @@ test.when(hasRequirements, "toolSearch", async () => {
     const results = await manager.search("dotnet-ef");
     assert.exists(results);
     assert.truthy(results.length > 0);
-    assert.ok(results.some(r => r.name === "dotnet-ef"));
+    assert.ok(results.some((r) => r.name === "dotnet-ef"));
 });
 
 test.when(hasRequirements && hasWrite, "toolInstall", async () => {
@@ -45,20 +43,19 @@ test.when(hasRequirements && hasWrite, "toolInstall", async () => {
         console.log(tmp);
         const manager = new DotNetToolManager();
         const results = await manager.install("dotnet-ef", undefined, ["--tool-path", tmp]);
-    
+
         assert.exists(results);
         assert.equals(results.code, 0);
 
         const tools = await manager.list(undefined, ["--tool-path", tmp]);
         assert.exists(tools);
         assert.truthy(tools.length > 0);
-        assert.ok(tools.some(r => r.name === "dotnet-ef"));
+        assert.ok(tools.some((r) => r.name === "dotnet-ef"));
 
         const results2 = await manager.uninstall("dotnet-ef", ["--tool-path", tmp]);
         assert.exists(results2);
         assert.equals(results2.code, 0);
-
     } finally {
-        await rm(tmp, { recursive: true});
+        await rm(tmp, { recursive: true });
     }
 });

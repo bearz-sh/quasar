@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("install", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("install", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\install.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\install.exe",
         "%SystemDrive%\\msys\\usr\\bin\\install.exe",
-    ]
+    ],
 });
 
 export function install(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function install(args?: string[], options?: IExecOptions) {
 }
 
 install.cli = install;
-install.sync = function(args?: string[], options?: IExecSyncOptions) {
+install.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("install", args, options);
-}
+};

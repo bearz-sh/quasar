@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("seq", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("seq", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\seq.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\seq.exe",
         "%SystemDrive%\\msys\\usr\\bin\\seq.exe",
-    ]
+    ],
 });
 
 export function seq(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function seq(args?: string[], options?: IExecOptions) {
 }
 
 seq.cli = seq;
-seq.sync = function(args?: string[], options?: IExecSyncOptions) {
+seq.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("seq", args, options);
-}
+};

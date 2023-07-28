@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("du", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("du", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\du.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\du.exe",
         "%SystemDrive%\\msys\\usr\\bin\\du.exe",
-    ]
+    ],
 });
 
 export function du(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function du(args?: string[], options?: IExecOptions) {
 }
 
 du.cli = du;
-du.sync = function(args?: string[], options?: IExecSyncOptions) {
+du.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("du", args, options);
-}
+};

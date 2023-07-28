@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("chmod", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("chmod", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\chmod.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\chmod.exe",
         "%SystemDrive%\\msys\\usr\\bin\\chmod.exe",
-    ]
+    ],
 });
 
 export function chmod(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function chmod(args?: string[], options?: IExecOptions) {
 }
 
 chmod.cli = chmod;
-chmod.sync = function(args?: string[], options?: IExecSyncOptions) {
+chmod.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("chmod", args, options);
-}
+};

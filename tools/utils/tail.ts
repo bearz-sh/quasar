@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("tail", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("tail", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\tail.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\tail.exe",
         "%SystemDrive%\\msys\\usr\\bin\\tail.exe",
-    ]
+    ],
 });
 
 export function tail(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function tail(args?: string[], options?: IExecOptions) {
 }
 
 tail.cli = tail;
-tail.sync = function(args?: string[], options?: IExecSyncOptions) {
+tail.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("tail", args, options);
-}
+};

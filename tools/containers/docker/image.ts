@@ -1,18 +1,8 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    splat,
-} from "../../mod.ts";
+import { IExecOptions, IExecSyncOptions, splat } from "../../mod.ts";
 
-import {
-    DockerArgs,
-    docker,
-} from './base.ts'
+import { docker, DockerArgs } from "./base.ts";
 
-import {
-    DockerBuildxBuildArgs,
-}
-from './buildx.ts'
+import { DockerBuildxBuildArgs } from "./buildx.ts";
 
 export interface DockerImageHistoryArgs extends DockerArgs {
     image: string;
@@ -23,7 +13,7 @@ export interface DockerImageHistoryArgs extends DockerArgs {
 }
 
 export interface DockerImageInspectArgs extends DockerArgs {
-    image: string[],
+    image: string[];
     format?: string;
 }
 
@@ -91,54 +81,81 @@ image.sync = function(options: IExecSyncOptions) {
 
 export function build(args: DockerBuildxBuildArgs, options?: IExecOptions) {
     args.path ??= ".";
-    return docker(splat(args, {
-        command: ["image", "build"],
-        arguments: ["path"],
-        appendArguments: true,
-    }), options);
+    return docker(
+        splat(args, {
+            command: ["image", "build"],
+            arguments: ["path"],
+            appendArguments: true,
+        }),
+        options,
+    );
 }
 
 export function buildSync(args: DockerBuildxBuildArgs, options?: IExecSyncOptions) {
     args.path ??= ".";
-    return docker.sync(["image", "build", ...splat(args, {
-        arguments: ["path"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "image",
+        "build",
+        ...splat(args, {
+            arguments: ["path"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function history(args: DockerImageHistoryArgs, options?: IExecOptions) {
-    return docker(["image", "history", ...splat(args, {
-        arguments: ["image"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "image",
+        "history",
+        ...splat(args, {
+            arguments: ["image"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function historySync(args: DockerImageHistoryArgs, options?: IExecSyncOptions) {
-    return docker.sync(["image", "history", ...splat(args, {
-        arguments: ["image"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "image",
+        "history",
+        ...splat(args, {
+            arguments: ["image"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function inspect(args: DockerImageInspectArgs, options?: IExecOptions) {
-    return docker(["image", "inspect", ...splat(args, {
-        arguments: ["image"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "image",
+        "inspect",
+        ...splat(args, {
+            arguments: ["image"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function ls(args: DockerImageLsArgs, options?: IExecOptions) {
-    return docker(["image", "ls", ...splat(args, {
-        arguments: ["repository"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "image",
+        "ls",
+        ...splat(args, {
+            arguments: ["repository"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function lsSync(args: DockerImageLsArgs, options?: IExecSyncOptions) {
-    return docker.sync(["image", "ls", ...splat(args, {
-        arguments: ["repository"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "image",
+        "ls",
+        ...splat(args, {
+            arguments: ["repository"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function load(args: DockerImageLoadArgs, options?: IExecOptions) {
@@ -158,72 +175,111 @@ export function prunSync(args: DockerImagePruneArgs, options?: IExecSyncOptions)
 }
 
 export function pull(args: DockerImagePullArgs, options?: IExecOptions) {
-    return docker(["image", "pull", ...splat(args, {
-        arguments: ["name"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "image",
+        "pull",
+        ...splat(args, {
+            arguments: ["name"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function pullSync(args: DockerImagePullArgs, options?: IExecSyncOptions) {
-    return docker.sync(["image", "pull", ...splat(args, {
-        arguments: ["name"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "image",
+        "pull",
+        ...splat(args, {
+            arguments: ["name"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function push(args: DockerImagePushArgs, options?: IExecOptions) {
-    return docker(["image", "push", ...splat(args, {
-        arguments: ["name"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "image",
+        "push",
+        ...splat(args, {
+            arguments: ["name"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function pushSync(args: DockerImagePushArgs, options?: IExecSyncOptions) {
-    return docker.sync(["image", "push", ...splat(args, {
-        arguments: ["name"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "image",
+        "push",
+        ...splat(args, {
+            arguments: ["name"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function rm(args: DockerImageRmArgs, options?: IExecOptions) {
-    return docker(["image", "rm", ...splat(args, {
-        arguments: ["image"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "image",
+        "rm",
+        ...splat(args, {
+            arguments: ["image"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function rmSync(args: DockerImageRmArgs, options?: IExecSyncOptions) {
-
-    return docker.sync(["image", "rm", ...splat(args, {
-        arguments: ["image"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "image",
+        "rm",
+        ...splat(args, {
+            arguments: ["image"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function save(args: DockerImageSaveArgs, options?: IExecOptions) {
-    return docker(["image", "save", ...splat(args, {
-        arguments: ["image"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "image",
+        "save",
+        ...splat(args, {
+            arguments: ["image"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function saveSync(args: DockerImageSaveArgs, options?: IExecSyncOptions) {
-    return docker.sync(["image", "save", ...splat(args, {
-        arguments: ["image"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "image",
+        "save",
+        ...splat(args, {
+            arguments: ["image"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function tag(args: DockerImageTagArgs, options?: IExecOptions) {
-    return docker(["image", "tag", ...splat(args, {
-        arguments: ["sourceImage", "targetImage"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "image",
+        "tag",
+        ...splat(args, {
+            arguments: ["sourceImage", "targetImage"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function tagSync(args: DockerImageTagArgs, options?: IExecSyncOptions) {
-    return docker.sync(["image", "tag", ...splat(args, {
-        arguments: ["sourceImage", "targetImage"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "image",
+        "tag",
+        ...splat(args, {
+            arguments: ["sourceImage", "targetImage"],
+            appendArguments: true,
+        }),
+    ], options);
 }

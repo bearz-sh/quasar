@@ -2,53 +2,60 @@ import { CHAR_UNDERSCORE } from "../char_constants.ts";
 import { IS_DENO, IS_NODELIKE } from "../runtime/mod.ts";
 import { equalsIgnoreCase } from "../str.ts";
 import { StringBuilder } from "../string-builder.ts";
-import { IS_WINDOWS, PATH_SEPARATOR, PATH_VAR_NAME } from './constants.ts'
+import { IS_WINDOWS, PATH_SEPARATOR, PATH_VAR_NAME } from "./constants.ts";
 
-export const secrets : string[] = [];
+export const secrets: string[] = [];
 
-let vars : { [key: string] : string | undefined } = {};
+let vars: { [key: string]: string | undefined } = {};
 
 if (IS_NODELIKE) {
     // deno-lint-ignore no-explicit-any
     const { process } = globalThis as any;
     vars = process.env;
-} else  {
-    vars["HOME"] = '/';
+} else {
+    vars["HOME"] = "/";
 }
 
-/** 
+/**
  * Get the value of an environment variable.
- * 
+ *
  * @param key The name of the environment variable.
  * @returns The value of the environment variable, or undefined if it is not set.
  */
-let getVar = (key: string) : string | undefined => vars[key];
-let setVar = (key: string, value: string) : void => { vars[key] = value };
-let removeVar = (key: string) : void => { delete vars[key] };
-let hasVar = (key: string) : boolean => vars[key] !== undefined;
-let getObject = () : Record<string, string | undefined> => Object.assign({}, vars);
-
+let getVar = (key: string): string | undefined => vars[key];
+let setVar = (key: string, value: string): void => {
+    vars[key] = value;
+};
+let removeVar = (key: string): void => {
+    delete vars[key];
+};
+let hasVar = (key: string): boolean => vars[key] !== undefined;
+let getObject = (): Record<string, string | undefined> => Object.assign({}, vars);
 
 if (IS_DENO) {
-    getVar = (key: string) : string | undefined => Deno.env.get(key);
-    setVar = (key: string, value: string) : void => { Deno.env.set(key, value) };
-    removeVar = (key: string) : void => { Deno.env.delete(key) };
-    hasVar = (key: string) : boolean => Deno.env.get(key) !== undefined;
-    getObject = () :  Record<string, string | undefined>  => Deno.env.toObject();
+    getVar = (key: string): string | undefined => Deno.env.get(key);
+    setVar = (key: string, value: string): void => {
+        Deno.env.set(key, value);
+    };
+    removeVar = (key: string): void => {
+        Deno.env.delete(key);
+    };
+    hasVar = (key: string): boolean => Deno.env.get(key) !== undefined;
+    getObject = (): Record<string, string | undefined> => Deno.env.toObject();
 }
-
 
 export const get = getVar;
 
-export function getOrDefault(key: string, defaultValue: string) : string {
+export function getOrDefault(key: string, defaultValue: string): string {
     const value = getVar(key);
-    if (value === undefined)
+    if (value === undefined) {
         return defaultValue;
+    }
 
     return value;
-}   
+}
 
-export function getRequired(key: string) : string {
+export function getRequired(key: string): string {
     const value = getVar(key);
     if (value === undefined) {
         throw new Error(`Environment variable ${key} is required.`);
@@ -56,25 +63,21 @@ export function getRequired(key: string) : string {
     return value;
 }
 
-export function set(key: string, value: string) : void;
-export function set(key: string, value: string, isSecret: boolean) : void;
-export function set(map: { [key: string] : string }) : void;
-export function set() : void {
-
-    switch(arguments.length) {
+export function set(key: string, value: string): void;
+export function set(key: string, value: string, isSecret: boolean): void;
+export function set(map: { [key: string]: string }): void;
+export function set(): void {
+    switch (arguments.length) {
         case 1:
             {
-                const map = arguments[0] as { [key: string] : string };
-                for (const key in map)
-                {
+                const map = arguments[0] as { [key: string]: string };
+                for (const key in map) {
                     const value = map[key];
                     setVar(key, value);
                 }
-               
             }
-        
+
             break;
-       
 
         case 2:
             {
@@ -137,24 +140,25 @@ function isLetterOrDigit(c: number): boolean {
 }
 
 function isValidBashVariable(value: string) {
-    
-    for(let i = 0; i < value.length; i++) {
+    for (let i = 0; i < value.length; i++) {
         const c = value.charCodeAt(i);
 
-        if (i == 0 && !((c >= 65 && c <= 90) || (c >= 97 && c <= 122)))
+        if (i == 0 && !((c >= 65 && c <= 90) || (c >= 97 && c <= 122))) {
             return false;
+        }
 
-        if (!isLetterOrDigit(c) && c != 95)
+        if (!isLetterOrDigit(c) && c != 95) {
             return false;
-
+        }
     }
 
     return true;
 }
 
 export function expand(template: string, options?: IEnvSubstitutionOptions): string {
-    if (typeof template !== 'string' || template.length === 0)
+    if (typeof template !== "string" || template.length === 0) {
         return "";
+    }
 
     const o = options ?? {
         windowsExpansion: true,
@@ -179,11 +183,11 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
             }
 
             if (o.unixExpansion) {
-
                 const z = i + 1;
                 let next = min;
-                if (z < template.length)
+                if (z < template.length) {
                     next = template.charCodeAt(z);
+                }
 
                 // escape the $ character.
                 if (c === backslash && next === dollar) {
@@ -223,8 +227,9 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
 
             const key = tokenBuilder.toString();
             const value = getValue(key);
-            if (value !== undefined && value.length > 0)
+            if (value !== undefined && value.length > 0) {
                 output.appendString(value);
+            }
             tokenBuilder.clear();
             kind = TokenKind.None;
             continue;
@@ -252,10 +257,10 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
 
                 if (o.unixAssignment) {
                     const v = getValue(key);
-                    if (v === undefined)
-                        setValue(key, defaultValue);    
+                    if (v === undefined) {
+                        setValue(key, defaultValue);
+                    }
                 }
-
             } else if (substitution.includes(":?")) {
                 const parts = substitution.split(":?");
                 key = parts[0];
@@ -277,18 +282,15 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
             }
 
             const value = getValue(key);
-            if (value !== undefined)
+            if (value !== undefined) {
                 output.appendString(value);
-
-            else if (message !== undefined)
+            } else if (message !== undefined) {
                 throw new Error(message);
-
-            else if (defaultValue.length > 0)
+            } else if (defaultValue.length > 0) {
                 output.appendString(defaultValue);
-
-            else
+            } else {
                 throw new Error(`Bad substitution, variable ${key} is not set.`);
-
+            }
 
             kind = TokenKind.None;
             continue;
@@ -319,13 +321,13 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
 
             const index = parseInt(key);
             if (o.unixArgsExpansion && !isNaN(index)) {
-                if (index > -1 || index < Deno.args.length)
-                {
+                if (index > -1 || index < Deno.args.length) {
                     output.appendString(Deno.args[index]);
                 }
-               
-                if (append)
+
+                if (append) {
                     output.appendChar(c);
+                }
 
                 kind = TokenKind.None;
                 continue;
@@ -336,14 +338,17 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
             }
 
             const value = getValue(key);
-            if (value !== undefined && value.length > 0)
+            if (value !== undefined && value.length > 0) {
                 output.appendString(value);
+            }
 
-            if (value === undefined)
+            if (value === undefined) {
                 throw new Error(`Bad substitution, variable ${key} is not set.`);
+            }
 
-            if (append)
+            if (append) {
                 output.appendChar(c);
+            }
 
             kind = TokenKind.None;
             continue;
@@ -351,11 +356,13 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
 
         tokenBuilder.appendChar(c);
         if (remaining === 0) {
-            if (kind === TokenKind.Windows)
+            if (kind === TokenKind.Windows) {
                 throw new Error("Bad substitution, missing closing token '%'.");
+            }
 
-            if (kind === TokenKind.BashInterpolation)
+            if (kind === TokenKind.BashInterpolation) {
                 throw new Error("Bad substitution, missing closing token '}'.");
+            }
         }
     }
 
@@ -366,12 +373,11 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
 
 function findPathIndex(paths: string[], path: string): number {
     if (IS_WINDOWS) {
-        return paths.findIndex(p => equalsIgnoreCase(p, path));
+        return paths.findIndex((p) => equalsIgnoreCase(p, path));
     }
 
-    return paths.findIndex(p => p === path);
+    return paths.findIndex((p) => p === path);
 }
-
 
 export function splitPath(): string[] {
     const path = getRequired(PATH_VAR_NAME);
@@ -392,8 +398,9 @@ export function hasPath(path: string): boolean {
 
 export function addPath(path: string, prepend = false): void {
     const paths = splitPath();
-    if (findPathIndex(paths, path) !== -1)
+    if (findPathIndex(paths, path) !== -1) {
         return;
+    }
 
     if (prepend) {
         paths.unshift(path);
@@ -418,5 +425,5 @@ export const path = {
     set: setPath,
     has: hasPath,
     add: addPath,
-    remove: removePath
-}
+    remove: removePath,
+};

@@ -1,6 +1,4 @@
-import {
-    DockerArgs,
-} from './base.ts'
+import { DockerArgs } from "./base.ts";
 
 export interface DockerTrustInspectArgs extends DockerArgs {
     name: string;

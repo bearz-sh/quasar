@@ -3,7 +3,7 @@
  * seeking.
  *
  * @category I/O */
- export enum SeekMode {
+export enum SeekMode {
     /* Seek from the start of the file/resource. */
     Start = 0,
     /* Seek from the current position within the file/resource. */
@@ -11,8 +11,6 @@
     /* Seek from the end of the current file/resource. */
     End = 2,
 }
-
-
 
 /**
  * An abstract interface which when implemented provides an interface to read

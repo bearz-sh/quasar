@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("nproc", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("nproc", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\nproc.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\nproc.exe",
         "%SystemDrive%\\msys\\usr\\bin\\nproc.exe",
-    ]
+    ],
 });
 
 export function nproc(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function nproc(args?: string[], options?: IExecOptions) {
 }
 
 nproc.cli = nproc;
-nproc.sync = function(args?: string[], options?: IExecSyncOptions) {
+nproc.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("nproc", args, options);
-}
+};

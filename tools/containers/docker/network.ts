@@ -1,14 +1,6 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    splat,
-} from "../../mod.ts";
+import { IExecOptions, IExecSyncOptions, splat } from "../../mod.ts";
 
-import {
-    DockerArgs,
-    docker,
-} from './base.ts'
-
+import { docker, DockerArgs } from "./base.ts";
 
 export interface DockerNetworkConnectArgs extends DockerArgs {
     container: string;
@@ -70,61 +62,92 @@ export interface DockerNetworkRmArgs extends DockerArgs {
     force?: boolean;
 }
 
-
 export function connect(args: DockerNetworkConnectArgs, options?: IExecOptions) {
-    return docker(["network", "connect", ...splat(args, {
-        arguments: ["container", "network"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "network",
+        "connect",
+        ...splat(args, {
+            arguments: ["container", "network"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function connectSync(args: DockerNetworkConnectArgs, options?: IExecSyncOptions) {
-    return docker.sync(["network", "connect", ...splat(args, {
-        arguments: ["container", "network"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "network",
+        "connect",
+        ...splat(args, {
+            arguments: ["container", "network"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function create(args: DockerNetworkCreateArgs, options?: IExecOptions) {
-    return docker(["network", "create", ...splat(args, {
-        arguments: ["network"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "network",
+        "create",
+        ...splat(args, {
+            arguments: ["network"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function createSync(args: DockerNetworkCreateArgs, options?: IExecSyncOptions) {
-    return docker.sync(["network", "create", ...splat(args, {
-        arguments: ["network"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "network",
+        "create",
+        ...splat(args, {
+            arguments: ["network"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function disconnect(args: DockerNetworkDisconnectArgs, options?: IExecOptions) {
-    return docker(["network", "disconnect", ...splat(args, {
-        arguments: ["container", "network"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "network",
+        "disconnect",
+        ...splat(args, {
+            arguments: ["container", "network"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function disconnectSync(args: DockerNetworkDisconnectArgs, options?: IExecSyncOptions) {
-    return docker.sync(["network", "disconnect", ...splat(args, {
-        arguments: ["container", "network"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "network",
+        "disconnect",
+        ...splat(args, {
+            arguments: ["container", "network"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function inspect(args: DockerNetworkInspectArgs, options?: IExecOptions) {
-    return docker(["network", "inspect", ...splat(args, {
-        arguments: ["network"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "network",
+        "inspect",
+        ...splat(args, {
+            arguments: ["network"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function inspectSync(args: DockerNetworkInspectArgs, options?: IExecSyncOptions) {
-    return docker.sync(["network", "inspect", ...splat(args, {
-        arguments: ["network"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "network",
+        "inspect",
+        ...splat(args, {
+            arguments: ["network"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function ls(args: DockerNetworkLsArgs, options?: IExecOptions) {
@@ -144,15 +167,23 @@ export function pruneSync(args: DockerNetworkPruneArgs, options?: IExecSyncOptio
 }
 
 export function rm(args: DockerNetworkRmArgs, options?: IExecOptions) {
-    return docker(["network", "rm", ...splat(args, {
-        arguments: ["network"],
-        appendArguments: true,
-    })], options);
+    return docker([
+        "network",
+        "rm",
+        ...splat(args, {
+            arguments: ["network"],
+            appendArguments: true,
+        }),
+    ], options);
 }
 
 export function rmSync(args: DockerNetworkRmArgs, options?: IExecSyncOptions) {
-    return docker.sync(["network", "rm", ...splat(args, {
-        arguments: ["network"],
-        appendArguments: true,
-    })], options);
+    return docker.sync([
+        "network",
+        "rm",
+        ...splat(args, {
+            arguments: ["network"],
+            appendArguments: true,
+        }),
+    ], options);
 }

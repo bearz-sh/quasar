@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("link", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("link", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\link.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\link.exe",
         "%SystemDrive%\\msys\\usr\\bin\\link.exe",
-    ]
+    ],
 });
 
 export function link(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function link(args?: string[], options?: IExecOptions) {
 }
 
 link.cli = link;
-link.sync = function(args?: string[], options?: IExecSyncOptions) {
+link.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("link", args, options);
-}
+};

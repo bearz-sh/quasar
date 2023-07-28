@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("whoami", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("whoami", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\whoami.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\whoami.exe",
         "%SystemDrive%\\msys\\usr\\bin\\whoami.exe",
-    ]
+    ],
 });
 
 export function whoami(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function whoami(args?: string[], options?: IExecOptions) {
 }
 
 whoami.cli = whoami;
-whoami.sync = function(args?: string[], options?: IExecSyncOptions) {
+whoami.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("whoami", args, options);
-}
+};

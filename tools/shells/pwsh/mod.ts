@@ -1,20 +1,20 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
+import {
+    exec,
     execSync,
-    generateScriptFile, 
-    generateScriptFileSync, 
-    registerExe,
+    exists,
+    existsSync,
+    generateScriptFile,
+    generateScriptFileSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
-    scriptRunner,
-    upm,
     PsOutput,
+    registerExe,
     rm,
     rmSync,
-    exists,
-    existsSync
+    scriptRunner,
+    upm,
 } from "../../mod.ts";
 
 registerExe("pwsh", {
@@ -23,58 +23,89 @@ registerExe("pwsh", {
         "%ProgramFiles(x86)%/PowerShell/7/pwsh.exe",
         "%ProgramFiles%/PowerShell/6/pwsh.exe",
         "%ProgramFiles(x86)%/PowerShell/6/pwsh.exe",
-    ]
+    ],
 });
-
 
 export function pwsh(args?: string[], options?: IExecOptions) {
     return exec("pwsh", args, options);
 }
 
 pwsh.cli = pwsh;
-pwsh.sync = function(args?: string[], options?: IExecOptions) {
+pwsh.sync = function (args?: string[], options?: IExecOptions) {
     return execSync("pwsh", args, options);
-}
+};
 
-pwsh.scriptFile = async function(scriptFile: string, options?: IExecOptions) {
-    return await pwsh.cli(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
-}
+pwsh.scriptFile = async function (scriptFile: string, options?: IExecOptions) {
+    return await pwsh.cli([
+        "-ExecutionPolicy",
+        "Bypass",
+        "-NoLogo",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        `. ${scriptFile}`,
+    ], options);
+};
 
-pwsh.scriptFileSync = function(scriptFile: string, options?: IExecSyncOptions) {
-    return pwsh.sync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
-}
+pwsh.scriptFileSync = function (scriptFile: string, options?: IExecSyncOptions) {
+    return pwsh.sync([
+        "-ExecutionPolicy",
+        "Bypass",
+        "-NoLogo",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        `. ${scriptFile}`,
+    ], options);
+};
 
-pwsh.script = async function(script: string, options?: IExecOptions) {
+pwsh.script = async function (script: string, options?: IExecOptions) {
     script = `
 $ErrorActionPreference = 'Stop'
 ${script}
 if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }
 `;
     const scriptFile = await generateScriptFile(script, ".ps1");
-    try  {
-        return await pwsh.cli(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+    try {
+        return await pwsh.cli([
+            "-ExecutionPolicy",
+            "Bypass",
+            "-NoLogo",
+            "-NoProfile",
+            "-NonInteractive",
+            "-Command",
+            `. ${scriptFile}`,
+        ], options);
     } finally {
         if (await exists(scriptFile)) {
-            await rm(scriptFile)
+            await rm(scriptFile);
         }
     }
-}
+};
 
-pwsh.scriptSync = function(script: string, options?: IExecSyncOptions) {
+pwsh.scriptSync = function (script: string, options?: IExecSyncOptions) {
     script = `
 $ErrorActionPreference = 'Stop'
 ${script}
 if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }
 `;
     const scriptFile = generateScriptFileSync(script, ".ps1");
-    try  {
-        return pwsh.sync(['-ExecutionPolicy', 'Bypass', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', `. ${scriptFile}`], options);
+    try {
+        return pwsh.sync([
+            "-ExecutionPolicy",
+            "Bypass",
+            "-NoLogo",
+            "-NoProfile",
+            "-NonInteractive",
+            "-Command",
+            `. ${scriptFile}`,
+        ], options);
     } finally {
         if (existsSync(scriptFile)) {
-            rmSync(scriptFile)
+            rmSync(scriptFile);
         }
     }
-}
+};
 
 export class PwshModuleManager implements IPkgMgr {
     readonly name: string = "pwsh";
@@ -112,15 +143,14 @@ export class PwshModuleManager implements IPkgMgr {
         return pwsh.script(`${splat.join(" ")}`);
     }
 
-
-    list(query: string,args?: string[]|undefined): Promise<IPkgInfo[]> {
+    list(query: string, args?: string[] | undefined): Promise<IPkgInfo[]> {
         const splat = ["Get-Module", "-ListAvailable", `-Name`, `"${query}"`];
 
         if (args) {
             splat.push(...args);
         }
 
-        const options : IExecOptions = {
+        const options: IExecOptions = {
             stdout: "piped",
             stderr: "piped",
         };
@@ -134,7 +164,7 @@ export class PwshModuleManager implements IPkgMgr {
             }
             const results = JSON.parse(json);
             if (Array.isArray(results)) {
-                return results.map(r => {
+                return results.map((r) => {
                     const v = r.Version;
                     let version = "";
                     if (v) {
@@ -144,18 +174,17 @@ export class PwshModuleManager implements IPkgMgr {
                         }
                     }
 
-                    const commands : string[] = [];
+                    const commands: string[] = [];
                     if (r.ExportedCommands) {
-                        Object.keys(r.ExportedCommands).forEach(k => {
+                        Object.keys(r.ExportedCommands).forEach((k) => {
                             commands.push(k);
                         });
                     }
 
-                    let deps : unknown[] = [];
-                    if (r.RequiredModules)
-                    {
+                    let deps: unknown[] = [];
+                    if (r.RequiredModules) {
                         // @ts-ignore - RequiredModules is not typed
-                        deps = r.RequiredModules.map(m => { 
+                        deps = r.RequiredModules.map((m) => {
                             const v = m.Version;
                             let version = "";
                             if (v) {
@@ -166,8 +195,8 @@ export class PwshModuleManager implements IPkgMgr {
                             }
                             return {
                                 "name": m.Name,
-                                "version": version
-                            }
+                                "version": version,
+                            };
                         });
                     }
 
@@ -182,7 +211,7 @@ export class PwshModuleManager implements IPkgMgr {
                         path: r.Path,
                         guid: r.Guid,
                         commands: commands,
-                        dependencies: deps
+                        dependencies: deps,
                     } as IPkgInfo;
                 });
             }
@@ -190,14 +219,14 @@ export class PwshModuleManager implements IPkgMgr {
             throw new Error("Unexpected output from Get-Module");
         });
     }
-    search(query: string,args?: string[]|undefined): Promise<IPkgInfo[]> {
+    search(query: string, args?: string[] | undefined): Promise<IPkgInfo[]> {
         const splat = ["Find-Module", `-Name`, `"${query}"`];
 
         if (args) {
             splat.push(...args);
         }
 
-        const options : IExecOptions = {
+        const options: IExecOptions = {
             stdout: "piped",
             stderr: "piped",
         };
@@ -212,17 +241,17 @@ export class PwshModuleManager implements IPkgMgr {
 
             const results = JSON.parse(json);
             if (Array.isArray(results)) {
-                return results.map(r => {
-                    let deps : unknown[] = [];
+                return results.map((r) => {
+                    let deps: unknown[] = [];
                     if (r.Dependencies) {
                         // @ts-ignore - Dependencies is not typed
-                        deps = r.Dependencies.map(d => {
+                        deps = r.Dependencies.map((d) => {
                             return {
                                 "id": d.CanonicalId,
                                 "name": d.Name,
                                 "version": d.RequiredVersion,
                                 "minimumVersion": d.MinimumVersion,
-                            }
+                            };
                         });
                     }
                     return {
@@ -236,7 +265,7 @@ export class PwshModuleManager implements IPkgMgr {
                         guid: r.AdditionalMetadata?.GUID,
                         publishedDate: r.PublishedDate,
                         repository: r.Repository,
-                        dependencies: deps
+                        dependencies: deps,
                     } as IPkgInfo;
                 });
             }
@@ -252,4 +281,4 @@ scriptRunner.register("pwsh", {
     runSync: pwsh.scriptSync,
     runFile: pwsh.scriptFile,
     runFileSync: pwsh.scriptFileSync,
-})
+});

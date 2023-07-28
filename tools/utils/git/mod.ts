@@ -1,14 +1,14 @@
 // deno-lint-ignore-file no-unused-vars
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
-    upm,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
-    PsOutput
+    PsOutput,
+    registerExe,
+    upm,
 } from "../../mod.ts";
 
 const findOptions = registerExe("git", {});
@@ -19,6 +19,6 @@ export function git(args?: string[], options?: IExecOptions) {
 
 git.cli = git;
 git.findOptions = findOptions;
-git.sync = function(args?: string[], options?: IExecSyncOptions) {
+git.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("git", args, options);
-}
+};

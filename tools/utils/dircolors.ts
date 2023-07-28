@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("dircolors", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("dircolors", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\dircolors.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\dircolors.exe",
         "%SystemDrive%\\msys\\usr\\bin\\dircolors.exe",
-    ]
+    ],
 });
 
 export function dircolors(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function dircolors(args?: string[], options?: IExecOptions) {
 }
 
 dircolors.cli = dircolors;
-dircolors.sync = function(args?: string[], options?: IExecSyncOptions) {
+dircolors.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("dircolors", args, options);
-}
+};

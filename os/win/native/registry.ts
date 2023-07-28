@@ -1,43 +1,41 @@
 import { PlatformNotSupportedError } from "../../../errors/mod.ts";
 import { IS_WINDOWS } from "../../constants.ts";
-import { Pwstr, convertToWideStringBuffer } from "./core.ts"
+import { convertToWideStringBuffer } from "./core.ts";
 import { Ptr } from "../../../ffi/mod.ts";
 
-
 // @ts-ignore using any for
-type Advapi32 =  Deno.DynamicLibrary<{
+type Advapi32 = Deno.DynamicLibrary<{
     RegOpenKeyExW: {
         parameters: ["pointer", "buffer", "u32", "u32", "pointer"];
         result: "u32";
         optional: true;
-    },
+    };
 
     RegEnumKeyExW: {
-        parameters: ["pointer", "u32", "buffer", "pointer", "pointer", "buffer", "pointer", "pointer"],
-        result: "u32",
-        optional: true,
-    },
+        parameters: ["pointer", "u32", "buffer", "pointer", "pointer", "buffer", "pointer", "pointer"];
+        result: "u32";
+        optional: true;
+    };
 
     RegCloseKey: {
-        parameters: ["pointer"],
-        result: "u32",
-        optional: true,
-    },
-}>
+        parameters: ["pointer"];
+        result: "u32";
+        optional: true;
+    };
+}>;
 
+let lib: Advapi32 | undefined = undefined;
 
-let lib : Advapi32 | undefined = undefined;
-
-function load() : Advapi32 {
+function load(): Advapi32 {
     if (!IS_WINDOWS) {
-        throw new PlatformNotSupportedError("openKey is only supported on Windows")
+        throw new PlatformNotSupportedError("openKey is only supported on Windows");
     }
 
-    if (lib)
+    if (lib) {
         return lib;
+    }
 
     const lib1 = Deno.dlopen("ADVAPI32.dll", {
-
         RegConnectRegistryW: {
             parameters: ["buffer", "pointer", "pointer"],
             result: "u32",
@@ -75,15 +73,16 @@ function load() : Advapi32 {
         },
     });
 
-    lib1.close
+    lib1.close;
     lib = lib1;
 
     return lib1;
 }
 
 export function close() {
-    if (!lib)
+    if (!lib) {
         return;
+    }
 
     lib.close();
     lib = undefined;
@@ -95,7 +94,7 @@ export function closeKey(hKey: Ptr) {
 
 /**
  * opens a registry key.
- * 
+ *
  * @param hKey Windows.Win32.System.Registry.HKEY
  * @param lpSubKey Windows.Win32.Foundation.PWSTR
  * @param ulOptions u32
@@ -108,9 +107,14 @@ export function openKey2(
     lpSubKey: string | null | Uint8Array | Uint16Array,
     ulOptions: number,
     samDesired: number,
-    phkResult: Ptr) {
-    const advapi32 = load().symbols
-    return advapi32.RegOpenKeyExW!(hKey.value, convertToWideStringBuffer(lpSubKey), ulOptions, samDesired, phkResult.value);
+    phkResult: Ptr,
+) {
+    const advapi32 = load().symbols;
+    return advapi32.RegOpenKeyExW!(
+        hKey.value,
+        convertToWideStringBuffer(lpSubKey),
+        ulOptions,
+        samDesired,
+        phkResult.value,
+    );
 }
-
-

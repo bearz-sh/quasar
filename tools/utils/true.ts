@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("true", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("true", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\true.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\true.exe",
         "%SystemDrive%\\msys\\usr\\bin\\true.exe",
-    ]
+    ],
 });
 
 export function _true(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function _true(args?: string[], options?: IExecOptions) {
 }
 
 _true.cli = _true;
-_true.sync = function(args?: string[], options?: IExecSyncOptions) {
+_true.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("true", args, options);
-}
+};

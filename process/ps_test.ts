@@ -1,13 +1,6 @@
-import { test, assert } from "../testing/mod.ts";
-import { isRunEnabled, isEnvEnabled } from "../testing/deno_permissions.ts";
-import { 
-    run, 
-    runSync, 
-    capture, 
-    captureSync,
-    output,
-    outputSync,
-} from "./ps.ts";
+import { assert, test } from "../testing/mod.ts";
+import { isEnvEnabled, isRunEnabled } from "../testing/deno_permissions.ts";
+import { capture, captureSync, output, outputSync, run, runSync } from "./ps.ts";
 import { get } from "../os/env.ts";
 import { HOME_VAR_NAME } from "../os/constants.ts";
 
@@ -80,7 +73,7 @@ test.when(hasRun, "output: success with capture pipe", async () => {
 });
 
 test.when(hasRun && hasEnv, "output: failure with inherit & different cwd", async () => {
-    const home = get(HOME_VAR_NAME)
+    const home = get(HOME_VAR_NAME);
     const { code } = await output({
         file: "git",
         args: ["status", "-s"],
@@ -92,7 +85,7 @@ test.when(hasRun && hasEnv, "output: failure with inherit & different cwd", asyn
 });
 
 test.when(hasRun && hasEnv, "output: failure with piped & different cwd", async () => {
-    const home = get(HOME_VAR_NAME)
+    const home = get(HOME_VAR_NAME);
     const { code, stderrAsString } = await output({
         file: "git",
         args: ["status", "-s"],
@@ -126,7 +119,7 @@ test.when(hasRun, "outputSync: success with capture pipe", () => {
 });
 
 test.when(hasRun && hasEnv, "outputSync: failure with inherit & different cwd", () => {
-    const home = get(HOME_VAR_NAME)
+    const home = get(HOME_VAR_NAME);
     const { code } = outputSync({
         file: "git",
         args: ["status", "-s"],
@@ -138,7 +131,7 @@ test.when(hasRun && hasEnv, "outputSync: failure with inherit & different cwd", 
 });
 
 test.when(hasRun && hasEnv, "outputSync: failure with piped & different cwd", () => {
-    const home = get(HOME_VAR_NAME)
+    const home = get(HOME_VAR_NAME);
     const { code, stderrAsString } = outputSync({
         file: "git",
         args: ["status", "-s"],

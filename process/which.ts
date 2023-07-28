@@ -1,5 +1,5 @@
-import * as env from '../os/env.ts';
-import { basename, basenameWithoutExtension, isAbsolute, join, resolve } from '../path/mod.ts';
+import * as env from "../os/env.ts";
+import { basename, basenameWithoutExtension, isAbsolute, join, resolve } from "../path/mod.ts";
 import {
     IDirectoryInfo,
     isDirectory,
@@ -8,10 +8,10 @@ import {
     isFileSync,
     readDirectory,
     readDirectorySync,
-} from '../fs/mod.ts';
-import { IS_WINDOWS as isWindows } from '../os/constants.ts';
-import { isNullOrEmpty, isNullOrWhiteSpace } from '../str.ts';
-import { notNull, notNullOrWhiteSpace } from '../check/mod.ts';
+} from "../fs/mod.ts";
+import { IS_WINDOWS as isWindows } from "../os/constants.ts";
+import { isNullOrEmpty, isNullOrWhiteSpace } from "../str.ts";
+import { notNull, notNullOrWhiteSpace } from "../check/mod.ts";
 
 const executableCache: { [key: string]: string | undefined } = {};
 
@@ -37,8 +37,8 @@ export function whichSync(
     prependPath?: string[],
     useCache = true,
 ): string | undefined {
-    notNullOrWhiteSpace(fileName, 'fileName');
-    notNull(env, 'env');
+    notNullOrWhiteSpace(fileName, "fileName");
+    notNull(env, "env");
 
     const rootName = basenameWithoutExtension(fileName);
     let location = executableCache[rootName];
@@ -75,12 +75,12 @@ export function whichSync(
     let pathExtSegments: string[] = [];
 
     if (isWindows) {
-        const pe = env.get('PATHEXT') || '';
+        const pe = env.get("PATHEXT") || "";
         const pathExtensions = !isNullOrWhiteSpace(pe)
             ? pe?.toLowerCase()
-            : '.com;.exe;.bat;.cmd;.vbs;.vbe;.js;.jse;.wsf;.wsh';
+            : ".com;.exe;.bat;.cmd;.vbs;.vbe;.js;.jse;.wsf;.wsh";
 
-        pathExtSegments = pathExtensions.split(';')
+        pathExtSegments = pathExtensions.split(";")
             .filter((segment) => !isNullOrWhiteSpace(segment));
     }
 
@@ -96,13 +96,11 @@ export function whichSync(
 
             if (!hasPathExt) {
                 try {
-                    let first : IDirectoryInfo | undefined;
-                    for(const entry of readDirectorySync(pathSegment)) {
-                        
-                        if (entry.isFile)
-                        {
+                    let first: IDirectoryInfo | undefined;
+                    for (const entry of readDirectorySync(pathSegment)) {
+                        if (entry.isFile) {
                             for (const ext of pathExtSegments) {
-                                if(entry.name?.toLowerCase() === baseNameLowered + ext) {
+                                if (entry.name?.toLowerCase() === baseNameLowered + ext) {
                                     first = entry;
                                     break;
                                 }
@@ -112,7 +110,6 @@ export function whichSync(
                                 break;
                             }
                         }
-
                     }
 
                     if (first?.name) {
@@ -128,9 +125,9 @@ export function whichSync(
                 }
             } else {
                 try {
-                    let first : IDirectoryInfo | undefined;
-                    for(const entry of readDirectorySync(pathSegment)) {
-                        if(entry.isFile && entry.name?.toLowerCase() === baseNameLowered) {
+                    let first: IDirectoryInfo | undefined;
+                    for (const entry of readDirectorySync(pathSegment)) {
+                        if (entry.isFile && entry.name?.toLowerCase() === baseNameLowered) {
                             first = entry;
                             break;
                         }
@@ -149,9 +146,9 @@ export function whichSync(
             }
         } else {
             try {
-                let first : IDirectoryInfo | undefined;
-                for(const entry of readDirectorySync(pathSegment)) {
-                    if(entry.isFile && entry.name?.toLowerCase() === baseNameLowered) {
+                let first: IDirectoryInfo | undefined;
+                for (const entry of readDirectorySync(pathSegment)) {
+                    if (entry.isFile && entry.name?.toLowerCase() === baseNameLowered) {
                         first = entry;
                         console.log(first);
                         break;
@@ -196,8 +193,8 @@ export async function which(
     prependPath?: string[],
     useCache = true,
 ): Promise<string | undefined> {
-    notNullOrWhiteSpace(fileName, 'fileName');
-    notNull(env, 'env');
+    notNullOrWhiteSpace(fileName, "fileName");
+    notNull(env, "env");
 
     const rootName = basenameWithoutExtension(fileName);
     let location = executableCache[rootName];
@@ -234,12 +231,12 @@ export async function which(
     let pathExtSegments: string[] = [];
 
     if (isWindows) {
-        const pe = env.get('PATHEXT') || '';
+        const pe = env.get("PATHEXT") || "";
         const pathExtensions = !isNullOrWhiteSpace(pe)
             ? pe?.toLowerCase()
-            : '.com;.exe;.bat;.cmd;.vbs;.vbe;.js;.jse;.wsf;.wsh';
+            : ".com;.exe;.bat;.cmd;.vbs;.vbe;.js;.jse;.wsf;.wsh";
 
-        pathExtSegments = pathExtensions.split(';')
+        pathExtSegments = pathExtensions.split(";")
             .filter((segment) => !isNullOrWhiteSpace(segment));
     }
 
@@ -260,12 +257,11 @@ export async function which(
 
             if (!hasPathExt) {
                 try {
-                   
-                    let first : IDirectoryInfo | undefined;
-                    for await(const entry of readDirectory(pathSegment)) {
-                        if(!entry.isDirectory) {
+                    let first: IDirectoryInfo | undefined;
+                    for await (const entry of readDirectory(pathSegment)) {
+                        if (!entry.isDirectory) {
                             for (const ext of pathExtSegments) {
-                                if(entry.name?.toLowerCase() === baseNameLowered + ext) {
+                                if (entry.name?.toLowerCase() === baseNameLowered + ext) {
                                     first = entry;
                                     break;
                                 }
@@ -290,9 +286,9 @@ export async function which(
                 }
             } else {
                 try {
-                    let first : IDirectoryInfo | undefined;
-                    for await(const entry of readDirectory(pathSegment)) {
-                        if(!entry.isDirectory && entry.name?.toLowerCase() === baseNameLowered) {
+                    let first: IDirectoryInfo | undefined;
+                    for await (const entry of readDirectory(pathSegment)) {
+                        if (!entry.isDirectory && entry.name?.toLowerCase() === baseNameLowered) {
                             first = entry;
                             break;
                         }
@@ -311,10 +307,9 @@ export async function which(
             }
         } else {
             try {
-                
-                let first : IDirectoryInfo | undefined;
-                for await(const entry of readDirectory(pathSegment)) {
-                    if(!entry.isDirectory && entry.name?.toLowerCase() === baseNameLowered) {
+                let first: IDirectoryInfo | undefined;
+                for await (const entry of readDirectory(pathSegment)) {
+                    if (!entry.isDirectory && entry.name?.toLowerCase() === baseNameLowered) {
                         first = entry;
                         break;
                     }

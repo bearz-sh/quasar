@@ -1,14 +1,14 @@
 // deno-lint-ignore-file no-unused-vars
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe,
-    upm,
+import {
+    exec,
+    execSync,
+    IExecOptions,
+    IExecSyncOptions,
     IPkgInfo,
     IPkgMgr,
-    PsOutput
+    PsOutput,
+    registerExe,
+    upm,
 } from "../../mod.ts";
 
 const findOptions = registerExe("snyk", {});
@@ -19,6 +19,6 @@ export function snyk(args?: string[], options?: IExecOptions) {
 
 snyk.cli = snyk;
 snyk.findOptions = findOptions;
-snyk.sync = function(args?: string[], options?: IExecSyncOptions) {
+snyk.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("snyk", args, options);
-}
+};

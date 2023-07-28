@@ -51,7 +51,7 @@ const latin = [0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x8E, 0x8E,
 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, // U+00E0..U+00EF
 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x19, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21,] // U+00F0..U+00FF]
 
-const char: number = 'a'.codePointAt(0) as number;
+const char: number = "a".codePointAt(0) as number;
 
 const latinLowerMask = 0x20;
 const latinUpperMask = 0x40;
@@ -76,7 +76,7 @@ export class Char {
     constructor(value: number) {
         if (!Number.isInteger(value)) {
             throw new Error(
-                'Invalid character value, value must be an integer',
+                "Invalid character value, value must be an integer",
             );
         }
         this.value = value;
@@ -90,23 +90,21 @@ export class Char {
 
     [Symbol.toPrimitive](hint: string) {
         switch (hint) {
-            case 'string':
+            case "string":
                 return String.fromCharCode(this.value);
-            case 'number':
+            case "number":
                 return this.value;
 
-            case 'boolean':
+            case "boolean":
                 return this.value > Char.MinValue && this.value < Char.MaxValue;
 
-            case 'bigint':
+            case "bigint":
                 return BigInt(this.value);
 
             default:
                 return null;
         }
     }
-
-    
 
     public valueOf() {
         this.value;
@@ -245,7 +243,7 @@ export function isLowerCharCode(value: number): boolean {
         const code = latin[value] as number;
         return (code & latinLowerMask) != 0;
     }
-  
+
     return IS_LOWER_EXP.test(String.fromCodePoint(value));
 }
 
@@ -290,7 +288,7 @@ export function toLowerCodePoint(value: number): number {
     }
 
     // already lower or non-letter
-    if(value < 65 || (value >= 91 && value <= 191)) {
+    if (value < 65 || (value >= 91 && value <= 191)) {
         return value;
     }
 
@@ -315,7 +313,7 @@ export function toUpperCodePoint(value: number): number {
     }
 
     // already upper or non-letter
-    if(value < 97 || (value >= 123 && value <= 191)) {
+    if (value < 97 || (value >= 123 && value <= 191)) {
         return value;
     }
 
@@ -328,8 +326,9 @@ export function isUpperCodePoint(value: number): boolean {
         return (code & latinUpperMask) != 0;
     }
 
-    if ((value >= 123 && value <= 191))
+    if ((value >= 123 && value <= 191)) {
         return false;
+    }
 
     return IS_UPPER_EXP.test(String.fromCodePoint(value));
 }

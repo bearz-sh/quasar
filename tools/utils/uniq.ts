@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("uniq", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("uniq", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\uniq.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\uniq.exe",
         "%SystemDrive%\\msys\\usr\\bin\\uniq.exe",
-    ]
+    ],
 });
 
 export function uniq(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function uniq(args?: string[], options?: IExecOptions) {
 }
 
 uniq.cli = uniq;
-uniq.sync = function(args?: string[], options?: IExecSyncOptions) {
+uniq.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("uniq", args, options);
-}
+};

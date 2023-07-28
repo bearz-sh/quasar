@@ -5,10 +5,10 @@ export type Stdio = "inherit" | "piped" | "null";
 
 export interface ICommandOptions {
     /**
-    * The working directory of the process.
-    *
-    * If not specified, the `cwd` of the parent process is used.
-    */
+     * The working directory of the process.
+     *
+     * If not specified, the `cwd` of the parent process is used.
+     */
     cwd?: string | URL;
 
     args?: string[];
@@ -55,25 +55,21 @@ export interface ICommandOptions {
     windowsRawArguments?: boolean;
 }
 
-export interface IPsStartInfo extends ICommandOptions
-{
+export interface IPsStartInfo extends ICommandOptions {
     file: string | URL;
 
     input?: Uint8Array | string | PsOutput | ReadableStream<Uint8Array>;
 }
 
-
-export class PsOutput
-{
+export class PsOutput {
     #output: Deno.CommandOutput;
-    #si: IPsStartInfo
+    #si: IPsStartInfo;
     #stdoutString?: string;
     #stderrString?: string;
     #stdoutLines?: string[];
     #stderrLines?: string[];
 
-    constructor(si: IPsStartInfo, output: Deno.CommandOutput) 
-    {
+    constructor(si: IPsStartInfo, output: Deno.CommandOutput) {
         this.#si = si;
         this.#output = output;
     }
@@ -95,7 +91,7 @@ export class PsOutput
     }
 
     get stdout() {
-        if(this.#si?.stdout === 'piped') {
+        if (this.#si?.stdout === "piped") {
             return this.#output.stdout;
         }
 
@@ -103,21 +99,21 @@ export class PsOutput
     }
 
     get stdoutAsString() {
-        if(this.#stdoutString) {
+        if (this.#stdoutString) {
             return this.#stdoutString;
         }
 
-        if(this.#si?.stdout === 'piped') { 
+        if (this.#si?.stdout === "piped") {
             this.#stdoutString = new TextDecoder().decode(this.#output.stdout);
         } else {
-            this.#stdoutString = '';
+            this.#stdoutString = "";
         }
 
         return this.#stdoutString;
     }
 
     get stderr() {
-        if(this.#si?.stderr === 'piped') {
+        if (this.#si?.stderr === "piped") {
             return this.#output.stderr;
         }
 
@@ -125,25 +121,25 @@ export class PsOutput
     }
 
     get stderrAsString() {
-        if(this.#stderrString) {
+        if (this.#stderrString) {
             return this.#stderrString;
         }
 
-        if(this.#si?.stderr === 'piped') {
+        if (this.#si?.stderr === "piped") {
             this.#stderrString = new TextDecoder().decode(this.#output.stderr);
         } else {
-            this.#stderrString = '';
+            this.#stderrString = "";
         }
 
         return this.#stderrString;
     }
 
-    get stdoutAsLines() {   
-        if(this.#stdoutLines) {
+    get stdoutAsLines() {
+        if (this.#stdoutLines) {
             return this.#stdoutLines;
         }
 
-        if(this.#si?.stdout === 'piped') {
+        if (this.#si?.stdout === "piped") {
             this.#stdoutLines = this.stdoutAsString.split(NEW_LINE);
         } else {
             this.#stdoutLines = [];
@@ -153,11 +149,11 @@ export class PsOutput
     }
 
     get stderrAsLines() {
-        if(this.#stderrLines) {
+        if (this.#stderrLines) {
             return this.#stderrLines;
         }
 
-        if(this.#si?.stderr === 'piped') {
+        if (this.#si?.stderr === "piped") {
             this.#stderrLines = this.stderrAsString.split(NEW_LINE);
         }
 
@@ -165,7 +161,7 @@ export class PsOutput
     }
 
     success(validate?: (code: number) => boolean) {
-        if(!validate) {
+        if (!validate) {
             return this.code === 0;
         }
 
@@ -173,7 +169,7 @@ export class PsOutput
     }
 
     throwOrContinue(validate?: (code: number) => boolean) {
-        if(!this.success(validate)) {
+        if (!this.success(validate)) {
             throw new Error(`Process failed with code ${this.code} and signal ${this.signal}`);
         }
 
@@ -183,33 +179,31 @@ export class PsOutput
     async pipe(
         next: (args?: string[], options?: Partial<IPsStartInfo>) => Promise<PsOutput>,
         args?: string[],
-        options?: Partial<IPsStartInfo>) {
-        
-        const o : Partial<IPsStartInfo> = options ?? {};
+        options?: Partial<IPsStartInfo>,
+    ) {
+        const o: Partial<IPsStartInfo> = options ?? {};
         o.input = this.stdout;
         await next(args, o);
     }
 }
 
 export interface IPsPreHook {
-    (si: IPsStartInfo) : void;
+    (si: IPsStartInfo): void;
 }
 
 export interface IPsPostHook {
-    (si: IPsStartInfo, result: PsOutput) : void;
+    (si: IPsStartInfo, result: PsOutput): void;
 }
 
 export const preCallHooks: IPsPreHook[] = [];
 
 export const postCallHooks: IPsPostHook[] = [];
 
-export class Ps
-{
-    #startInfo: IPsStartInfo
+export class Ps {
+    #startInfo: IPsStartInfo;
 
-    constructor(startInfo?: IPsStartInfo)
-    {
-        this.#startInfo = startInfo ?? { file: '', stdout: 'inherit', stderr: 'inherit'};
+    constructor(startInfo?: IPsStartInfo) {
+        this.#startInfo = startInfo ?? { file: "", stdout: "inherit", stderr: "inherit" };
     }
 
     withFile(file: string | URL) {
@@ -217,8 +211,7 @@ export class Ps
         return this;
     }
 
-    addEnv(key: string, value: string)
-    {
+    addEnv(key: string, value: string) {
         if (this.#startInfo.env == undefined) {
             this.#startInfo.env = {};
         }
@@ -226,15 +219,12 @@ export class Ps
         return this;
     }
 
-
-    withArgs(args: string[])
-    {
+    withArgs(args: string[]) {
         this.#startInfo.args = args;
         return this;
     }
 
-    withEnv(env: { [key: string]: string })
-    {
+    withEnv(env: { [key: string]: string }) {
         if (this.#startInfo.env == undefined) {
             this.#startInfo.env = env;
             return this;
@@ -247,27 +237,23 @@ export class Ps
         return this;
     }
 
-    withStdin(stdin: "inherit" | "piped" | "null")
-    {
+    withStdin(stdin: "inherit" | "piped" | "null") {
         this.#startInfo.stdin = stdin;
         return this;
     }
 
-    withStdout(stdout: "inherit" | "piped" | "null")
-    {
+    withStdout(stdout: "inherit" | "piped" | "null") {
         this.#startInfo.stdout = stdout;
         return this;
     }
 
-    withStderr(stderr: "inherit" | "piped" | "null")
-    {
+    withStderr(stderr: "inherit" | "piped" | "null") {
         this.#startInfo.stderr = stderr;
         return this;
     }
 
-    spawn()
-    {
-        if(preCallHooks.length > 0) {
+    spawn() {
+        if (preCallHooks.length > 0) {
             preCallHooks.forEach((hook) => {
                 hook(this.#startInfo);
             });
@@ -275,12 +261,12 @@ export class Ps
 
         const cmd = new Deno.Command(this.#startInfo.file, this.#startInfo);
         const r = cmd.spawn();
-       
-        const child : IChildProcess = {
+
+        const child: IChildProcess = {
             pid: r.pid,
 
             status: r.status,
-            
+
             stdin: r.stdin,
 
             stdout: r.stdout,
@@ -297,43 +283,39 @@ export class Ps
 
             ref: () => r.ref(),
 
-            unref: () => r.unref()
-        }
+            unref: () => r.unref(),
+        };
 
         return child;
     }
 
-
-    async output()
-    {
-        if(preCallHooks.length > 0) {
+    async output() {
+        if (preCallHooks.length > 0) {
             preCallHooks.forEach((hook) => {
                 hook(this.#startInfo);
             });
         }
 
-      
         if (!this.#startInfo.input) {
             const cmd2 = new Deno.Command(this.#startInfo.file, this.#startInfo);
             const result = await cmd2.output();
             const output = new PsOutput(this.#startInfo, result);
-    
+
             if (postCallHooks.length > 0) {
                 postCallHooks.forEach((hook) => {
                     hook(this.#startInfo, output);
                 });
             }
-    
+
             return output;
         }
 
         const input = this.#startInfo.input;
-        this.#startInfo.stdin = 'piped';
+        this.#startInfo.stdin = "piped";
         const cmd = new Deno.Command(this.#startInfo.file, this.#startInfo);
 
         const child = cmd.spawn();
         if (input instanceof PsOutput) {
-           
             const writer = child.stdin.getWriter();
             await writer.write(input.stdout);
             await writer.close();
@@ -348,7 +330,7 @@ export class Ps
         if (input instanceof ReadableStream) {
             const writer = child.stdin.getWriter();
             const reader = input.getReader();
-            while(true) {
+            while (true) {
                 const { done, value } = await reader.read();
                 if (done) {
                     break;
@@ -359,13 +341,11 @@ export class Ps
             await writer.close();
         }
 
-        if (typeof input === 'string') {
+        if (typeof input === "string") {
             const writer = child.stdin.getWriter();
             await writer.write(new TextEncoder().encode(input));
             await writer.close();
         }
-
-
 
         const result = await child.output();
         const output = new PsOutput(this.#startInfo, result);
@@ -379,9 +359,8 @@ export class Ps
         return output;
     }
 
-    outputSync()
-    {
-        if(preCallHooks.length > 0) {
+    outputSync() {
+        if (preCallHooks.length > 0) {
             preCallHooks.forEach((hook) => {
                 hook(this.#startInfo);
             });
@@ -401,62 +380,56 @@ export class Ps
     }
 }
 
-export function run(...args: string[])
-{
-    const si : IPsStartInfo = {
+export function run(...args: string[]) {
+    const si: IPsStartInfo = {
         file: args[0],
         args: args.slice(1),
-        stdout: 'inherit',
-        stderr: 'inherit'
-    }
+        stdout: "inherit",
+        stderr: "inherit",
+    };
     const ps = new Ps(si);
     return ps.output();
 }
 
-export function runSync(...args: string[])
-{
-    const si : IPsStartInfo = {
+export function runSync(...args: string[]) {
+    const si: IPsStartInfo = {
         file: args[0],
         args: args.slice(1),
-        stdout: 'inherit',
-        stderr: 'inherit'
-    }
+        stdout: "inherit",
+        stderr: "inherit",
+    };
     const ps = new Ps(si);
     return ps.outputSync();
 }
 
-export function capture(...args: string[])
-{
-    const si : IPsStartInfo = {
+export function capture(...args: string[]) {
+    const si: IPsStartInfo = {
         file: args[0],
         args: args.slice(1),
-        stdout: 'piped',
-        stderr: 'piped'
-    }
+        stdout: "piped",
+        stderr: "piped",
+    };
     const ps = new Ps(si);
     return ps.output();
 }
 
-export function captureSync(...args: string[])
-{
-    const si : IPsStartInfo = {
+export function captureSync(...args: string[]) {
+    const si: IPsStartInfo = {
         file: args[0],
         args: args.slice(1),
-        stdout: 'piped',
-        stderr: 'piped'
-    }
+        stdout: "piped",
+        stderr: "piped",
+    };
     const ps = new Ps(si);
     return ps.outputSync();
 }
 
-export function output(startInfo: IPsStartInfo)
-{
+export function output(startInfo: IPsStartInfo) {
     const ps = new Ps(startInfo);
     return ps.output();
 }
 
-export function outputSync(startInfo: IPsStartInfo)
-{
+export function outputSync(startInfo: IPsStartInfo) {
     const ps = new Ps(startInfo);
     return ps.outputSync();
 }

@@ -1,4 +1,4 @@
-import { test, assert } from "../testing/mod.ts";
+import { assert, test } from "../testing/mod.ts";
 import { CaseInsensitiveMap } from "./case_insensitive_map.ts";
 
 test("CaseInsensitiveMap", () => {

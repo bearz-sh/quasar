@@ -1,10 +1,4 @@
-import { 
-    IExecOptions, 
-    IExecSyncOptions, 
-    exec, 
-    execSync, 
-    registerExe 
-} from "../mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../mod.ts";
 
 registerExe("env", {
     windows: [
@@ -12,7 +6,7 @@ registerExe("env", {
         "%ChocolateyInstall%\\msys2\\usr\\bin\\env.exe",
         "%SystemDrive%\\msys64\\usr\\bin\\env.exe",
         "%SystemDrive%\\msys\\usr\\bin\\env.exe",
-    ]
+    ],
 });
 
 export function env(args?: string[], options?: IExecOptions) {
@@ -20,6 +14,6 @@ export function env(args?: string[], options?: IExecOptions) {
 }
 
 env.cli = env;
-env.sync = function(args?: string[], options?: IExecSyncOptions) {
+env.sync = function (args?: string[], options?: IExecSyncOptions) {
     return execSync("env", args, options);
-}
+};

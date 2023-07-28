@@ -4,9 +4,7 @@ import { dirname } from "../../path/mod.ts";
 import { existsSync } from "../../fs/mod.ts";
 import { captureSync } from "../../process/ps.ts";
 
-
 export class GitProvider implements ICiEnvProvider {
-
     #isCi?: boolean;
 
     #ref?: string;
@@ -25,10 +23,8 @@ export class GitProvider implements ICiEnvProvider {
         if (this.#isCi === undefined) {
             this.#isCi = false;
             let target = cwd();
-            while (target.length > 0)
-            {
-                if (existsSync(`${target}/.git`))
-                {
+            while (target.length > 0) {
+                if (existsSync(`${target}/.git`)) {
                     this.#isCi = true;
                     break;
                 }
@@ -92,5 +88,4 @@ export class GitProvider implements ICiEnvProvider {
     get buildNumber(): string {
         return "";
     }
-
 }
