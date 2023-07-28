@@ -1,14 +1,30 @@
-import { ChocoManager } from './tools/choco/mod.ts';
-import { whichSync } from './process/which.ts';
-
-console.log(whichSync("choco"));
-
-const choco = new ChocoManager();
-console.log(await choco.list(""));
+import { task, shellTask, ps, runTaskRunner } from './tasks/mod.ts';
 
 
+task("hello", async () => {
+    await ps.run("echo", "Hello World");
+
+});
+
+shellTask("bash", "echo 'bash'");
+
+shellTask("pwsh", "pwsh", "echo 'pwsh'");
+
+task("skip_me", () => {
+    console.log("before skip_me");
+    return Promise.resolve();   
+}).set({
+    skip: true
+})
+
+task("default", ["hello", "skip_me", "pwsh", "bash"], () => {
+    console.log("before hello");
+    return Promise.resolve();
+});
 
 
+
+await runTaskRunner();
 
 /*
 import { bash } from './tools/bash/mod.ts';

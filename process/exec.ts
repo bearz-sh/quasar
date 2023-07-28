@@ -6,11 +6,7 @@ import { IPsStartInfo, PsOutput, output, outputSync } from './ps.ts';
 import { NotFoundOnPathError } from './errors.ts';
 import { isAbsolute } from 'https://deno.land/std@0.194.0/path/posix.ts';
 import { existsSync } from '../mod.ts';
-import { readTextFile } from '../mod.ts';
-import { NEW_LINE } from '../mod.ts';
-import { update } from '../tools/docker/container.ts';
 import { StringBuilder } from '../string-builder.ts';
-import setBlocking from 'https://deno.land/x/yargs@v17.7.2-deno/build/lib/utils/set-blocking.js';
 import { writeTextFileSync } from '../mod.ts';
 
 export interface IPathFinderOptions {

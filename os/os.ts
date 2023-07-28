@@ -35,7 +35,7 @@ export function gid() : number | null {
     return Deno.gid();
 }
 
-export function isProcessEleveated() : boolean {
+export function isProcessElevated() : boolean {
     if(Deno.build.os === "windows") {
         return isWindowsAdmin();
     }

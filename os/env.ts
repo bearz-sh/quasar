@@ -1,7 +1,8 @@
 import { CHAR_UNDERSCORE } from "../char_constants.ts";
 import { IS_DENO, IS_NODELIKE } from "../runtime/mod.ts";
+import { equalsIgnoreCase } from "../str.ts";
 import { StringBuilder } from "../string-builder.ts";
-import {  PATH_SEPARATOR, PATH_VAR_NAME } from './constants.ts'
+import { IS_WINDOWS, PATH_SEPARATOR, PATH_VAR_NAME } from './constants.ts'
 
 export const secrets : string[] = [];
 
@@ -134,7 +135,6 @@ const backslash = 92;
 function isLetterOrDigit(c: number): boolean {
     return (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57);
 }
-
 
 function isValidBashVariable(value: string) {
     
@@ -364,6 +364,13 @@ export function expand(template: string, options?: IEnvSubstitutionOptions): str
     return r;
 }
 
+function findPathIndex(paths: string[], path: string): number {
+    if (IS_WINDOWS) {
+        return paths.findIndex(p => equalsIgnoreCase(p, path));
+    }
+
+    return paths.findIndex(p => p === path);
+}
 
 
 export function splitPath(): string[] {
@@ -380,11 +387,14 @@ export function setPath(path: string): void {
 }
 
 export function hasPath(path: string): boolean {
-    return splitPath().includes(path);
+    return findPathIndex(splitPath(), path) !== -1;
 }
 
 export function addPath(path: string, prepend = false): void {
     const paths = splitPath();
+    if (findPathIndex(paths, path) !== -1)
+        return;
+
     if (prepend) {
         paths.unshift(path);
     } else {
@@ -395,7 +405,7 @@ export function addPath(path: string, prepend = false): void {
 
 export function removePath(path: string): void {
     const paths = splitPath();
-    const index = paths.indexOf(path);
+    const index = findPathIndex(paths, path);
     if (index !== -1) {
         paths.splice(index, 1);
         setVar(PATH_VAR_NAME, paths.join(PATH_SEPARATOR));
