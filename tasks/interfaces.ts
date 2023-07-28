@@ -94,15 +94,25 @@ export interface IProcess {
 
     readonly args: string[];
 
-    run(...args: string[]): Promise<Result<PsOutput, Error>>;
+    run(...args: string[]): Promise<PsOutput>
 
-    capture(...args: string[]): Promise<Result<PsOutput, Error>>;
+    runSync(...args: string[]): PsOutput
 
-    exec(exec: string, args?: string[], options?: IExecOptions): Promise<Result<PsOutput, Error>>;
+    capture(...args: string[]): Promise<PsOutput>
+
+    captureSync(...args: string[]): PsOutput
+
+    exec(exec: string, args?: string[], options?: IExecOptions): Promise<PsOutput>
+
+    execSync(exec: string, args?: string[], options?: IExecOptions): PsOutput
+
+    isatty(rid: number): boolean;
 
     push(path: string): void;
 
     pop(): void;
+
+    exit(code?: number): void;
 }
 
 export interface IFileSystem {

@@ -4,7 +4,12 @@ import {
     capture,
     chdir,
     cwd,
-    exec as exec2,
+    runSync,
+    captureSync,
+    exit,
+    isatty,
+    exec,
+    execSync,
     findExe,
     findExeSync,
     IExecOptions,
@@ -77,31 +82,14 @@ export const ps: IProcess = {
         chdir(last);
         return last;
     },
-    async capture(...args: string[]) {
-        try {
-            const result = await capture(...args);
-            return ok(result);
-        } catch (error) {
-            return err(error);
-        }
-    },
-    async run(...args: string[]) {
-        try {
-            const result = await run(...args);
-            return ok(result);
-        } catch (error) {
-            return err(error);
-        }
-    },
-
-    async exec(exec: string, args?: string[], options?: IExecOptions) {
-        try {
-            const result = await exec2(exec, args, options);
-            return ok(result);
-        } catch (error) {
-            return err(error);
-        }
-    },
+    capture,
+    captureSync,
+    run,
+    runSync,
+    isatty,
+    exec,
+    execSync,
+    exit
 };
 
 Reflect.defineProperty(ps, "cwd", {
