@@ -1,18 +1,24 @@
+
+export const ERR = Symbol("ERR");
+export const OK = Symbol("OK");
+
 export class Result<T, E> {
     #ok: T | undefined;
     #error: E | undefined;
+    #symbol: symbol;
 
-    constructor(ok: T | undefined, error: E | undefined) {
+    constructor(ok: T | undefined, error: E | undefined, symbol: typeof OK | typeof ERR = OK) {
         this.#ok = ok;
         this.#error = error;
+        this.#symbol = symbol;
     }
 
     get isOk(): boolean {
-        return this.#ok != undefined;
+        return this.#symbol === OK;
     }
 
     get isErr(): boolean {
-        return this.#error != undefined;
+        return this.#symbol === ERR;
     }
 
     isOkAnd(predicate: (value: T) => boolean): boolean {
@@ -60,9 +66,9 @@ export class Result<T, E> {
 }
 
 export function ok<T, E>(value: T): Result<T, E> {
-    return new Result<T, E>(value, undefined);
+    return new Result<T, E>(value, undefined, OK);
 }
 
 export function err<T, E>(value: E): Result<T, E> {
-    return new Result<T, E>(undefined, value);
+    return new Result<T, E>(undefined, value, ERR);
 }

@@ -8,6 +8,32 @@ import {
     IWriteOptions,
 } from "./_interfaces.ts";
 
+export { 
+    exists, 
+    existsSync,
+    copy,
+    copySync,
+    move,
+    moveSync,
+    emptyDir as emptyDirectory,
+    emptyDirSync as emptyDirectorySync,
+    ensureDir as ensureDirectory,
+    ensureDirSync as ensureDirectorySync,
+    ensureFile,
+    ensureFileSync,
+    ensureLink,
+    ensureLinkSync,
+    ensureSymlink,
+    ensureSymlinkSync,
+    expandGlob,
+    expandGlobSync,
+    
+} from "https://deno.land/std@0.196.0/fs/mod.ts";
+
+export type {
+    ExpandGlobOptions,
+    WalkEntry} from "https://deno.land/std@0.196.0/fs/mod.ts"
+
 export function isDirectory(path: string | URL): Promise<boolean> {
     return Deno.stat(path).then((stat) => stat.isDirectory).catch(() => false);
 }
