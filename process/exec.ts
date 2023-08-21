@@ -1,6 +1,6 @@
 import { which, whichSync } from "./which.ts";
 import { expand, get, set } from "../os/env.ts";
-import { isFile, isFileSync, readTextFileSync } from "../fs/mod.ts";
+import { isFile, isFileSync, makeTempFileSync, readTextFileSync, writeTextFile } from "../fs/mod.ts";
 import { IS_DARWIN, IS_WINDOWS } from "../os/constants.ts";
 import { IPsStartInfo, output, outputSync, PsOutput } from "./ps.ts";
 import { NotFoundOnPathError } from "../errors/mod.ts";
@@ -333,22 +333,22 @@ export function execSync(name: string, args?: string[], options?: IExecSyncOptio
 }
 
 export function generateScriptFileSync(script: string, ext: string, tpl?: string) {
-    const scriptFile = Deno.makeTempFileSync({ prefix: "quasar_scripts", suffix: ext });
+    const scriptFile = makeTempFileSync({ prefix: "quasar_scripts", suffix: ext });
     if (tpl) {
-        Deno.writeTextFileSync(scriptFile, tpl.replace("{{script}}", script));
+        writeTextFileSync(scriptFile, tpl.replace("{{script}}", script));
     } else {
-        Deno.writeTextFileSync(scriptFile, script);
+        writeTextFileSync(scriptFile, script);
     }
 
     return scriptFile.replaceAll("\\", "/");
 }
 
 export async function generateScriptFile(script: string, ext: string, tpl?: string) {
-    const scriptFile = Deno.makeTempFileSync({ prefix: "quasar_scripts", suffix: ext });
+    const scriptFile = makeTempFileSync({ prefix: "quasar_scripts", suffix: ext });
     if (tpl) {
-        await Deno.writeTextFile(scriptFile, tpl.replace("{{script}}", script));
+        await writeTextFile(scriptFile, tpl.replace("{{script}}", script));
     } else {
-        await Deno.writeTextFile(scriptFile, script);
+        await writeTextFile(scriptFile, script);
     }
 
     return scriptFile.replaceAll("\\", "/");
