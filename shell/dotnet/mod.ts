@@ -8,3 +8,4 @@ export function dotnet(args: string[], options?: IExecOptions) {
 export function dotnetSync(args: string[], options?: IExecSyncOptions) {
     return cliSync(args, options);
 }
+

@@ -42,7 +42,7 @@ export interface ISecretGenerator {
     generateAsUint8Array(length: number): Uint8Array;
 }
 
-export default class SecretGenerator {
+export class SecretGenerator {
     #codes: number[];
     #validator: (value: Uint8Array) => boolean;
 

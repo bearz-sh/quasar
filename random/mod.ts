@@ -1,11 +1,19 @@
-const getRandomValues = crypto.getRandomValues;
-const randomUUID = crypto.randomUUID;
+
+function getRandomValues<T extends ArrayBufferView>(array: T): T {
+    return crypto.getRandomValues<T>(array);
+}
+
+function randomUUID(): string {
+    return crypto.randomUUID();
+}
 
 const randomBytes = (length: number): Uint8Array => {
     const buffer = new Uint8Array(length);
     getRandomValues(buffer);
     return buffer;
 };
+
+
 
 const codes: number[] = [];
 const validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
