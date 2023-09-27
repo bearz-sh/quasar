@@ -144,7 +144,6 @@ class RegistryKey {
         );
         if (result === 0) {
             const v = Deno.UnsafePointer.value(out.value);
-            console.log("v", v);
             if (v !== 0) {
                 const keyName = this.#keyName + "\\" + name;
                 const writable = permissionCheck === RegistryKeyPermissionCheck.ReadWriteSubTree;
