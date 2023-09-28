@@ -70,7 +70,6 @@ export async function setup(ctx: IExecutionContext) {
             ctx.config.sops.recipient = pubKey;
             await save(ctx.config);
         } catch (e) {
-            console.error(e)
             if (e instanceof Error) {
                 ctx.host.error(e);
             } else {
@@ -81,10 +80,8 @@ export async function setup(ctx: IExecutionContext) {
 
     if (toolsEnabled["mkcert"]) {
         ctx.host.info("Setting mkcert");
-        ctx.host.error("test");
         await setupLocalCerts(ctx).catch(err => {
             if (err instanceof Error) {
-                ctx.host.info(err);
                 ctx.host.error(err);
             } else {
                 ctx.host.error(`Unknown error setting up local certs. ${err}`);

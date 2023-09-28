@@ -29,6 +29,7 @@ providers:
     exposedByDefault: false
     watch: true
     network: {{ networks.default.name }}
+
 {{#if ca.selfSigned}}
   file:
     filename: "/etc/traefik/certs/certs.yaml"

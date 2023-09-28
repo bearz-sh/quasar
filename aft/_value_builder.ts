@@ -33,7 +33,7 @@ export class ValueBuilder
             volumes: {
                 etc: `${dataDir}/etc/${service}`,
                 data: `${dataDir}/data/${service}`,
-                certs: `${dataDir}/certs`,
+                certs: `${dataDir}/etc/certs`,
                 logs: `${dataDir}/var/logs/${service}`,
                 tmp: `${dataDir}/var/tmp/${service}`,
                 cache: `${dataDir}/var/cache/${service}`,
@@ -42,7 +42,6 @@ export class ValueBuilder
         }
 
         this.add(o);
-        this.addYamlFile(ctx.package.valuesFile);
     }
 
     add(values: Record<string, unknown>) {

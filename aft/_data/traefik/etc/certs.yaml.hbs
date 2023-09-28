@@ -3,6 +3,6 @@ tls:
   stores:
     default:
       defaultCertificate:
-        certFile: "{{ volumes.certs }}/aft.pem"
-        keyFile: "{{ volumes.certs }}/aft.key.pem"
+        certFile: "/etc/certs/aft.pem"
+        keyFile: "/etc/certs/aft.key.pem"
 {{/if}}

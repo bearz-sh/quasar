@@ -1,11 +1,9 @@
 import { hostWriter } from "../../ci/mod.ts";
-import { retry } from "../../deps.ts";
 import { ensureDirectory, exists, readFile, writeFile } from "../../fs/fs.ts";
 import { get } from "../../os/env.ts";
 import { dirname, join } from "../../path/mod.ts";
 import { secretGenerator } from "../../secrets/mod.ts";
 import { KpDatabase, createCredentials, kdbx } from "../../stack/keepass/mod.ts";
-import { paths } from "../_paths.ts";
 import { ISecretStore } from "../interfaces.ts";
 import { load } from "../config/mod.ts";
 

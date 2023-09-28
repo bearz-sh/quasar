@@ -64,7 +64,8 @@ async function generateEnvFile(ctx: IPackageExecutionContext, vb: ValueBuilder, 
 
     await writeTextFile(envFile, envText);
     if (ctx.config.sops.enabled && ctx.config.sops.recipient) {
-        await sops(["-e", envFile, "-i", envFile]);
+        set("SOPS_AGE_RECIPIENTS", ctx.config.sops.recipient!);
+        await sops(["-e","-i", envFile]);
     }
 }
 
@@ -103,11 +104,13 @@ async function walk(src: string, dest: string, hb: typeof handlebars, locals: Re
 export async function unpack(ctx: IPackageExecutionContext, valueFiles?: string[], secretsFile?: string) {
     const vb = new ValueBuilder();
     vb.addDefaults(ctx);
+    await vb.addYamlFile(ctx.package.valuesFile);
     if (valueFiles) {
         await vb.addYamlFile(valueFiles);
     }
 
     const locals = vb.build();
+    ctx.host.debug(JSON.stringify(locals, null, 4));
     const composeFile = ctx.package.composeFile;
     const service = ctx.package.spec.service ?? ctx.package.spec.name;
     const composeDir = join(ctx.config.paths.data, "etc", "compose", service);
@@ -163,7 +166,7 @@ export async function up(ctx: IPackageExecutionContext) {
 
         if (useSops) {
             set("SOPS_AGE_RECIPIENTS", ctx.config.sops.recipient!);
-            await sops(["-d", envFile, "-i", envFile]);
+            await sops(["-d", "-i", envFile]);
         }
     } else {
         useSops = false;
@@ -173,7 +176,7 @@ export async function up(ctx: IPackageExecutionContext) {
         await upInternal(args);
     } finally {
         if (useSops) {
-            await sops(["-e", envFile, "-i", envFile]);
+            await sops(["-e", "-i", envFile]);
         }
     }
 }
@@ -199,7 +202,7 @@ export async function down(ctx: IPackageExecutionContext) {
 
         if (useSops) {
             set("SOPS_AGE_RECIPIENTS", ctx.config.sops.recipient!);
-            await sops(["-d", envFile, "-i", envFile]);
+            await sops(["-d", "-i", envFile]);
         }
     } else {
         useSops = false;
@@ -209,7 +212,7 @@ export async function down(ctx: IPackageExecutionContext) {
         await downInternal(args);
     } finally {
         if (useSops) {
-            await sops(["-e", envFile, "-i", envFile]);
+            await sops(["-e", "-i", envFile]);
         }
     }
 }
