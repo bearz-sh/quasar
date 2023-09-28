@@ -20,18 +20,20 @@ export async function install(installDir?: string, toolsDir?: string) {
         return;
     }
 
+    let envSet = "":
     if (installDir) {
         set("ChocolateyInstall", installDir);
+        envSet += `\n[Environment]::SetEnvironmentVariable("ChocolateyInstall", "${installDir}", "User");`;
     }
 
     if (toolsDir) {
         set("ChocolateyToolsLocation", toolsDir);
+        envSet += `\n[Environment]::SetEnvironmentVariable("ChocolateyToolsLocation", "${toolsDir}", "User");`;
     }
 
     const hasPwsh = (await which("pwsh")) !== undefined;
     const script = `
-    [Environment]::SetEnvironmentVariable("ChocolateyInstall", "${installDir}", "User");
-    [Environment]::SetEnvironmentVariable("ChocolateyToolsLocation", "${toolsDir}", "User");
+    ${envSet}
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
     iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 `;

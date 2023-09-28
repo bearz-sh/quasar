@@ -3,7 +3,7 @@
 // which is under under MIT License
 // Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
-import { dasherize } from "../text/inflections.ts";
+import { dasherize, underscore } from "../text/inflections.ts";
 import { args } from "./_base.ts";
 
 const match = (array: unknown[], value: string) =>
@@ -43,7 +43,7 @@ export function splat(object: Record<string, unknown>, options?: SplatOptions) {
 
     const makeArguments = (key: string, value?: unknown) => {
         const prefix = options?.shortFlag && key.length === 1 ? "-" : options?.prefix;
-        const theKey = options?.preserveCase ? key : dasherize(key);
+        const theKey = options?.preserveCase ? key : dasherize(underscore(key));
 
         key = prefix + theKey;
 
