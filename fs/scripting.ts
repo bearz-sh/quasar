@@ -1,12 +1,13 @@
-import { 
-    ICreateDirectoryOptions, 
-    IDirectoryInfo, 
-    IFileInfo, 
-    IMakeTempOptions, 
-    IRemoveOptions, 
-    ISymlinkOptions, 
-    IWriteOptions } from "./_interfaces.ts";
-import * as fs2 from "./fs.ts"
+import {
+    ICreateDirectoryOptions,
+    IDirectoryInfo,
+    IFileInfo,
+    IMakeTempOptions,
+    IRemoveOptions,
+    ISymlinkOptions,
+    IWriteOptions,
+} from "./_interfaces.ts";
+import * as fs2 from "./fs.ts";
 
 export interface IFileSystem {
     chmod(path: string | URL, mode: number): Promise<void>;
@@ -29,9 +30,15 @@ export interface IFileSystem {
 
     ensureDirectorySync(path: string | URL): void;
 
-    expandGlob(glob: string | URL, { root, exclude, includeDirs, extended, globstar, caseInsensitive, followSymlinks, }?: fs2.ExpandGlobOptions): AsyncIterableIterator<fs2.WalkEntry>
+    expandGlob(
+        glob: string | URL,
+        { root, exclude, includeDirs, extended, globstar, caseInsensitive, followSymlinks }?: fs2.ExpandGlobOptions,
+    ): AsyncIterableIterator<fs2.WalkEntry>;
 
-    expandGlobSync(glob: string | URL, { root, exclude, includeDirs, extended, globstar, caseInsensitive, followSymlinks, }?: fs2.ExpandGlobOptions): IterableIterator<fs2.WalkEntry>
+    expandGlobSync(
+        glob: string | URL,
+        { root, exclude, includeDirs, extended, globstar, caseInsensitive, followSymlinks }?: fs2.ExpandGlobOptions,
+    ): IterableIterator<fs2.WalkEntry>;
 
     exists(path: string): Promise<boolean>;
 
@@ -110,8 +117,8 @@ export interface IFileSystem {
     writeFileSync(
         path: string | URL,
         data: Uint8Array | ReadableStream<Uint8Array>,
-        options?: IWriteOptions | undefined): void;
+        options?: IWriteOptions | undefined,
+    ): void;
 }
-
 
 export const fs: IFileSystem = fs2;

@@ -1,4 +1,3 @@
-
 function getRandomValues<T extends ArrayBufferView>(array: T): T {
     return crypto.getRandomValues<T>(array);
 }
@@ -12,8 +11,6 @@ const randomBytes = (length: number): Uint8Array => {
     getRandomValues(buffer);
     return buffer;
 };
-
-
 
 const codes: number[] = [];
 const validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";

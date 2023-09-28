@@ -158,6 +158,27 @@ export class PlatformNotSupportedError extends SystemError {
     }
 }
 
+export class EnvVariableNotSetError extends SystemError {
+    constructor(variableName: string, message?: string) {
+        super(message || `Environment variable ${variableName} is not set.`);
+        this.name = "EnvVariableNotSetError";
+    }
+}
+
+export class FileNotFoundError extends SystemError {
+    constructor(message?: string) {
+        super(message || "File not found.");
+        this.name = "FileNotFoundError";
+    }
+}
+
+export class DirectoryNotFoundError extends SystemError {
+    constructor(message?: string) {
+        super(message || "Directory not found.");
+        this.name = "DirectoryNotFoundError";
+    }
+}
+
 export class ArgumentNullError extends ArgumentError {
     constructor(parameterName: string | null = null) {
         super(`Argument ${parameterName} must not be null or undefined.`);

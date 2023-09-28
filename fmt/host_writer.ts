@@ -2,6 +2,7 @@ import { get, has, set } from "../os/env.ts";
 import { ISupportsColor, supportsColor } from "./supports_color.ts";
 import { args, isatty, stdout } from "../process/_base.ts";
 import { blue, cyan, gray, green, magenta, red, sprintf, yellow } from "../deps.ts";
+import { secretMasker } from "../secrets/masker.ts";
 
 function handleStack(stack?: string) {
     stack = stack ?? "";
@@ -13,10 +14,78 @@ function handleStack(stack?: string) {
     return stack.substring(index + 1);
 }
 
+export function handleArguments(args: IArguments) {
+    let msg: string | undefined = undefined;
+    let stack: string | undefined = undefined;
+
+    switch (args.length) {
+        case 0:
+            return { msg, stack };
+        case 1:
+            {
+                if (arguments[0] instanceof Error) {
+                    const e = arguments[0] as Error;
+                    msg = e.message;
+                    stack = handleStack(e.stack);
+                } else {
+                    msg = arguments[0] as string;
+                }
+            }
+            break;
+
+        case 2:
+            {
+                if (arguments[0] instanceof Error) {
+                    const e = arguments[0] as Error;
+                    const message = arguments[1] as string;
+                    msg = message;
+                    stack = handleStack(e.stack);
+                } else {
+                    const message = arguments[0] as string;
+                    const args = Array.from(arguments).slice(1);
+                    msg = sprintf(message, ...args);
+                }
+            }
+            break;
+
+        default:
+            {
+                if (arguments[0] instanceof Error) {
+                    const e = arguments[0] as Error;
+                    const message = arguments[1] as string;
+                    const args = Array.from(arguments).slice(2);
+                    msg = sprintf(message, ...args);
+                    stack = handleStack(e.stack);
+                } else {
+                    const message = arguments[0] as string;
+                    const args = Array.from(arguments).slice(1);
+                    msg = sprintf(message, ...args);
+                }
+            }
+
+            break;
+    }
+
+    return { msg, stack };
+}
+
+export enum WriteLevel {
+    None = 0,
+    Critical = 10,
+    Error = 20,
+    Warning = 30,
+    Command = 35,
+    Info = 40,
+    Debug = 50,
+    Trace = 60,
+}
+
 export interface IHostWriter {
     readonly interactive: boolean;
 
     readonly supportsColor: ISupportsColor;
+
+    enabled(level: WriteLevel): boolean;
 
     startGroup(name: string): IHostWriter;
 
@@ -29,6 +98,8 @@ export interface IHostWriter {
     command(message: string, ...args: unknown[]): IHostWriter;
 
     debug(message: string, ...args: unknown[]): IHostWriter;
+
+    trace(message: string, ...args: unknown[]): IHostWriter;
 
     info(message: string, ...args: unknown[]): IHostWriter;
 
@@ -47,6 +118,19 @@ export interface IHostWriter {
 
 export class HostWriter implements IHostWriter {
     #interactive?: boolean;
+    #level: WriteLevel;
+
+    constructor(level?: WriteLevel) {
+        this.#level = level ?? WriteLevel.Debug;
+    }
+
+    get level(): WriteLevel {
+        return this.#level;
+    }
+
+    enabled(level: WriteLevel): boolean {
+        return this.#level >= level;
+    }
 
     get interactive(): boolean {
         if (this.#interactive !== undefined) {
@@ -94,31 +178,19 @@ export class HostWriter implements IHostWriter {
         return this;
     }
 
-    command(message: string, ...args: unknown[]): IHostWriter {
-        switch (arguments.length) {
-            case 0:
-                return this;
-
-            case 1:
-                {
-                    if (this.supportsColor.stdout.level) {
-                        this.writeLine(cyan(`$> ${message}`));
-                    } else {
-                        this.writeLine(`$> ${message}`);
-                    }
-                }
-                return this;
-
-            default: {
-                if (this.supportsColor.stdout.level) {
-                    this.writeLine(cyan(`$>: ${sprintf(message, ...args)}`));
-                } else {
-                    this.writeLine(`$>: ${sprintf(message, ...args)}`);
-                }
-
-                return this;
-            }
+    command(message: string, args: unknown[]): IHostWriter {
+        if (this.#level > WriteLevel.Command) {
+            return this;
         }
+        const splat = secretMasker.mask(args.join(" "));
+        const fmt = `$ ${message} ${splat}`;
+        if (this.supportsColor.stdout.level) {
+            this.writeLine(cyan(fmt));
+            return this;
+        }
+
+        this.writeLine(fmt);
+        return this;
     }
 
     exportVariable(name: string, value: string, secret = false): IHostWriter {
@@ -126,192 +198,88 @@ export class HostWriter implements IHostWriter {
         return this;
     }
 
-    debug(message: string, ...args: unknown[]): IHostWriter {
-        switch (arguments.length) {
-            case 0:
-                return this;
-
-            case 1:
-                {
-                    if (this.supportsColor.stdout.level) {
-                        this.writeLine(gray(`DBG: ${message}`));
-                    } else {
-                        this.writeLine(`DBG: ${message}`);
-                    }
-                }
-                return this;
-
-            default: {
-                if (this.supportsColor.stdout.level) {
-                    this.writeLine(gray(`DBG: ${sprintf(message, ...args)}`));
-                } else {
-                    this.writeLine(`DBG: ${sprintf(message, ...args)}`);
-                }
-
-                return this;
-            }
+    trace(message: string, ...args: unknown[]): IHostWriter {
+        if (this.#level > WriteLevel.Debug) {
+            return this;
         }
+
+        const fmt = `TRC: ${args.length > 0 ? sprintf(message, ...args) : message}`;
+
+        if (this.supportsColor.stdout.level) {
+            this.writeLine(gray(fmt));
+            return this;
+        }
+
+        this.writeLine(fmt);
+        return this;
+    }
+
+    debug(message: string, ...args: unknown[]): IHostWriter {
+        if (this.#level > WriteLevel.Debug) {
+            return this;
+        }
+
+        const fmt = `DBG: ${args.length > 0 ? sprintf(message, ...args) : message}`;
+
+        if (this.supportsColor.stdout.level) {
+            this.writeLine(gray(fmt));
+            return this;
+        }
+
+        this.writeLine(fmt);
+        return this;
     }
 
     warn(e: Error, message?: string, ...args: unknown[]): IHostWriter;
     warn(message: string, ...args: unknown[]): IHostWriter;
     warn(): IHostWriter {
-        switch (arguments.length) {
-            case 0:
-                return this;
-            case 1: {
-                if (arguments[0] instanceof Error) {
-                    const e = arguments[0] as Error;
-                    if (this.supportsColor.stdout.level) {
-                        this.writeLine(yellow(`WRN: ${e.message}`));
-                        this.writeLine(yellow(handleStack(e.stack)));
-                    } else {
-                        this.writeLine(`WRN: ${e.message}`);
-                        this.writeLine(handleStack(e.stack));
-                    }
-                    return this;
-                }
-
-                const message = arguments[0] as string;
-                if (this.supportsColor.stdout.level) {
-                    this.writeLine(yellow(`WRN: ${message}`));
-                } else {
-                    this.writeLine(`WRN: ${message}`);
-                }
-
-                return this;
-            }
-
-            case 2: {
-                if (arguments[0] instanceof Error) {
-                    const e = arguments[0] as Error;
-                    const message = arguments[1] as string;
-                    if (this.supportsColor.stdout.level) {
-                        this.writeLine(yellow(`WRN: ${message}`));
-                        this.writeLine(yellow(handleStack(e.stack)));
-                    } else {
-                        this.writeLine(`WRN: ${message}`);
-                        this.writeLine(handleStack(e.stack));
-                    }
-                    return this;
-                }
-
-                const message = arguments[0] as string;
-                const args = Array.from(arguments).slice(1);
-                if (this.supportsColor.stdout.level) {
-                    this.writeLine(yellow(`WRN: ${sprintf(message, ...args)}`));
-                } else {
-                    this.writeLine(`WRN: ${sprintf(message, ...args)}`);
-                }
-
-                return this;
-            }
-
-            default: {
-                if (arguments[0] instanceof Error) {
-                    const e = arguments[0] as Error;
-                    const message = arguments[1] as string;
-                    const args = Array.from(arguments).slice(2);
-                    if (this.supportsColor.stdout.level) {
-                        this.writeLine(yellow(`WRN: ${sprintf(message, ...args)}`));
-                        this.writeLine(yellow(handleStack(e.stack)));
-                    } else {
-                        this.writeLine(`WRN: ${sprintf(message, ...args)}`);
-                        this.writeLine(handleStack(e.stack));
-                    }
-                } else {
-                    const message = arguments[0] as string;
-                    const args = Array.from(arguments).slice(1);
-                    if (this.supportsColor.stdout.level) {
-                        this.writeLine(yellow(`WRN: ${sprintf(message, ...args)}`));
-                    } else {
-                        this.writeLine(`WRN: ${sprintf(message, ...args)}`);
-                    }
-                }
-                return this;
-            }
+        if (this.#level > WriteLevel.Warning) {
+            return this;
         }
+
+        const { msg, stack } = handleArguments(arguments);
+        const fmt = `WRN: ${msg}`;
+
+        if (this.supportsColor.stdout.level) {
+            this.writeLine(yellow(fmt));
+            if (stack) {
+                this.writeLine(yellow(stack));
+            }
+            return this;
+        }
+
+        this.writeLine(fmt);
+        if (stack) {
+            this.writeLine(stack);
+        }
+
+        return this;
     }
 
     error(e: Error, message?: string, ...args: unknown[]): IHostWriter;
     error(message: string, ...args: unknown[]): IHostWriter;
     error(): IHostWriter {
-        switch (arguments.length) {
-            case 0:
-                return this;
-            case 1: {
-                if (arguments[0] instanceof Error) {
-                    const e = arguments[0] as Error;
-                    if (this.supportsColor.stdout.level) {
-                        this.writeLine(red(`ERR: ${e.message}`));
-                        this.writeLine(red(handleStack(e.stack)));
-                    } else {
-                        this.writeLine(`ERR: ${e.message}`);
-                        this.writeLine(handleStack(e.stack));
-                    }
-                    return this;
-                }
-
-                const message = arguments[0] as string;
-                if (this.supportsColor.stdout.level) {
-                    this.writeLine(red(`ERR: ${message}`));
-                } else {
-                    this.writeLine(`ERR: ${message}`);
-                }
-
-                return this;
-            }
-
-            case 2: {
-                if (arguments[0] instanceof Error) {
-                    const e = arguments[0] as Error;
-                    const message = arguments[1] as string;
-                    if (this.supportsColor.stdout.level) {
-                        this.writeLine(red(`ERR: ${message}`));
-                        this.writeLine(red(handleStack(e.stack)));
-                    } else {
-                        this.writeLine(`ERR: ${message}`);
-                        this.writeLine(handleStack(e.stack));
-                    }
-                    return this;
-                }
-
-                const message = arguments[0] as string;
-                const args = arguments[1] as unknown;
-                if (this.supportsColor.stdout.level) {
-                    this.writeLine(red(`ERR: ${sprintf(message, args)}`));
-                } else {
-                    this.writeLine(`ERR: ${sprintf(message, args)}`);
-                }
-
-                return this;
-            }
-
-            default: {
-                if (arguments[0] instanceof Error) {
-                    const e = arguments[0] as Error;
-                    const message = arguments[1] as string;
-                    const args = Array.from(arguments).slice(2);
-                    if (this.supportsColor.stdout.level) {
-                        this.writeLine(red(`ERR: ${sprintf(message, ...args)}`));
-                        this.writeLine(red(handleStack(e.stack)));
-                    } else {
-                        this.writeLine(`ERR: ${sprintf(message, ...args)}`);
-                        this.writeLine(handleStack(e.stack));
-                    }
-                } else {
-                    const message = arguments[0] as string;
-                    const args = Array.from(arguments).slice(1);
-                    if (this.supportsColor.stdout.level) {
-                        this.writeLine(red(`ERR: ${sprintf(message, ...args)}`));
-                    } else {
-                        this.writeLine(`ERR: ${sprintf(message, ...args)}`);
-                    }
-                }
-
-                return this;
-            }
+        if (this.#level > WriteLevel.Error) {
+            return this;
         }
+
+        const { msg, stack } = handleArguments(arguments);
+        const fmt = `ERR: ${msg}`;
+
+        if (this.supportsColor.stdout.level) {
+            this.writeLine(red(fmt));
+            if (stack) {
+                this.writeLine(red(stack));
+            }
+            return this;
+        }
+
+        this.writeLine(fmt);
+        if (stack) {
+            this.writeLine(stack);
+        }
+
+        return this;
     }
 
     success(message: string, ...args: unknown[]): IHostWriter {
@@ -342,30 +310,15 @@ export class HostWriter implements IHostWriter {
     }
 
     info(message: string, ...args: unknown[]): IHostWriter {
-        switch (arguments.length) {
-            case 0:
-                return this;
+        const fmt = `INF: ${args.length > 0 ? sprintf(message, ...args) : message}`;
 
-            case 1:
-                {
-                    if (this.supportsColor.stdout.level) {
-                        this.writeLine(blue(`INF: ${message}`));
-                    } else {
-                        this.writeLine(`INF: ${message}`);
-                    }
-                }
-                return this;
-
-            default: {
-                if (this.supportsColor.stdout.level) {
-                    this.writeLine(blue(`INF: ${sprintf(message, ...args)}`));
-                } else {
-                    this.writeLine(`INF: ${sprintf(message, ...args)}`);
-                }
-
-                return this;
-            }
+        if (this.supportsColor.stdout.level) {
+            this.writeLine(blue(fmt));
+            return this;
         }
+
+        this.writeLine(fmt);
+        return this;
     }
 
     write(message?: string, ...args: unknown[]): IHostWriter {
@@ -430,3 +383,5 @@ export class HostWriter implements IHostWriter {
         return this;
     }
 }
+
+export const hostWriter = new HostWriter();

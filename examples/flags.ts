@@ -16,7 +16,7 @@ console.log(parseFlags(["task/one", "task2", "--task-file", "tasks.ts", "--ef", 
     },
     default: {
         "working-directory": Deno.cwd(),
-        list: false,    
+        list: false,
         "skip-deps": false,
         timeout: 3 * 60,
         help: false,

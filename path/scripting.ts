@@ -1,12 +1,12 @@
-import * as _path from './mod.ts';
+import * as _path from "./mod.ts";
 /**
  * The path scripting module provides path methods returns as a single object
- * 
+ *
  * @module scripting
  */
 
 export interface IPath {
-    common(paths: string[], sep?: string): string
+    common(paths: string[], sep?: string): string;
 
     globToRegExp(glob: string, options?: _path.GlobToRegExpOptions): RegExp;
 
@@ -18,7 +18,7 @@ export interface IPath {
 
     basename(path: string): string;
 
-    basenameWithoutExtension(path: string) : string;
+    basenameWithoutExtension(path: string): string;
 
     extname(path: string): string;
 
@@ -28,7 +28,7 @@ export interface IPath {
 
     normalize(path: string): string;
 
-    normalizeGlob(glob: string, { globstar }?: _path.GlobOptions): string
+    normalizeGlob(glob: string, { globstar }?: _path.GlobOptions): string;
 
     relative(from: string, to: string): string;
 

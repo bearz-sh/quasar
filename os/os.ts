@@ -19,7 +19,7 @@ export function hostname(): string {
     return getRequired(HOST_VAR_NAME);
 }
 
-export function homeDir(): string | undefined {
+export function homeDir(): string {
     return getRequired(HOME_VAR_NAME);
 }
 

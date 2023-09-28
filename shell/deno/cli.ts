@@ -1,17 +1,17 @@
-import { 
-    exec, 
-    execSync, 
-    exists, 
-    existsSync, 
-    generateScriptFile, 
-    generateScriptFileSync, 
-    IExecOptions, 
-    IExecSyncOptions, 
-    registerExe, 
+import {
+    chmodSync,
+    exec,
+    execSync,
+    exists,
+    existsSync,
+    generateScriptFile,
+    generateScriptFileSync,
+    IExecOptions,
+    IExecSyncOptions,
+    IS_WINDOWS,
+    registerExe,
     rm,
     rmSync,
-    chmodSync, 
-    IS_WINDOWS 
 } from "../core/mod.ts";
 
 registerExe("deno", {
@@ -47,7 +47,7 @@ export async function runScript(script: string, options?: IExecOptions) {
     }
 }
 
-export  function runScriptSync(script: string, options?: IExecSyncOptions) {
+export function runScriptSync(script: string, options?: IExecSyncOptions) {
     const scriptFile = generateScriptFileSync(script, ".ts");
     try {
         if (!IS_WINDOWS) {

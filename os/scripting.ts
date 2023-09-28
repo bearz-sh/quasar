@@ -4,14 +4,14 @@ import {
     IS_LINUX,
     IS_WINDOWS,
     NEW_LINE,
+    OS_FAMILY,
+    OsFamily,
     PATH_SEPARATOR,
     RUNTIME_ARCH,
-    OsFamily,
     RuntimeArch,
-    OS_FAMILY,
 } from "./constants.ts";
 import { IEnvSubstitutionOptions } from "./env.ts";
-import { expand, get, getOrDefault, getRequired, has, set, remove, path, toObject } from "./env.ts"; 
+import { expand, get, getOrDefault, getRequired, has, path, remove, set, toObject } from "./env.ts";
 
 export interface IEnvPath {
     get(): string;
@@ -61,7 +61,6 @@ export const env: IEnv = {
     path,
 };
 
-
 export interface IOperatingSystem {
     platform: OsFamily;
     isWindows: boolean;
@@ -72,7 +71,6 @@ export interface IOperatingSystem {
     directorySeparator: string;
     newLine: string;
 }
-
 
 export const os: IOperatingSystem = {
     arch: RUNTIME_ARCH,

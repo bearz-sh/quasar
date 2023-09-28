@@ -1,20 +1,20 @@
-import { 
-    exec, 
-    execSync, 
-    exists, 
-    existsSync, 
-    findExe, 
-    findExeSync, 
-    generateScriptFile, 
-    generateScriptFileSync, 
-    IExecOptions, 
-    IExecSyncOptions, 
-    IS_WINDOWS, 
-    registerExe, 
+import {
+    chmod,
+    chmodSync,
+    exec,
+    execSync,
+    exists,
+    existsSync,
+    findExe,
+    findExeSync,
+    generateScriptFile,
+    generateScriptFileSync,
+    IExecOptions,
+    IExecSyncOptions,
+    IS_WINDOWS,
+    registerExe,
     rm,
     rmSync,
-    chmod,
-    chmodSync
 } from "../core/mod.ts";
 
 registerExe("bash", {
@@ -54,14 +54,16 @@ export async function runScript(script: string, options?: IExecOptions) {
         // windows with WSL installed has bash.exe in System32, but it doesn't handle windows paths
         if (IS_WINDOWS) {
             const exe = await findExe("bash");
-            if (exe?.endsWith("System32\\bash.exe")) {
+            if (exe?.endsWith("System32\\bash.exe") || exe?.endsWith("system32\\bash.exe")) {
                 file = "/mnt/" + "c" + file.substring(1).replace(":", "");
             }
+            console.log(exe);
         } else {
             await chmod(scriptFile, 0o777);
         }
 
-        return await cli(["-noprofile", "--norc", "-e", "-o", "pipefail", "-c", file], options);
+        const args = ["-noprofile", "--norc", "-e", "-o", "pipefail", "-c", file];
+        return await cli(args, options);
     } finally {
         if (await exists(scriptFile)) {
             await rm(scriptFile);
@@ -77,7 +79,7 @@ export function runScriptSync(script: string, options?: IExecSyncOptions) {
         // windows with WSL installed has bash.exe in System32, but it doesn't handle windows paths
         if (IS_WINDOWS) {
             const exe = findExeSync("bash");
-            if (exe?.endsWith("System32\\bash.exe")) {
+            if (exe?.endsWith("System32\\bash.exe") || exe?.endsWith("system32\\bash.exe")) {
                 file = "/mnt/" + "c" + file.substring(1).replaceAll("\\", "/").replace(":", "");
             }
         } else {

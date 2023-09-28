@@ -1,4 +1,3 @@
-
 export const ERR = Symbol("ERR");
 export const OK = Symbol("OK");
 

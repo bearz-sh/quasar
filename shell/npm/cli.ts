@@ -1,15 +1,15 @@
 import { isDirectory, isDirectorySync } from "../../fs/mod.ts";
 import { join } from "../../path/mod.ts";
 import { cwd, which, whichSync } from "../../process/mod.ts";
-import { 
-    exec, 
-    execSync, 
-    exists, 
-    existsSync, 
-    IExecOptions, 
-    IExecSyncOptions, 
-    registerExe, 
-    IS_WINDOWS
+import {
+    exec,
+    execSync,
+    exists,
+    existsSync,
+    IExecOptions,
+    IExecSyncOptions,
+    IS_WINDOWS,
+    registerExe,
 } from "../core/mod.ts";
 
 registerExe("npm", {

@@ -1,10 +1,4 @@
-import { 
-    exec, 
-    execSync,  
-    IExecOptions, 
-    IExecSyncOptions, 
-    registerExe, 
-} from "../core/mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../core/mod.ts";
 
 registerExe("nvs", {
     windows: [
@@ -15,7 +9,6 @@ registerExe("nvs", {
         "${HOME}/.nvs/nvs",
     ],
 });
-
 
 export function cli(args?: string[], options?: IExecOptions) {
     return exec("nvs", args, options);

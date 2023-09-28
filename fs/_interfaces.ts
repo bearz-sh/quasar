@@ -56,7 +56,7 @@ export interface IWriteOptions {
     append?: boolean;
     create?: boolean;
     signal?: AbortSignal;
-    mode: number;
+    mode?: number;
 }
 
 export interface IFileInfo {

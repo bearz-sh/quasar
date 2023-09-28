@@ -3,6 +3,7 @@ import { IS_DENO, IS_NODELIKE } from "../runtime/mod.ts";
 import { equalsIgnoreCase } from "../text/str.ts";
 import { StringBuilder } from "../text/string_builder.ts";
 import { IS_WINDOWS, PATH_SEPARATOR, PATH_VAR_NAME } from "./constants.ts";
+import { EnvVariableNotSetError } from "../errors/mod.ts";
 
 export const secrets: string[] = [];
 
@@ -58,7 +59,7 @@ export function getOrDefault(key: string, defaultValue: string): string {
 export function getRequired(key: string): string {
     const value = getVar(key);
     if (value === undefined) {
-        throw new Error(`Environment variable ${key} is required.`);
+        throw new EnvVariableNotSetError(key);
     }
     return value;
 }

@@ -1,16 +1,16 @@
-import { 
-    exec, 
-    execSync, 
-    exists, 
-    existsSync, 
-    generateScriptFile, 
-    generateScriptFileSync, 
-    IExecOptions, 
-    IExecSyncOptions, 
-    IS_WINDOWS, 
-    registerExe, 
+import {
+    exec,
+    execSync,
+    exists,
+    existsSync,
+    generateScriptFile,
+    generateScriptFileSync,
+    IExecOptions,
+    IExecSyncOptions,
+    IS_WINDOWS,
+    registerExe,
     rm,
-    rmSync
+    rmSync,
 } from "../core/mod.ts";
 
 let exe = "powershell";

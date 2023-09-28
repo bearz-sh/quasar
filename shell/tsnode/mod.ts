@@ -1,10 +1,5 @@
 import { NotFoundOnPathError } from "../../errors/mod.ts";
-import { 
-    exec, 
-    execSync,  
-    IExecOptions, 
-    IExecSyncOptions, 
-} from "../core/mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions } from "../core/mod.ts";
 import { findNpmBinFile, findNpmBinFileSync } from "../npm/mod.ts";
 
 // TODO: create a cli.ts file and register_script_runner.ts file for ts-node

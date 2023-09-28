@@ -1,18 +1,18 @@
-import { 
-    exec, 
-    execSync, 
-    exists, 
-    existsSync, 
-    generateScriptFile, 
-    generateScriptFileSync, 
-    IExecOptions, 
-    IExecSyncOptions, 
-    IS_WINDOWS, 
-    registerExe, 
+import {
+    chmod,
+    chmodSync,
+    exec,
+    execSync,
+    exists,
+    existsSync,
+    generateScriptFile,
+    generateScriptFileSync,
+    IExecOptions,
+    IExecSyncOptions,
+    IS_WINDOWS,
+    registerExe,
     rm,
     rmSync,
-    chmod,
-    chmodSync
 } from "../core/mod.ts";
 
 registerExe("sh", {

@@ -1,10 +1,4 @@
-import { 
-    exec, 
-    execSync, 
-    IExecOptions, 
-    IExecSyncOptions, 
-    registerExe, 
-} from "../core/mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions, registerExe } from "../core/mod.ts";
 
 registerExe("nuget", {
     windows: [

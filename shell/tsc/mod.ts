@@ -1,10 +1,5 @@
 import { NotFoundOnPathError } from "../../errors/mod.ts";
-import { 
-    exec, 
-    execSync,  
-    IExecOptions, 
-    IExecSyncOptions, 
-} from "../core/mod.ts";
+import { exec, execSync, IExecOptions, IExecSyncOptions } from "../core/mod.ts";
 import { findNpmBinFile, findNpmBinFileSync } from "../npm/mod.ts";
 
 export async function tsc(args?: string[], options?: IExecOptions) {

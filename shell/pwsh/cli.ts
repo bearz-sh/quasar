@@ -1,17 +1,16 @@
-import { 
-    exec, 
-    execSync, 
-    exists, 
-    existsSync, 
-    generateScriptFile, 
-    generateScriptFileSync, 
-    IExecOptions, 
-    IExecSyncOptions, 
-    registerExe, 
+import {
+    exec,
+    execSync,
+    exists,
+    existsSync,
+    generateScriptFile,
+    generateScriptFileSync,
+    IExecOptions,
+    IExecSyncOptions,
+    registerExe,
     rm,
-    rmSync
+    rmSync,
 } from "../core/mod.ts";
-
 
 registerExe("pwsh", {
     windows: [
@@ -23,14 +22,13 @@ registerExe("pwsh", {
     linux: [
         "/opt/microsoft/powershell/7/pwsh",
         "/opt/microsoft/powershell/6/pwsh",
-    ]
+    ],
 });
 
 // PWSH
 export function cli(args?: string[], options?: IExecOptions) {
     return exec("pwsh", args, options);
 }
-
 
 export function cliSync(args?: string[], options?: IExecOptions) {
     return execSync("pwsh", args, options);

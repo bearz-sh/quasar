@@ -1,27 +1,27 @@
-import { 
-    PsOutput, 
-    IExecOptions, 
-    IExecSyncOptions, 
-    splat, 
-    SplatOptions, 
-    stdout, 
-    stderr, 
-    stdin,
-    which,
-    whichSync,
-    run,
-    exit,
-    runSync,
+import {
+    args,
     capture,
     captureSync,
+    chdir,
+    cwd,
     exec,
     execSync,
-    cwd,
+    exit,
+    IExecOptions,
+    IExecSyncOptions,
     isatty,
-    chdir,
-    args} from "./mod.ts";
+    PsOutput,
+    run,
+    runSync,
+    splat,
+    SplatOptions,
+    stderr,
+    stdin,
+    stdout,
+    which,
+    whichSync,
+} from "./mod.ts";
 import { isProcessElevated } from "../os/os.ts";
-
 
 export interface IProcess {
     readonly isElevated: boolean;
@@ -71,7 +71,7 @@ export interface IProcess {
 
     exit(code?: number): void;
 
-    splat(object: Record<string, unknown>, options?: SplatOptions): string[]
+    splat(object: Record<string, unknown>, options?: SplatOptions): string[];
 
     which(exec: string): Promise<string | undefined>;
 

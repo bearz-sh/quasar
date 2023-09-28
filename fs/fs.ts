@@ -8,13 +8,9 @@ import {
     IWriteOptions,
 } from "./_interfaces.ts";
 
-export { 
-    exists, 
-    existsSync,
+export {
     copy,
     copySync,
-    move,
-    moveSync,
     emptyDir as emptyDirectory,
     emptyDirSync as emptyDirectorySync,
     ensureDir as ensureDirectory,
@@ -25,14 +21,15 @@ export {
     ensureLinkSync,
     ensureSymlink,
     ensureSymlinkSync,
+    exists,
+    existsSync,
     expandGlob,
     expandGlobSync,
-    
+    move,
+    moveSync,
 } from "https://deno.land/std@0.196.0/fs/mod.ts";
 
-export type {
-    ExpandGlobOptions,
-    WalkEntry} from "https://deno.land/std@0.196.0/fs/mod.ts"
+export type { ExpandGlobOptions, WalkEntry } from "https://deno.land/std@0.196.0/fs/mod.ts";
 
 export function isDirectory(path: string | URL): Promise<boolean> {
     return Deno.stat(path).then((stat) => stat.isDirectory).catch(() => false);
@@ -264,12 +261,12 @@ export function symlinkSync(target: string | URL, path: string | URL, type?: ISy
     Deno.symlinkSync(target, path, type);
 }
 
-export function writeTextFileSync(path: string | URL, data: string): void {
-    Deno.writeTextFileSync(path, data);
+export function writeTextFileSync(path: string | URL, data: string, options?: IWriteOptions): void {
+    Deno.writeTextFileSync(path, data, options);
 }
 
-export function writeTextFile(path: string | URL, data: string): Promise<void> {
-    return Deno.writeTextFile(path, data);
+export function writeTextFile(path: string | URL, data: string, options?: IWriteOptions): Promise<void> {
+    return Deno.writeTextFile(path, data, options);
 }
 
 export function writeFile(

@@ -1,18 +1,18 @@
-import { 
-    exec, 
-    execSync, 
-    exists, 
-    existsSync, 
-    generateScriptFile, 
-    generateScriptFileSync, 
-    IExecOptions, 
-    IExecSyncOptions, 
-    registerExe, 
-    rm,
-    rmSync,
+import {
     chmod,
     chmodSync,
-    IS_WINDOWS
+    exec,
+    execSync,
+    exists,
+    existsSync,
+    generateScriptFile,
+    generateScriptFileSync,
+    IExecOptions,
+    IExecSyncOptions,
+    IS_WINDOWS,
+    registerExe,
+    rm,
+    rmSync,
 } from "../core/mod.ts";
 
 registerExe("node", {
@@ -20,7 +20,6 @@ registerExe("node", {
         "%ProgramFiles%\\nodejs\\node.exe",
     ],
 });
-
 
 export function cli(args?: string[], options?: IExecOptions) {
     return exec("node", args, options);
@@ -53,7 +52,7 @@ export async function runScript(script: string, options?: IExecOptions) {
     }
 }
 
-export  function runScriptSync(script: string, options?: IExecSyncOptions) {
+export function runScriptSync(script: string, options?: IExecSyncOptions) {
     const scriptFile = generateScriptFileSync(script, ".js");
     try {
         if (!IS_WINDOWS) {
