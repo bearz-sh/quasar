@@ -22,7 +22,7 @@ export function dotnetSync(args: string[], options?: IExecSyncOptions) {
 let buildConfigValue: DotNetBuildConfig | string | undefined;
 let defaultProjectPath: string | undefined = undefined;
 
-function buildConfig(value?: DotNetBuildConfig | string) {
+export function buildConfig(value?: DotNetBuildConfig | string) {
     if (value) {
         buildConfigValue = value;
         return buildConfigValue;
@@ -35,7 +35,7 @@ function buildConfig(value?: DotNetBuildConfig | string) {
     return buildConfigValue;
 }
 
-function defaultProject(value?: string) {
+export function defaultProject(value?: string) {
     if (value) {
         defaultProjectPath = value;
         return defaultProjectPath;

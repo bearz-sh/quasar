@@ -68,7 +68,7 @@ export function splat(object: Record<string, unknown>, options?: SplatOptions) {
 
     const argz: unknown[] = [];
     if (options.arguments?.length) {
-        args.length = options.arguments.length;
+        argz.length = options.arguments.length;
     }
 
     if (options?.command?.length) {
