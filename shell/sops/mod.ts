@@ -3,7 +3,7 @@ import { exec, exists, existsSync, IExecOptions, IExecSyncOptions } from "../cor
 import { homeDir, IS_DARWIN, NEW_LINE } from "../../os/mod.ts";
 import { homeConfigDir } from "../../path/os.ts";
 import { dirname, join } from "../../path/mod.ts";
-import { writeTextFile, ensureDirectory, readTextFile } from "../../fs/fs.ts";
+import { ensureDirectory, readTextFile, writeTextFile } from "../../fs/fs.ts";
 
 export function sops(args: string[], options?: IExecOptions) {
     return cli(args, options);
@@ -23,8 +23,8 @@ export async function createAgeKey(keyFile?: string) {
             .then((o) => o.throwOrContinue());
 
         let pubKeyLine = "";
-        const contents = (await readTextFile(keyFile)).split('\n');
-       pubKeyLine = contents[1];
+        const contents = (await readTextFile(keyFile)).split("\n");
+        pubKeyLine = contents[1];
         const pubKey = pubKeyLine.substring(pubKeyLine.indexOf(":") + 1).trim();
         await writeTextFile(pubKeyFile, pubKey);
         return { keyFile, pubKeyFile };

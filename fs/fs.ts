@@ -27,9 +27,9 @@ export {
     expandGlobSync,
     move,
     moveSync,
-} from "https://deno.land/std@0.196.0/fs/mod.ts";
+} from "https://deno.land/std@0.200.0/fs/mod.ts";
 
-export type { ExpandGlobOptions, WalkEntry } from "https://deno.land/std@0.196.0/fs/mod.ts";
+export type { ExpandGlobOptions, WalkEntry } from "https://deno.land/std@0.200.0/fs/mod.ts";
 
 export function isDirectory(path: string | URL): Promise<boolean> {
     return Deno.stat(path).then((stat) => stat.isDirectory).catch(() => false);

@@ -21,50 +21,47 @@ export function handleArguments(args: IArguments) {
     switch (args.length) {
         case 0:
             return { msg, stack };
-        case 1:
-            {
-                if (args[0] instanceof Error) {
-                    const e = args[0] as Error;
-                    msg = e.message;
-                    stack = handleStack(e.stack);
-                } else {
-                    msg = args[0] as string;
-                }
-
-                return { msg, stack };
+        case 1: {
+            if (args[0] instanceof Error) {
+                const e = args[0] as Error;
+                msg = e.message;
+                stack = handleStack(e.stack);
+            } else {
+                msg = args[0] as string;
             }
 
-        case 2:
-            {
-                if (args[0] instanceof Error) {
-                    const e = args[0] as Error;
-                    const message = args[1] as string;
-                    msg = message;
-                    stack = handleStack(e.stack);
-                } else {
-                    const message = args[0] as string;
-                    const splat = Array.from(args).slice(1);
-                    msg = sprintf(message, ...splat);
-                }
-                return { msg, stack };
+            return { msg, stack };
+        }
+
+        case 2: {
+            if (args[0] instanceof Error) {
+                const e = args[0] as Error;
+                const message = args[1] as string;
+                msg = message;
+                stack = handleStack(e.stack);
+            } else {
+                const message = args[0] as string;
+                const splat = Array.from(args).slice(1);
+                msg = sprintf(message, ...splat);
+            }
+            return { msg, stack };
+        }
+
+        default: {
+            if (args[0] instanceof Error) {
+                const e = args[0] as Error;
+                const message = args[1] as string;
+                const splat = Array.from(args).slice(2);
+                msg = sprintf(message, ...splat);
+                stack = handleStack(e.stack);
+            } else {
+                const message = args[0] as string;
+                const splat = Array.from(args).slice(1);
+                msg = sprintf(message, ...splat);
             }
 
-        default:
-            {
-                if (args[0] instanceof Error) {
-                    const e = args[0] as Error;
-                    const message = args[1] as string;
-                    const splat = Array.from(args).slice(2);
-                    msg = sprintf(message, ...splat);
-                    stack = handleStack(e.stack);
-                } else {
-                    const message = args[0] as string;
-                    const splat = Array.from(args).slice(1);
-                    msg = sprintf(message, ...splat);
-                }
-
-                return { msg, stack };
-            }
+            return { msg, stack };
+        }
     }
 }
 

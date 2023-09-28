@@ -20,7 +20,7 @@ export async function install(installDir?: string, toolsDir?: string) {
         return;
     }
 
-    let envSet = "":
+    let envSet = "";
     if (installDir) {
         set("ChocolateyInstall", installDir);
         envSet += `\n[Environment]::SetEnvironmentVariable("ChocolateyInstall", "${installDir}", "User");`;

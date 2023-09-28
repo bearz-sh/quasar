@@ -67,6 +67,6 @@ export function caRootDirSync() {
         return "";
     }
 
-    const path = o.stdoutAsLines[0].trim();;
+    const path = o.stdoutAsLines[0].trim();
     return path;
 }
