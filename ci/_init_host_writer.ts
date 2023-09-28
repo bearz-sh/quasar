@@ -29,7 +29,7 @@ if (isTfBuild) {
     };
 
     hostWriter.warn = function (): IHostWriter {
-        if (this.level > WriteLevel.Warning) {
+        if (this.level < WriteLevel.Warning) {
             return this;
         }
 
@@ -43,7 +43,7 @@ if (isTfBuild) {
     };
 
     hostWriter.error = function (): IHostWriter {
-        if (this.level > WriteLevel.Error) {
+        if (this.level < WriteLevel.Error) {
             return this;
         }
 
@@ -57,7 +57,7 @@ if (isTfBuild) {
     };
 
     hostWriter.debug = function (message: string, ...args: unknown[]): IHostWriter {
-        if (this.level > WriteLevel.Debug) {
+        if (this.level < WriteLevel.Debug) {
             return this;
         }
 
@@ -69,7 +69,7 @@ if (isTfBuild) {
     };
 
     hostWriter.command = function (command: string, args?: unknown[]): IHostWriter {
-        if (this.level > WriteLevel.Command) {
+        if (this.level < WriteLevel.Command) {
             return this;
         }
 
@@ -109,7 +109,7 @@ if (isGithub) {
     };
 
     hostWriter.warn = function (): IHostWriter {
-        if (this.level > WriteLevel.Warning) {
+        if (this.level < WriteLevel.Warning) {
             return this;
         }
 
@@ -123,7 +123,7 @@ if (isGithub) {
     };
 
     hostWriter.error = function (): IHostWriter {
-        if (this.level > WriteLevel.Error) {
+        if (this.level < WriteLevel.Error) {
             return this;
         }
 

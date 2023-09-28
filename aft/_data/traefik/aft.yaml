@@ -1,0 +1,7 @@
+name: traefik
+description: ""
+service: traefik
+version: "0.0.1"
+image: 
+  name: traefik
+  tag: latest

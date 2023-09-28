@@ -7,3 +7,4 @@ export * from "https://deno.land/std@0.200.0/fmt/printf.ts";
 export { deepMerge } from "https://deno.land/std@0.200.0/collections/deep_merge.ts";
 export { parse as parseFlags } from "https://deno.land/std@0.200.0/flags/mod.ts";
 export * as dotenv from "https://deno.land/std@0.200.0/dotenv/mod.ts";
+export { parse as parseYaml, stringify as stringifYaml } from "https://deno.land/std@0.200.0/yaml/mod.ts";

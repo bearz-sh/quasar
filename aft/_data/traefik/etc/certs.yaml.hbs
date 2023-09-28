@@ -1,0 +1,8 @@
+{{#if ca.selfSigned}}
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: "{{ volumes.certs }}/aft.pem"
+        keyFile: "{{ volumes.certs }}/aft.key.pem"
+{{/if}}

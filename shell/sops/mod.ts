@@ -1,9 +1,9 @@
 import { cli, cliSync } from "./cli.ts";
 import { exec, exists, existsSync, IExecOptions, IExecSyncOptions } from "../core/mod.ts";
-import { homeDir, IS_DARWIN } from "../../os/mod.ts";
+import { homeDir, IS_DARWIN, NEW_LINE } from "../../os/mod.ts";
 import { homeConfigDir } from "../../path/os.ts";
 import { dirname, join } from "../../path/mod.ts";
-import { writeTextFile } from "../../fs/fs.ts";
+import { writeTextFile, ensureDirectory, readTextFile } from "../../fs/fs.ts";
 
 export function sops(args: string[], options?: IExecOptions) {
     return cli(args, options);
@@ -18,15 +18,14 @@ export async function createAgeKey(keyFile?: string) {
     const dir = dirname(keyFile);
     const pubKeyFile = join(dir, "publicKey.txt");
     if (!await exists(keyFile)) {
+        await ensureDirectory(dir);
         const o = await exec("age-keygen", ["-o", keyFile], { stdout: "piped", stderr: "piped" })
             .then((o) => o.throwOrContinue());
 
-        if (o.stdoutAsLines.length < 2) {
-            throw Error("Expected age-keygen stdout lines to have at least 2 or more lines, containing the public key");
-        }
-
-        const pubKeyLine = o.stdoutAsLines[1].trim();
-        const pubKey = pubKeyLine.substring(pubKeyLine.indexOf(":")).trim();
+        let pubKeyLine = "";
+        const contents = (await readTextFile(keyFile)).split('\n');
+       pubKeyLine = contents[1];
+        const pubKey = pubKeyLine.substring(pubKeyLine.indexOf(":") + 1).trim();
         await writeTextFile(pubKeyFile, pubKey);
         return { keyFile, pubKeyFile };
     }

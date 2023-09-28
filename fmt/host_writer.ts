@@ -23,50 +23,49 @@ export function handleArguments(args: IArguments) {
             return { msg, stack };
         case 1:
             {
-                if (arguments[0] instanceof Error) {
-                    const e = arguments[0] as Error;
+                if (args[0] instanceof Error) {
+                    const e = args[0] as Error;
                     msg = e.message;
                     stack = handleStack(e.stack);
                 } else {
-                    msg = arguments[0] as string;
+                    msg = args[0] as string;
                 }
+
+                return { msg, stack };
             }
-            break;
 
         case 2:
             {
-                if (arguments[0] instanceof Error) {
-                    const e = arguments[0] as Error;
-                    const message = arguments[1] as string;
+                if (args[0] instanceof Error) {
+                    const e = args[0] as Error;
+                    const message = args[1] as string;
                     msg = message;
                     stack = handleStack(e.stack);
                 } else {
-                    const message = arguments[0] as string;
-                    const args = Array.from(arguments).slice(1);
-                    msg = sprintf(message, ...args);
+                    const message = args[0] as string;
+                    const splat = Array.from(args).slice(1);
+                    msg = sprintf(message, ...splat);
                 }
+                return { msg, stack };
             }
-            break;
 
         default:
             {
-                if (arguments[0] instanceof Error) {
-                    const e = arguments[0] as Error;
-                    const message = arguments[1] as string;
-                    const args = Array.from(arguments).slice(2);
-                    msg = sprintf(message, ...args);
+                if (args[0] instanceof Error) {
+                    const e = args[0] as Error;
+                    const message = args[1] as string;
+                    const splat = Array.from(args).slice(2);
+                    msg = sprintf(message, ...splat);
                     stack = handleStack(e.stack);
                 } else {
-                    const message = arguments[0] as string;
-                    const args = Array.from(arguments).slice(1);
-                    msg = sprintf(message, ...args);
+                    const message = args[0] as string;
+                    const splat = Array.from(args).slice(1);
+                    msg = sprintf(message, ...splat);
                 }
+
+                return { msg, stack };
             }
-
-            break;
     }
-
-    return { msg, stack };
 }
 
 export enum WriteLevel {
@@ -179,7 +178,7 @@ export class HostWriter implements IHostWriter {
     }
 
     command(message: string, args: unknown[]): IHostWriter {
-        if (this.#level > WriteLevel.Command) {
+        if (this.#level < WriteLevel.Command) {
             return this;
         }
         const splat = secretMasker.mask(args.join(" "));
@@ -215,7 +214,7 @@ export class HostWriter implements IHostWriter {
     }
 
     debug(message: string, ...args: unknown[]): IHostWriter {
-        if (this.#level > WriteLevel.Debug) {
+        if (this.#level < WriteLevel.Debug) {
             return this;
         }
 
@@ -233,7 +232,7 @@ export class HostWriter implements IHostWriter {
     warn(e: Error, message?: string, ...args: unknown[]): IHostWriter;
     warn(message: string, ...args: unknown[]): IHostWriter;
     warn(): IHostWriter {
-        if (this.#level > WriteLevel.Warning) {
+        if (this.#level < WriteLevel.Warning) {
             return this;
         }
 
@@ -259,7 +258,7 @@ export class HostWriter implements IHostWriter {
     error(e: Error, message?: string, ...args: unknown[]): IHostWriter;
     error(message: string, ...args: unknown[]): IHostWriter;
     error(): IHostWriter {
-        if (this.#level > WriteLevel.Error) {
+        if (this.#level < WriteLevel.Error) {
             return this;
         }
 
@@ -310,6 +309,9 @@ export class HostWriter implements IHostWriter {
     }
 
     info(message: string, ...args: unknown[]): IHostWriter {
+        if (this.#level < WriteLevel.Info) {
+            return this;
+        }
         const fmt = `INF: ${args.length > 0 ? sprintf(message, ...args) : message}`;
 
         if (this.supportsColor.stdout.level) {

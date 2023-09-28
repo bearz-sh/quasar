@@ -54,7 +54,7 @@ export async function caRootDir() {
         return "";
     }
 
-    const path = o.stdoutAsLines[0];
+    const path = o.stdoutAsLines[0].trim();
     return path;
 }
 
@@ -67,6 +67,6 @@ export function caRootDirSync() {
         return "";
     }
 
-    const path = o.stdoutAsLines[0];
+    const path = o.stdoutAsLines[0].trim();;
     return path;
 }

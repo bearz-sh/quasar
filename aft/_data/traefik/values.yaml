@@ -1,0 +1,13 @@
+dns:
+  subdomain: traefik
+host:
+  ip: 127.0.0.1
+
+ca:
+  enabled: true
+  selfSigned: true
+  acme:
+    enabled: false
+    email: ""
+    server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+    provider: "cloudflare"

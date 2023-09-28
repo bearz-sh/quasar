@@ -1,0 +1,36 @@
+services:
+  traefik:
+    image: {{{ image.name }}}:{{ image.tag }}
+    container_name: {{ name }}
+    restart: unless-stopped
+    ports:
+      - "{{ host.ip }}:80:80"
+      - "{{ host.ip }}:443:443"
+      - "{{ host.ip }}:8080:8080"
+    environment:
+      TZ: "{{ tz }}"
+      PUID: "{{ puid }}"
+      GUID: "{{ guid }}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+{{#if ca.selfSigned}}
+      - {{ volumes.etc }}/certs.yaml:/etc/traefik/certs/certs.yaml
+{{/if}}
+      - {{ volumes.etc }}/traefik.yaml:/etc/traefik/traefik.yaml
+      - {{ volumes.certs }}:/etc/certs
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ name }}.entrypoints=https"
+      - "traefik.http.routers.{{ name }}.rule=Host(`{{ dns.subdomain }}.{{ dns.domain}}`)"
+      - "traefik.http.routers.{{ name }}.service=api@internal"
+      - "traefik.http.routers.{{ name }}.tls=true"
+      - "traefik.http.services.{{ name }}.loadbalancer.server.port=8080"
+      - "traefik.http.services.{{ name }}.loadbalancer.sticky.cookie.httpOnly=true"
+      - "traefik.http.services.{{ name }}.loadbalancer.sticky.cookie.secure=true"
+    networks:
+      - aft-vnet
+
+networks:
+  aft-vnet:
+    external: true
+    name: {{ networks.default.name }}
