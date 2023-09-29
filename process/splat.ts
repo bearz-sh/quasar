@@ -4,23 +4,65 @@
 // Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 import { dasherize, underscore } from "../text/inflections.ts";
-import { args } from "./_base.ts";
 
 const match = (array: unknown[], value: string) =>
     array.some((element) => (element instanceof RegExp ? element.test(value) : element === value));
 
 export interface SplatOptions {
+    /**
+     * The command to use. The command array is prepend to the front of the command line. Default: `undefined`.
+     */
     command?: string[];
+
+    /**
+     * The prefix to use for options such as `--foo bar`. Default: `--`.
+     */
     prefix?: string;
+    /** alias an option.  the alias value must include the case and prefix such as --, -, or /
+     *
+     * @example
+     * ```ts
+     * splat({ foo: "bar" }, { aliases: { foo: "/f" } });
+     * ```
+     */
     aliases?: Record<string, string>;
+    /**
+     * The assignment operator to use for options such as `--foo=bar`. When set to undefined,
+     * only the key will be used, resulting in `--foo bar`.
+     */
     assign?: string;
+    /**
+     * Preserve the case of the key. Default: `false`.
+     */
     preserveCase?: boolean;
+    /**
+     * Forces the use of short flags for all prefixes. Default: `true`.
+     */
     shortFlag?: boolean;
+    /**
+     * Only include the given keys. Default: `undefined`.
+     */
     includes?: Array<string | RegExp>;
+    /**
+     * Exclude the given keys. Default: `undefined`.
+     */
     excludes?: Array<string | RegExp>;
+    /**
+     * Ignore `true` values. Default: `false`.
+     */
     ignoreTrue?: boolean;
+
+    /**
+     * Ignore `false` values. Default: `false`.
+     */
     ignoreFalse?: boolean;
+    /**
+     * Maps the given keys to be used as positional arguments where only the values are emitted1. Default: `undefined`.
+     */
     arguments?: string[];
+    /**
+     * Instructs all arguments to be appended to the end of the command line. Default: `false`.
+     */
     appendArguments?: boolean;
 }
 
@@ -47,7 +89,7 @@ export function splat(object: Record<string, unknown>, options?: SplatOptions) {
 
         key = prefix + theKey;
 
-        if (options?.assign) {
+        if (options?.assign && typeof value !== "boolean") {
             splat.push(key + (value ? `${options.assign}${value}` : ""));
         } else {
             splat.push(key);
@@ -59,10 +101,13 @@ export function splat(object: Record<string, unknown>, options?: SplatOptions) {
     };
 
     const makeAliasArg = (key: string, value?: unknown) => {
-        splat.push(`-${key}`);
-
-        if (value) {
-            splat.push(value);
+        if (options?.assign) {
+            splat.push(key + (value ? `${options.assign}${value}` : ""));
+        } else {
+            splat.push(key);
+            if (value) {
+                splat.push(value);
+            }
         }
     };
 
@@ -71,19 +116,15 @@ export function splat(object: Record<string, unknown>, options?: SplatOptions) {
         argz.length = options.arguments.length;
     }
 
-    if (options?.command?.length) {
-        splat.push(...options.command);
-    }
-
     for (let [key, value] of Object.entries(object)) {
         let pushArguments = makeArguments;
-
         if (options.arguments?.length && options.arguments.includes(key)) {
             // ensure the order of the arguments
             const index = options.arguments.indexOf(key);
-            if (value) {
+            if (value !== undefined && value !== null) {
                 argz[index] = value;
             }
+            continue;
         }
 
         if (Array.isArray(options.excludes) && match(options.excludes, key)) {
@@ -122,7 +163,7 @@ export function splat(object: Record<string, unknown>, options?: SplatOptions) {
         }
 
         if (value === true && !options.ignoreTrue) {
-            pushArguments(key, "");
+            pushArguments(key, undefined);
         }
 
         if (value === false && !options.ignoreFalse) {
@@ -163,7 +204,7 @@ export function splat(object: Record<string, unknown>, options?: SplatOptions) {
             if (arg) {
                 if (Array.isArray(arg)) {
                     unwrapped.push(...arg.map((a) => String(a)));
-                } else {
+                } else if (arg !== undefined && arg !== null) {
                     unwrapped.push(String(arg));
                 }
             }
@@ -174,6 +215,10 @@ export function splat(object: Record<string, unknown>, options?: SplatOptions) {
         } else {
             splat.splice(0, 0, ...unwrapped);
         }
+    }
+
+    if (options?.command?.length) {
+        splat.splice(0, 0, ...options.command);
     }
 
     return splat;
