@@ -124,6 +124,10 @@ export class HostWriter implements IHostWriter {
         return this.#level;
     }
 
+    set level(value: WriteLevel) {
+        this.#level = value;
+    }
+
     enabled(level: WriteLevel): boolean {
         return this.#level >= level;
     }

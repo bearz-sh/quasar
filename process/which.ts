@@ -150,7 +150,6 @@ export function whichSync(
                 for (const entry of readDirectorySync(pathSegment)) {
                     if (entry.isFile && entry.name?.toLowerCase() === baseNameLowered) {
                         first = entry;
-                        console.log(first);
                         break;
                     }
                 }
