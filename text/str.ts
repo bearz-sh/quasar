@@ -2,6 +2,17 @@ import { Char, isWhiteSpaceAt } from "./char.ts";
 
 export const EMPTY = "";
 
+export function split(str: string | Uint8Array, separator: string | RegExp, trim = false, limit?: number) {
+    if (str instanceof Uint8Array)
+        str = new TextDecoder().decode(str);
+
+    const result = str.split(separator, limit);
+    if (trim)
+        return result.map((x) => x.trim()).filter((x) => x.length > 0);
+
+    return result;
+}
+
 export function trimEnd(str: string, chars: string = EMPTY): string {
     let size = str.length;
 

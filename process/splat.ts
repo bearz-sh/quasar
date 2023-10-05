@@ -4,25 +4,11 @@
 // Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 import { dasherize, underscore } from "../text/inflections.ts";
-import { args } from "./_base.ts";
+import { ISplatOptions } from "./interfaces.ts";
 
 const match = (array: unknown[], value: string) =>
     array.some((element) => (element instanceof RegExp ? element.test(value) : element === value));
 
-export interface SplatOptions {
-    command?: string[];
-    prefix?: string;
-    aliases?: Record<string, string>;
-    assign?: string;
-    preserveCase?: boolean;
-    shortFlag?: boolean;
-    includes?: Array<string | RegExp>;
-    excludes?: Array<string | RegExp>;
-    ignoreTrue?: boolean;
-    ignoreFalse?: boolean;
-    arguments?: string[];
-    appendArguments?: boolean;
-}
 
 /**
  * Converts an object to an array of command line arguments.
@@ -30,7 +16,7 @@ export interface SplatOptions {
  * @param options The options to use
  * @returns An array of command line arguments
  */
-export function splat(object: Record<string, unknown>, options?: SplatOptions) {
+export function splat(object: Record<string, unknown>, options?: ISplatOptions) {
     const splat = [];
     let extraArguments = [];
     let separatedArguments = [];
@@ -66,8 +52,10 @@ export function splat(object: Record<string, unknown>, options?: SplatOptions) {
         }
     };
 
-    const argz: unknown[] = [];
-    if (options.arguments?.length) {
+    let argz: unknown[] = [];
+    if (object.arguments && Array.isArray(object.arguments)) {
+        argz = object.arguments;
+    } else if (options.arguments?.length) {
         argz.length = options.arguments.length;
     }
 
@@ -84,6 +72,8 @@ export function splat(object: Record<string, unknown>, options?: SplatOptions) {
             if (value) {
                 argz[index] = value;
             }
+
+            continue;
         }
 
         if (Array.isArray(options.excludes) && match(options.excludes, key)) {
